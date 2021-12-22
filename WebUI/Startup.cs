@@ -1,3 +1,4 @@
+using LordOfTheHoney.WebUI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,15 @@ namespace WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            
+            services.AddCurrentUserService();
+            services.AddDatabase(Configuration);
+            services.AddIdentity();
+            services.AddJwtAuthentication(services.GetApplicationSettings(Configuration));
+            //services.AddApplicationLayer();
+            //services.AddApplicationServices();
+            services.AddSharedInfrastructure(Configuration);
+            
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -45,6 +55,8 @@ namespace WebUI
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
