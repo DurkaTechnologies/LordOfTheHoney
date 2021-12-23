@@ -29,7 +29,6 @@ namespace LordOfTheHoney.Infrastructure.Helpers
                     //TODO - take descriptions from description attribute
                 }
             }
-
         }
 
         public static async Task<IdentityResult> AddPermissionClaim(this RoleManager<ApplicationRole> roleManager, ApplicationRole role, string permission)

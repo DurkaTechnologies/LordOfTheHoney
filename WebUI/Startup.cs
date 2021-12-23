@@ -1,3 +1,4 @@
+using LordOfTheHoney.Infrastructure.Extensions;
 using LordOfTheHoney.WebUI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,16 +22,29 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddControllersWithViews();
-            
+
             services.AddCurrentUserService();
             services.AddDatabase(Configuration);
             services.AddIdentity();
             services.AddJwtAuthentication(services.GetApplicationSettings(Configuration));
             //services.AddApplicationLayer();
-            //services.AddApplicationServices();
+            services.AddApplicationServices();
+            services.AddRepositories();
+
             services.AddSharedInfrastructure(Configuration);
-            
+            services.RegisterSwagger();
+            services.AddInfrastructureMappings();
+            services.AddControllers();
+            services.AddApiVersioning(config =>
+           {
+               config.DefaultApiVersion = new ApiVersion(1, 0);
+               config.AssumeDefaultVersionWhenUnspecified = true;
+               config.ReportApiVersions = true;
+           });
+            services.AddLazyCache();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -50,6 +64,7 @@ namespace WebUI
             {
                 app.UseExceptionHandler("/Error");
             }
+            app.UseCors();
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -64,6 +79,8 @@ namespace WebUI
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
+            app.ConfigureSwagger();
+            app.Initialize(Configuration);
 
             app.UseSpa(spa =>
             {
