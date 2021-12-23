@@ -68,7 +68,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                     await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                     if (!request.AutoConfirmEmail)
                     {
-                       
+
                         return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
                     }
                     return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
@@ -173,7 +173,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             // For more information on how to enable account confirmation and password reset please
             // visit https://go.microsoft.com/fwlink/?LinkID=532713
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        
+
             return await Result.SuccessAsync("Password Reset Mail has been sent to your authorized Email.");
         }
 

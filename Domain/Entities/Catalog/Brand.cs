@@ -9,3 +9,4 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
         public decimal Tax { get; set; }
     }
 }
+

@@ -12,7 +12,7 @@ namespace LordOfTheHoney.WebUI.Extensions
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-           
+
             return builder;
         }
     }

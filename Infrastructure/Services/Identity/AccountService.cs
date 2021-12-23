@@ -1,5 +1,4 @@
-﻿using LordOfTheHoney.Application.Interfaces.Services;
-using LordOfTheHoney.Application.Interfaces.Services.Account;
+﻿using LordOfTheHoney.Application.Interfaces.Services.Account;
 using LordOfTheHoney.Infrastructure.Models.Identity;
 using LordOfTheHoney.Application.Requests.Identity;
 using LordOfTheHoney.Shared.Wrapper;
@@ -49,7 +48,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                     return await Result.FailAsync("User Not Found.");
                 }
                 var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-               
+
                 var identityResult = await _userManager.UpdateAsync(user);
                 var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
                 await _signInManager.RefreshSignInAsync(user);

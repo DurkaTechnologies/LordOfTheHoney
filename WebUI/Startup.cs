@@ -25,7 +25,7 @@ namespace WebUI
             services.AddCors();
 
             services.AddControllersWithViews();
-            
+
             services.AddCurrentUserService();
             services.AddDatabase(Configuration);
             services.AddIdentity();
@@ -38,12 +38,12 @@ namespace WebUI
             services.RegisterSwagger();
             services.AddInfrastructureMappings();
             services.AddControllers();
-             services.AddApiVersioning(config =>
-            {
-                config.DefaultApiVersion = new ApiVersion(1, 0);
-                config.AssumeDefaultVersionWhenUnspecified = true;
-                config.ReportApiVersions = true;
-            });
+            services.AddApiVersioning(config =>
+           {
+               config.DefaultApiVersion = new ApiVersion(1, 0);
+               config.AssumeDefaultVersionWhenUnspecified = true;
+               config.ReportApiVersions = true;
+           });
             services.AddLazyCache();
 
             // In production, the React files will be served from this directory

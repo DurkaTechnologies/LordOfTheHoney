@@ -52,7 +52,7 @@ namespace LordOfTheHoney.Infrastructure.Repositories
 
         public async Task<int> CommitAndRemoveCache(CancellationToken cancellationToken, params string[] cacheKeys)
         {
-            var result =  await _dbContext.SaveChangesAsync(cancellationToken);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
             foreach (var cacheKey in cacheKeys)
             {
                 _cache.Remove(cacheKey);

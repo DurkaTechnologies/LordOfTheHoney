@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using LordOfTheHoney.Application.Interfaces.Repositories;
 using LordOfTheHoney.Infrastructure.Repositories;
