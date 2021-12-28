@@ -49,7 +49,8 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
             if (userWithSameUserName != null)
             {
-                return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
+                throw new Exception(string.Format("Username {0} is already taken.", request.UserName));
+                //return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
             }
             var user = new ApplicationUser
             {
@@ -68,7 +69,6 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                     await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                     if (!request.AutoConfirmEmail)
                     {
-
                         return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
                     }
                     return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
@@ -80,7 +80,8 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             }
             else
             {
-                return await Result.FailAsync(string.Format("Email {0} is already registered.", request.Email));
+                throw new Exception(string.Format("Email {0} is already registered.", request.Email));
+                //return await Result.FailAsync(string.Format("Email {0} is already registered.", request.Email));
             }
         }
 

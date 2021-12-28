@@ -10,18 +10,18 @@ import {
 
 import http from "../../../http_common"; //axios
 import axios, { AxiosError } from "axios";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
 export const loginUser = (data: ILoginModel) => {
   return async (dispatch: React.Dispatch<AuthAction>) => {
     try {
       const response = await http.post<ILoginResponse>("/api/auth/login", data);
 
-      const { access_token } = response.data;
-      localStorage.token = access_token;
+      // const { access_token } = response.data;
+      // localStorage.token = access_token;
 
       //Write to redux
-      AuthUser(access_token, dispatch);
+      // AuthUser(access_token, dispatch);
 
       return Promise.resolve();
     } catch (error) {
@@ -41,7 +41,8 @@ export const AuthUser = (
   token: string,
   dispatch: React.Dispatch<AuthAction>
 ) => {
-  const user = jwt.decode(token) as IUser;
+  const user = {} as IUser;
+  // const user = jwt.decode(token) as IUser;
   dispatch({
     type: AuthActionTypes.LOGIN_AUTH,
     payload: user,

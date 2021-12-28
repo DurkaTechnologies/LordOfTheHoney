@@ -1,25 +1,37 @@
 import * as React from "react";
 import axios, { AxiosError } from "axios";
 import { Dispatch } from "react";
-import http_common from "../../../http_common";
-import { RegisterAction, RegisterActionTypes, RegisterErrors } from "./types";
+import http from "../../../http_common";
+import {
+  RegisterAction,
+  RegisterActionTypes,
+  IRegisterResponse,
+  RegisterError,
+  IRegisterModel,
+} from "./types";
 
-export const RegisterUser = (data: FormData) => {
+export const registerUser = (data: IRegisterModel) => {
   return async (dispatch: Dispatch<RegisterAction>) => {
     try {
-      const response = await http_common.post("api/user/register", data);
-      const token = await response.data.token;
-      dispatch({
-        type: RegisterActionTypes.REGISTER_AUTH,
-        payload: token,
-      });
-      return Promise.resolve(token);
+      console.log("data: ", data);
+      const response = await http.post<IRegisterResponse>(
+        "api/identity/user",
+        data
+      );
+
+      if (!response.data.succeed) {
+        const messages = response.data.message;
+        return Promise.reject(messages);
+      }
+
+      dispatch({ type: RegisterActionTypes.REGISTER_AUTH });
+      return Promise.resolve();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const serverError = error as AxiosError<RegisterErrors>;
+        const serverError = error as AxiosError<RegisterError>;
         if (serverError && serverError.response) {
-          const { errors } = serverError.response.data;
-          return Promise.reject(errors);
+          const { messages } = serverError.response.data;
+          return Promise.reject(messages);
         }
       }
       return Promise.reject();

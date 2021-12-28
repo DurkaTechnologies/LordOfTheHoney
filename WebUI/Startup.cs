@@ -22,7 +22,8 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            //services.AddCors();
+            services.AddForwarding(Configuration);
 
             services.AddControllersWithViews();
 
@@ -51,6 +52,7 @@ namespace WebUI
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +66,10 @@ namespace WebUI
             {
                 app.UseExceptionHandler("/Error");
             }
-            app.UseCors();
+
+            //app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
+
+            app.UseForwarding(Configuration);
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

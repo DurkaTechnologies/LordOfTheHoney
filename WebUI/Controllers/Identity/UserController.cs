@@ -78,8 +78,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterRequest request)
         {
-            var origin = Request.Headers["origin"];
-            return Ok(await _userService.RegisterAsync(request, origin));
+            try
+            {
+                var origin = Request.Headers["origin"];
+                return Ok(await _userService.RegisterAsync(request, origin));
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>

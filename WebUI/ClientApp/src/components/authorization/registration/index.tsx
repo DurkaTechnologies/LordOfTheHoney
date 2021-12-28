@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useState } from "react";
-import { IRegisterModel } from "./types";
+import { IRegisterModel, RegisterError } from "./types";
 import { useNavigate } from "react-router";
 
 import InputGroupFormik from "../../common/inputGroupFormik";
@@ -16,30 +16,45 @@ import {
 } from "formik";
 import { validationFields } from "./validation";
 
+import { useActions } from "../../../hooks/useActions";
+
 const RegisterPage = () => {
   const initialValues: IRegisterModel = {
     email: "",
-    nickname: "",
+    userName: "",
     password: "",
-    password_confirmation: "",
+    confirmPassword: "",
+    activateUser: true,
+    autoConfirmEmail: true,
   };
-  const [invalid, setInvalid] = useState<string>("");
+  const [serverError, setServerError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigator = useNavigate();
+
+  const { registerUser } = useActions();
 
   const handleSubmit = async (
     values: IRegisterModel,
     actions: FormikHelpers<IRegisterModel>
   ) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      await navigator("/login");
-    } catch (errors) {}
+      registerUser(values);
+      setLoading(false);
+      navigator("/login");
+    } catch (ex) {
+      console.log("ERRORS in index");
+      const serverErrors = ex as RegisterError;
+      if (serverErrors.messages) {
+        setServerError(serverErrors.messages.join(", "));
+      }
+      setLoading(false);
+    }
   };
 
   return (
     <div>
-      {invalid && <div className="alert alert-danger">{invalid}</div>}
+      {serverError && <div className="alert alert-danger">{serverError}</div>}
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -60,11 +75,11 @@ const RegisterPage = () => {
               />
               <InputGroupFormik
                 label="Nickname"
-                field="nickname"
+                field="userName"
                 type="text"
-                value={values.nickname}
-                error={errors.nickname}
-                touched={touched.nickname}
+                value={values.userName}
+                error={errors.userName}
+                touched={touched.userName}
                 onChange={handleChange}
               />
               <InputGroupFormik
@@ -78,14 +93,15 @@ const RegisterPage = () => {
               />
               <InputGroupFormik
                 label="Password confirmation"
-                field="password_confirmation"
+                field="confirmPassword"
                 type="password"
-                value={values.password_confirmation}
-                error={errors.password_confirmation}
-                touched={touched.password_confirmation}
+                value={values.confirmPassword}
+                error={errors.confirmPassword}
+                touched={touched.confirmPassword}
                 onChange={handleChange}
               />
-              <Button type="submit" label="confirm" />
+              {/* <Button type="submit" label="confirm" /> */}
+              <button type="submit">Confidasrm</button>
             </Form>
           );
         }}
