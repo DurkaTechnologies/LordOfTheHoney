@@ -17,7 +17,13 @@
       "dom"
     ],
     "skipLibCheck": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+    "paths": {
+      "crypto": [
+        "../../node_modules/crypto-js"
+      ]
+    }
   },
   "include": [
     "src"
