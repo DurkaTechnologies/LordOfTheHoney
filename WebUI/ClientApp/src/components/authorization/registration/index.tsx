@@ -38,18 +38,20 @@ const RegisterPage = () => {
     actions: FormikHelpers<IRegisterModel>
   ) => {
     setLoading(true);
-    try {
-      registerUser(values);
-      setLoading(false);
-      navigator("/login");
-    } catch (ex) {
-      console.log("ERRORS in index");
-      const serverErrors = ex as RegisterError;
-      if (serverErrors.messages) {
-        setServerError(serverErrors.messages.join(", "));
+    await registerUser(values).then(
+      (value) => {
+        setLoading(false);
+        navigator("/login");
+      },
+      (reason) => {
+        const serverErrors = reason as RegisterError;
+        console.log("serverErrors: ", serverErrors);
+        if (serverErrors.messages) {
+          setServerError(serverErrors.messages.join(", "));
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
+    );
   };
 
   return (
@@ -101,7 +103,7 @@ const RegisterPage = () => {
                 onChange={handleChange}
               />
               {/* <Button type="submit" label="confirm" /> */}
-              <button type="submit">Confidasrm</button>
+              <button type="submit">Confirm</button>
             </Form>
           );
         }}

@@ -2,7 +2,9 @@ import * as Yup from "yup";
 
 export const validationFields = () => {
   return Yup.object().shape({
-    userName: Yup.string().required("Input nickname"),
+    userName: Yup.string()
+      .required("Input nickname")
+      .min(6, "Username must have more than 6 character"),
     email: Yup.string().email("Input valid email").required("Input email"),
     password: Yup.string()
       .required("Input password")

@@ -1,7 +1,3 @@
-export enum RegisterActionTypes {
-  REGISTER_AUTH = "REGISTER_AUTH",
-}
-
 export interface IRegisterModel {
   userName: string;
   email: string;
@@ -9,10 +5,6 @@ export interface IRegisterModel {
   confirmPassword: string;
   activateUser: boolean;
   autoConfirmEmail: boolean;
-}
-
-export interface RegisterAction {
-  type: RegisterActionTypes.REGISTER_AUTH;
 }
 
 export interface IRegisterResponse {

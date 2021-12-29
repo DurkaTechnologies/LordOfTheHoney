@@ -89,8 +89,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// Register a User
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>Status 200 OK</returns>
-        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>
+        ///     <para>
+        ///         Status 200 OK
+        ///     </para>
+        ///     <para>
+        ///         Status 400 BadRequest
+        ///     </para>
+        /// </returns>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterRequest request)
@@ -99,7 +106,7 @@ namespace LordOfTheHoney.Server.Controllers.Identity
             var response = await _userService.RegisterAsync(request, origin);
             if (response.Succeeded)
                 return Ok(response);
-            return BadRequest(response.Messages);
+            return BadRequest(response);
         }
 
         /// <summary>
