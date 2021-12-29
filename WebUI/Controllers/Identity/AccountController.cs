@@ -26,11 +26,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
         [HttpPut(nameof(UpdateProfile))]
         public async Task<ActionResult> UpdateProfile(UpdateProfileRequest model)
         {
             var response = await _accountService.UpdateProfileAsync(model, _currentUser.UserId);
-            return Ok(response);
+            if (response.Succeeded)
+                return Ok(response);
+            else
+                return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -38,11 +42,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
         [HttpPut(nameof(ChangePassword))]
         public async Task<ActionResult> ChangePassword(ChangePasswordRequest model)
         {
             var response = await _accountService.ChangePasswordAsync(model, _currentUser.UserId);
-            return Ok(response);
+            if (response.Succeeded)
+                return Ok(response);
+            else
+                return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -50,11 +58,16 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>Status 200 OK </returns>
+        /// <returns>Status 404 OK </returns>
         [HttpGet("profile-picture/{userId}")]
         [ResponseCache(NoStore = false, Location = ResponseCacheLocation.Client, Duration = 60)]
         public async Task<IActionResult> GetProfilePictureAsync(string userId)
         {
-            return Ok(await _accountService.GetProfilePictureAsync(userId));
+            var response = await _accountService.GetProfilePictureAsync(userId);
+            if (response.Succeeded)
+                return Ok(response);
+            else
+                return BadRequest(response.Messages);
         }
     }
 }

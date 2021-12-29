@@ -215,22 +215,22 @@ namespace LordOfTheHoney.WebUI.Extensions
             services
                 .AddAuthentication(authentication =>
                 {
-                    authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(bearer =>
                 {
                     bearer.RequireHttpsMetadata = false;
-                    bearer.SaveToken = true;
-                    bearer.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        RoleClaimType = ClaimTypes.Role,
-                        ClockSkew = TimeSpan.Zero
-                    };
+                    //bearer.SaveToken = true;
+                    //bearer.TokenValidationParameters = new TokenValidationParameters
+                    //{
+                    //    ValidateIssuerSigningKey = true,
+                    //    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    //    ValidateIssuer = false,
+                    //    ValidateAudience = false,
+                    //    RoleClaimType = ClaimTypes.Role,
+                    //    ClockSkew = TimeSpan.Zero
+                    //};
 
                     bearer.Events = new JwtBearerEvents
                     {

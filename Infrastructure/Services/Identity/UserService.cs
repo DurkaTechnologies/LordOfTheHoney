@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
+using LordOfTheHoney.Application.Exceptions;
 using LordOfTheHoney.Application.Interfaces.Services;
 using LordOfTheHoney.Application.Interfaces.Services.Identity;
 using LordOfTheHoney.Application.Requests.Identity;
@@ -46,12 +47,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
 
         public async Task<IResult> RegisterAsync(RegisterRequest request, string origin)
         {
-            var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
-            if (userWithSameUserName != null)
-            {
-                throw new Exception(string.Format("Username {0} is already taken.", request.UserName));
-                //return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
-            }
+            if (await _userManager.FindByNameAsync(request.UserName) != null)
+                return await Result.FailAsync($"Username {request.UserName} is already taken.");
+
             var user = new ApplicationUser
             {
                 Email = request.Email,
@@ -60,58 +58,58 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                 EmailConfirmed = request.AutoConfirmEmail
             };
 
-            var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
-            if (userWithSameEmail == null)
+            if (await _userManager.FindByEmailAsync(request.Email) == null)
             {
                 var result = await _userManager.CreateAsync(user, request.Password);
+
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                     if (!request.AutoConfirmEmail)
-                    {
-                        return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
-                    }
-                    return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
+                        return await Result<string>.SuccessAsync(user.Id, $"User {user.UserName} Registered. Please check your Mailbox to verify!");
+
+                    return await Result<string>.SuccessAsync(user.Id, $"User {user.UserName} Registered.");
                 }
-                else
-                {
-                    return await Result.FailAsync(result.Errors.Select(a => a.Description.ToString()).ToList());
-                }
+                return await Result.FailAsync(result.Errors.Select(a => a.Description.ToString()).ToList());
             }
-            else
-            {
-                throw new Exception(string.Format("Email {0} is already registered.", request.Email));
-                //return await Result.FailAsync(string.Format("Email {0} is already registered.", request.Email));
-            }
+            return await Result.FailAsync($"Email {request.Email} is already registered.");
         }
 
         public async Task<IResult<UserResponse>> GetAsync(string userId)
         {
             var user = await _userManager.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
-            var result = _mapper.Map<UserResponse>(user);
-            return await Result<UserResponse>.SuccessAsync(result);
+            if (user != null)
+                return await Result<UserResponse>.SuccessAsync(_mapper.Map<UserResponse>(user));
+
+            throw new NotFoundException(nameof(ApplicationUser), userId);
         }
 
         public async Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
         {
             var user = await _userManager.Users.Where(u => u.Id == request.UserId).FirstOrDefaultAsync();
             var isAdmin = await _userManager.IsInRoleAsync(user, RoleConstants.AdministratorRole);
+
             if (isAdmin)
-            {
                 return await Result.FailAsync("Administrators Profile's Status cannot be toggled");
-            }
+
             if (user != null)
             {
                 user.IsActive = request.ActivateUser;
                 var identityResult = await _userManager.UpdateAsync(user);
+                return await Result.SuccessAsync();
             }
-            return await Result.SuccessAsync();
+
+            throw new NotFoundException(nameof(ApplicationUser), request.UserId);
         }
 
         public async Task<IResult<UserRolesResponse>> GetRolesAsync(string userId)
         {
             var viewModel = new List<UserRoleModel>();
             var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new NotFoundException(nameof(ApplicationUser), userId);
+
             var roles = await _roleManager.Roles.ToListAsync();
 
             foreach (var role in roles)
@@ -121,14 +119,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                     RoleName = role.Name,
                     RoleDescription = role.Description
                 };
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRolesViewModel.Selected = true;
-                }
-                else
-                {
-                    userRolesViewModel.Selected = false;
-                }
+
+                userRolesViewModel.Selected = await _userManager.IsInRoleAsync(user, role.Name);
+
                 viewModel.Add(userRolesViewModel);
             }
             var result = new UserRolesResponse { UserRoles = viewModel };
@@ -138,24 +131,23 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
         public async Task<IResult> UpdateRolesAsync(UpdateUserRolesRequest request)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+                throw new NotFoundException(nameof(ApplicationUser), request.UserId);
+
             if (user.Email == "amongusbee@amongusbee.com")
-            {
-                return await Result.FailAsync("Not Allowed.");
-            }
+                throw new ForbiddenAccessException();
 
             var roles = await _userManager.GetRolesAsync(user);
             var selectedRoles = request.UserRoles.Where(x => x.Selected).ToList();
-
             var currentUser = await _userManager.FindByIdAsync(_currentUserService.UserId);
+
             if (!await _userManager.IsInRoleAsync(currentUser, RoleConstants.AdministratorRole))
             {
-                var tryToAddAdministratorRole = selectedRoles
-                    .Any(x => x.RoleName == RoleConstants.AdministratorRole);
+                var tryToAddAdministratorRole = selectedRoles.Any(x => x.RoleName == RoleConstants.AdministratorRole);
                 var userHasAdministratorRole = roles.Any(x => x == RoleConstants.AdministratorRole);
+
                 if (tryToAddAdministratorRole && !userHasAdministratorRole || !tryToAddAdministratorRole && userHasAdministratorRole)
-                {
                     return await Result.FailAsync("Not Allowed to add or delete Administrator Role if you have not this role.");
-                }
             }
 
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
@@ -166,15 +158,10 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
         public async Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
-            {
-                // Don't reveal that the user does not exist or is not confirmed
-                return await Result.FailAsync("An Error has occurred!");
-            }
-            // For more information on how to enable account confirmation and password reset please
-            // visit https://go.microsoft.com/fwlink/?LinkID=532713
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (user == null /*|| !(await _userManager.IsEmailConfirmedAsync(user))*/)
+                throw new NotFoundException(nameof(ApplicationUser), request.Email);
 
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             return await Result.SuccessAsync("Password Reset Mail has been sent to your authorized Email.");
         }
 
@@ -182,10 +169,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-            {
-                // Don't reveal that the user does not exist
-                return await Result.FailAsync("An Error has occured!");
-            }
+                throw new NotFoundException(nameof(ApplicationUser), request.Email);
 
             var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             if (result.Succeeded)
