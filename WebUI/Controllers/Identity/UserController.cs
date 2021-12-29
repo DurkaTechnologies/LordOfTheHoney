@@ -1,8 +1,11 @@
 ﻿using LordOfTheHoney.Application.Interfaces.Services.Identity;
 using LordOfTheHoney.Application.Requests.Identity;
+using LordOfTheHoney.Application.Responses.Identity;
 using LordOfTheHoney.Shared.Constants.Permission;
+using LordOfTheHoney.Shared.Wrapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Server.Controllers.Identity
@@ -23,12 +26,12 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// Get User Details
         /// </summary>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
         [Authorize(Policy = Permissions.Users.View)]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<UserResponse>>> GetAll()
         {
-            var users = await _userService.GetAllAsync();
-            return Ok(users);
+            return (await _userService.GetAllAsync()).Data;
         }
 
         /// <summary>
@@ -36,12 +39,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Status 200 OK</returns>
-        //[Authorize(Policy = Permissions.Users.View)]
+        /// <returns>Status 400 BadRequest</returns>
+        [Authorize(Policy = Permissions.Users.View)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var user = await _userService.GetAsync(id);
-            return Ok(user);
+            var response = await _userService.GetAsync(id);
+            if (response.Succeeded && response.Data != null)
+                return Ok(response.Data);
+            return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -49,12 +55,16 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 404 NotFound</returns>
         [Authorize(Policy = Permissions.Users.View)]
         [HttpGet("roles/{id}")]
         public async Task<IActionResult> GetRolesAsync(string id)
         {
-            var userRoles = await _userService.GetRolesAsync(id);
-            return Ok(userRoles);
+            var response = await _userService.GetRolesAsync(id);
+            if (response.Succeeded)
+                return Ok(response.Data);
+            return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -62,11 +72,17 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 403 Forbidden</returns>
+        /// <returns>Status 404 NotFound</returns>
         [Authorize(Policy = Permissions.Users.Edit)]
         [HttpPut("roles/{id}")]
         public async Task<IActionResult> UpdateRolesAsync(UpdateUserRolesRequest request)
         {
-            return Ok(await _userService.UpdateRolesAsync(request));
+            var response = await _userService.UpdateRolesAsync(request);
+            if (response.Succeeded)
+                return Ok(response.Messages);
+            return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -74,12 +90,16 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterRequest request)
         {
             var origin = Request.Headers["origin"];
-            return Ok(await _userService.RegisterAsync(request, origin));
+            var response = await _userService.RegisterAsync(request, origin);
+            if (response.Succeeded)
+                return Ok(response);
+            return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -87,10 +107,15 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 404 NotFound</returns>
         [HttpPost("toggle-status")]
         public async Task<IActionResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
         {
-            return Ok(await _userService.ToggleUserStatusAsync(request));
+            var response = await _userService.ToggleUserStatusAsync(request);
+            if (response.Succeeded)
+                return Ok(response.Messages);
+            return BadRequest();
         }
 
         /// <summary>
@@ -98,12 +123,18 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 404 NotFound</returns>
         [HttpPost("forgot-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequest request)
         {
             var origin = Request.Headers["origin"];
-            return Ok(await _userService.ForgotPasswordAsync(request, origin));
+            var response = await _userService.ForgotPasswordAsync(request, origin);
+
+            if (response.Succeeded)
+                return Ok(response.Messages);
+            return BadRequest(response.Messages);
         }
 
         /// <summary>
@@ -111,11 +142,17 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 404 NotFound</returns>
         [HttpPost("reset-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest request)
         {
-            return Ok(await _userService.ResetPasswordAsync(request));
+            var response = await _userService.ResetPasswordAsync(request);
+
+            if (response.Succeeded)
+                return Ok(response.Messages);
+            return BadRequest(response.Messages);
         }
     }
 }

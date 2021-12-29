@@ -1,5 +1,6 @@
 using LordOfTheHoney.Infrastructure.Extensions;
 using LordOfTheHoney.WebUI.Extensions;
+using LordOfTheHoney.WebUI.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace WebUI
             services.AddSharedInfrastructure(Configuration);
             services.RegisterSwagger();
             services.AddInfrastructureMappings();
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
             services.AddApiVersioning(config =>
            {
                config.DefaultApiVersion = new ApiVersion(1, 0);
