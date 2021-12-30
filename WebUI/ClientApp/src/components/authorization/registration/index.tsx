@@ -15,8 +15,10 @@ import {
   FieldProps,
 } from "formik";
 import { validationFields } from "./validation";
+import { registerUser } from "./service";
 
-import { useActions } from "../../../hooks/useActions";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPage = () => {
   const initialValues: IRegisterModel = {
@@ -31,27 +33,24 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigator = useNavigate();
 
-  const { registerUser } = useActions();
-
   const handleSubmit = async (
     values: IRegisterModel,
     actions: FormikHelpers<IRegisterModel>
   ) => {
     setLoading(true);
-    await registerUser(values).then(
-      (value) => {
-        setLoading(false);
-        navigator("/login");
-      },
-      (reason) => {
-        const serverErrors = reason as RegisterError;
-        console.log("serverErrors: ", serverErrors);
-        if (serverErrors.messages) {
-          setServerError(serverErrors.messages.join(", "));
-        }
-        setLoading(false);
+    try {
+      await registerUser(values);
+      setLoading(false);
+      toast.success(`User ${values.userName} are successfully registered`);
+      navigator("/login");
+    } catch (error) {
+      toast.error("Registration with errors");
+      const serverErrors = error as RegisterError;
+      if (serverErrors.messages) {
+        setServerError(serverErrors.messages.join(", "));
       }
-    );
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,7 +102,9 @@ const RegisterPage = () => {
                 onChange={handleChange}
               />
               {/* <Button type="submit" label="confirm" /> */}
-              <button type="submit">Confirm</button>
+              <button type="submit" disabled={loading}>
+                Confirm
+              </button>
             </Form>
           );
         }}

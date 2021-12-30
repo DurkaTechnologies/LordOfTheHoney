@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import HomePage from "./components/home";
 import DefaultLayout from "./components/containers/defaultLayout";
@@ -16,5 +17,6 @@ export default () => (
         <Route path="/register" element={<RegisterPage />} />
       </Route>
     </Routes>
+    <ToastContainer pauseOnHover={false} pauseOnFocusLoss={false} />
   </Router>
 );
