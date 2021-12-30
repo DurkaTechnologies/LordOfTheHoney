@@ -138,7 +138,6 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             {
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
             }
             .Union(userClaims)
             .Union(roleClaims)

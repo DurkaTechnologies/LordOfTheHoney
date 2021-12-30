@@ -6,7 +6,7 @@ export interface IUser {
   email: string;
 }
 export interface ILoginModel {
-  nickname: string;
+  email: string;
   password: string;
 }
 export interface AuthState {
@@ -20,16 +20,13 @@ export interface AuthAction {
 }
 
 export interface ILoginResponse {
-  access_token: string;
-  expires_in: string;
+  data: ILoginResponseData;
+  messages: Array<string>;
+  succeeded: boolean;
 }
-
-export interface ILoginError {
-  password: Array<string>;
-  email: Array<string>;
-  invalid: Array<string>;
-}
-export interface ILoginErrors {
-  errors: ILoginError;
-  status: number;
+export interface ILoginResponseData {
+  token: string;
+  refreshToken: string;
+  userImageUrl: string | null;
+  refreshTokenExpiryTime: Date;
 }

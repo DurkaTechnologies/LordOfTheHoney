@@ -14,23 +14,28 @@ import {
   Field,
   FieldProps,
 } from "formik";
+import { useActions } from "src/hooks/useActions";
 import { validationFields } from "./validation";
 
 const LoginPage = () => {
-  const initialValues: ILoginModel = { nickname: "", password: "" };
+  const initialValues: ILoginModel = { email: "", password: "" };
   const [invalid, setInvalid] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigator = useNavigate();
+
+  const { loginUser } = useActions();
 
   const handleSubmit = async (
     values: ILoginModel,
     actions: FormikHelpers<ILoginModel>
   ) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      // await LoginUser(values);
-      await navigator("/");
-    } catch (errors) {}
+      await loginUser(values);
+      navigator("/");
+    } catch (errors) {
+      setInvalid("Invalid password or email");
+    }
   };
 
   return (
@@ -39,19 +44,19 @@ const LoginPage = () => {
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        validationSchema={validationFields}
+        // validationSchema={validationFields}
       >
         {(props: FormikProps<ILoginModel>) => {
           const { values, errors, touched, handleChange, handleSubmit } = props;
           return (
             <Form onSubmit={handleSubmit}>
               <InputGroupFormik
-                label="Nickname"
-                field="nickname"
+                label="Email"
+                field="email"
                 type="text"
-                value={values.nickname}
-                error={errors.nickname}
-                touched={touched.nickname}
+                value={values.email}
+                error={errors.email}
+                touched={touched.email}
                 onChange={handleChange}
               />
               <InputGroupFormik

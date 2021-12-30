@@ -5,33 +5,34 @@ import {
   ILoginResponse,
   AuthActionTypes,
   IUser,
-  ILoginErrors,
 } from "./types";
 
 import http from "../../../http_common"; //axios
 import axios, { AxiosError } from "axios";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 // import jwt from "jsonwebtoken";
 
 export const loginUser = (data: ILoginModel) => {
   return async (dispatch: React.Dispatch<AuthAction>) => {
     try {
-      const response = await http.post<ILoginResponse>("/api/auth/login", data);
+      const response = await http.post<ILoginResponse>(
+        "/api/identity/token",
+        data
+      );
 
-      // const { access_token } = response.data;
-      // localStorage.token = access_token;
+      console.log("AAA");
+
+      const { token } = response.data.data;
+      const { refreshToken } = response.data.data;
+
+      localStorage.token = token;
+      localStorage.refreshToken = refreshToken;
 
       //Write to redux
-      // AuthUser(access_token, dispatch);
+      AuthUser(token, dispatch);
 
       return Promise.resolve();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const serverError = error as AxiosError<ILoginErrors>;
-        if (serverError && serverError.response) {
-          const { errors } = serverError.response?.data;
-          return Promise.reject(errors);
-        }
-      }
       return Promise.reject();
     }
   };
@@ -41,10 +42,27 @@ export const AuthUser = (
   token: string,
   dispatch: React.Dispatch<AuthAction>
 ) => {
-  const user = {} as IUser;
-  // const user = jwt.decode(token) as IUser;
-  dispatch({
-    type: AuthActionTypes.LOGIN_AUTH,
-    payload: user,
-  });
+  const userTmp = parseJwt(token);
+  console.log("User: ", userTmp);
+  // console.log("User.nickname: ", user.nickname);
+  // console.log("User.email: ", user.email);
+
+  // dispatch({
+  //   type: AuthActionTypes.LOGIN_AUTH,
+  //   payload: user,
+  // });
 };
+function parseJwt(token: string) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+}
