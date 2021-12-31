@@ -14,6 +14,14 @@ const Input = ({
   className = "form-control",
   type = "text",
 }: IBaseInputProps) => {
+  const [autocomplete, setAutocomplete] = React.useState<string>("off");
+
+  React.useEffect(() => {
+    if (type === "password") {
+      setAutocomplete("on");
+    }
+  });
+
   return (
     <input
       onChange={onChange}
@@ -22,6 +30,7 @@ const Input = ({
       id={field}
       type={type}
       className={className}
+      autoComplete={autocomplete}
     />
   );
 };

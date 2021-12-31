@@ -1,7 +1,9 @@
 export enum AuthActionTypes {
   LOGIN_AUTH = "LOGIN_AUTH",
+  LOGOUT_AUTH = "LOGOUT_AUTH",
 }
 export interface IUser {
+  id: string | null | undefined;
   nickname: string;
   email: string;
 }
@@ -14,9 +16,13 @@ export interface AuthState {
   isAuth: boolean;
 }
 
-export interface AuthAction {
+export interface AuthLogin {
   type: AuthActionTypes.LOGIN_AUTH;
   payload: IUser;
+}
+
+export interface AuthLogout {
+  type: AuthActionTypes.LOGOUT_AUTH;
 }
 
 export interface ILoginResponse {
@@ -30,3 +36,5 @@ export interface ILoginResponseData {
   userImageUrl: string | null;
   refreshTokenExpiryTime: Date;
 }
+
+export type AuthAction = AuthLogin | AuthLogout;

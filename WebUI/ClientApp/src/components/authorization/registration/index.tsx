@@ -101,10 +101,7 @@ const RegisterPage = () => {
                 touched={touched.confirmPassword}
                 onChange={handleChange}
               />
-              {/* <Button type="submit" label="confirm" /> */}
-              <button type="submit" disabled={loading}>
-                Confirm
-              </button>
+              <Button type="submit" label="confirm" disabled={loading} />
             </Form>
           );
         }}

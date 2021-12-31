@@ -16,6 +16,7 @@ import {
 } from "formik";
 import { useActions } from "src/hooks/useActions";
 import { validationFields } from "./validation";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const initialValues: ILoginModel = { email: "", password: "" };
@@ -32,9 +33,12 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await loginUser(values);
+      setLoading(false);
       navigator("/");
     } catch (errors) {
+      setLoading(false);
       setInvalid("Invalid password or email");
+      toast.error("Error in login values");
     }
   };
 
@@ -68,7 +72,7 @@ const LoginPage = () => {
                 touched={touched.password}
                 onChange={handleChange}
               />
-              <Button type="submit" label="confirm" />
+              <Button type="submit" label="confirm" disabled={loading} />
             </Form>
           );
         }}

@@ -4,9 +4,12 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { ApplicationState, reducers } from "./";
 
+import { loginReducer } from "../components/authorization/login/reducer";
+
 const rootReducer = combineReducers({
   ...reducers,
   router: connectRouter(history),
+  auth: loginReducer,
 });
 
 export default function configureStore(

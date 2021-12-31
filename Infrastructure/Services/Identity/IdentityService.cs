@@ -136,8 +136,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Email, user.Email),
+                new(JwtRegisteredClaimNames.UniqueName, user.Id),
+                new(JwtRegisteredClaimNames.Email, user.Email),
+                new(JwtRegisteredClaimNames.GivenName, user.UserName),
             }
             .Union(userClaims)
             .Union(roleClaims)
