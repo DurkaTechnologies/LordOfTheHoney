@@ -1,12 +1,22 @@
-import * as React from 'react';
-import { Route } from 'react-router';
-import Layout from './components/Layout';
-import Home from './components/Home';
+import * as React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
-import './custom.css'
+import HomePage from "./components/home";
+import DefaultLayout from "./components/containers/defaultLayout";
+
+import LoginPage from "./components/authorization/login";
+import RegisterPage from "./components/authorization/registration";
 
 export default () => (
-    <Layout>
-        <Route exact path='/' component={Home} />
-    </Layout>
+  <Router>
+    <Routes>
+      <Route path="/" element={<DefaultLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Route>
+    </Routes>
+    <ToastContainer pauseOnHover={false} pauseOnFocusLoss={false} />
+  </Router>
 );

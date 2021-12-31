@@ -15,6 +15,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using LordOfTheHoney.Application.Exceptions;
+using LordOfTheHoney.Application.Enums;
 
 namespace LordOfTheHoney.Infrastructure.Services.Identity
 {
@@ -42,7 +44,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return await Result<TokenResponse>.FailAsync("User Not Found.");
+                throw new NotFoundException(nameof(ApplicationUser), model.Email);
             }
             if (!user.IsActive)
             {
@@ -63,7 +65,13 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             await _userManager.UpdateAsync(user);
 
             var token = await GenerateJwtAsync(user);
-            var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, UserImageURL = user.ProfilePictureDataUrl };
+            var response = new TokenResponse 
+            { 
+                Token = token, 
+                RefreshToken = user.RefreshToken, 
+                UserImageURL = user.ProfilePictureDataUrl 
+            };
+
             return await Result<TokenResponse>.SuccessAsync(response);
         }
 
@@ -71,20 +79,39 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
         {
             if (model is null)
             {
-                return await Result<TokenResponse>.FailAsync("Invalid Client Token.");
+                throw new NotFoundException("Invalid Client Token.");
             }
-            var userPrincipal = GetPrincipalFromExpiredToken(model.Token);
+
+            ClaimsPrincipal userPrincipal;
+
+            try
+            {
+                userPrincipal = GetPrincipalFromExpiredToken(model.Token);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Invalid User Token.");
+            }
+
             var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(userEmail);
+
             if (user == null)
-                return await Result<TokenResponse>.FailAsync("User Not Found.");
+                throw new NotFoundException(nameof(ApplicationUser), userEmail);
             if (user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return await Result<TokenResponse>.FailAsync("Invalid Client Token.");
+                throw new NotFoundException("Invalid Client Token.");
+
             var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
             user.RefreshToken = GenerateRefreshToken();
             await _userManager.UpdateAsync(user);
 
-            var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, RefreshTokenExpiryTime = user.RefreshTokenExpiryTime };
+            var response = new TokenResponse 
+            { 
+                Token = token, 
+                RefreshToken = user.RefreshToken, 
+                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime 
+            };
+
             return await Result<TokenResponse>.SuccessAsync(response);
         }
 
@@ -110,9 +137,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
+                new(JwtClaimNames.Id, user.Id),
+                new(JwtClaimNames.Email, user.Email),
+                new(JwtClaimNames.Nickname, user.UserName),
             }
             .Union(userClaims)
             .Union(roleClaims)

@@ -1,12 +1,32 @@
-﻿using LordOfTheHoney.Application.Interfaces.Services;
+﻿using LordOfTheHoney.Application.Configurations;
+using LordOfTheHoney.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using WebUI;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
     internal static class ApplicationBuilderExtensions
     {
+        internal static IApplicationBuilder UseForwarding(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            AppConfiguration config = GetApplicationSettings(configuration);
+            if (config.BehindSSLProxy)
+            {
+                app.UseCors();
+                app.UseForwardedHeaders();
+            }
+
+            return app;
+        }
+
+        private static AppConfiguration GetApplicationSettings(IConfiguration configuration)
+        {
+            var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
+            return applicationSettingsConfiguration.Get<AppConfiguration>();
+        }
+
         internal static void ConfigureSwagger(this IApplicationBuilder app)
         {
             app.UseSwagger();

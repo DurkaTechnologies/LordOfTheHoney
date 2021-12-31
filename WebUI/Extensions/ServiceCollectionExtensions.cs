@@ -32,11 +32,48 @@ using LordOfTheHoney.Infrastructure.Services.Identity;
 using LordOfTheHoney.Application.Interfaces.Services.Account;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
     internal static class ServiceCollectionExtensions
     {
+        internal static IServiceCollection AddForwarding(this IServiceCollection services, IConfiguration configuration)
+        {
+            var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
+            var config = applicationSettingsConfiguration.Get<AppConfiguration>();
+            if (config.BehindSSLProxy)
+            {
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                    if (!string.IsNullOrWhiteSpace(config.ProxyIP))
+                    {
+                        var ipCheck = config.ProxyIP;
+                        if (IPAddress.TryParse(ipCheck, out var proxyIP))
+                            options.KnownProxies.Add(proxyIP);
+                        //else
+                            //Log.Logger.Warning("Invalid Proxy IP of {IpCheck}, Not Loaded", ipCheck);
+                    }
+                });
+
+                services.AddCors(options =>
+                {
+                    options.AddDefaultPolicy(
+                        builder =>
+                        {
+                            builder
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .WithOrigins(config.ApplicationUrl.TrimEnd('/'));
+                        });
+                });
+            }
+
+            return services;
+        }
         internal static async Task<IStringLocalizer> GetRegisteredServerLocalizerAsync<T>(this IServiceCollection services) where T : class
         {
             var serviceProvider = services.BuildServiceProvider();
@@ -178,22 +215,22 @@ namespace LordOfTheHoney.WebUI.Extensions
             services
                 .AddAuthentication(authentication =>
                 {
-                    authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(bearer =>
                 {
                     bearer.RequireHttpsMetadata = false;
-                    bearer.SaveToken = true;
-                    bearer.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        RoleClaimType = ClaimTypes.Role,
-                        ClockSkew = TimeSpan.Zero
-                    };
+                    //bearer.SaveToken = true;
+                    //bearer.TokenValidationParameters = new TokenValidationParameters
+                    //{
+                    //    ValidateIssuerSigningKey = true,
+                    //    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    //    ValidateIssuer = false,
+                    //    ValidateAudience = false,
+                    //    RoleClaimType = ClaimTypes.Role,
+                    //    ClockSkew = TimeSpan.Zero
+                    //};
 
                     bearer.Events = new JwtBearerEvents
                     {

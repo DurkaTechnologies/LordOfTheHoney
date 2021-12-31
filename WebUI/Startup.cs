@@ -1,5 +1,6 @@
 using LordOfTheHoney.Infrastructure.Extensions;
 using LordOfTheHoney.WebUI.Extensions;
+using LordOfTheHoney.WebUI.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            //services.AddCors();
+            services.AddForwarding(Configuration);
 
             services.AddControllersWithViews();
 
@@ -37,7 +39,7 @@ namespace WebUI
             services.AddSharedInfrastructure(Configuration);
             services.RegisterSwagger();
             services.AddInfrastructureMappings();
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
             services.AddApiVersioning(config =>
            {
                config.DefaultApiVersion = new ApiVersion(1, 0);
@@ -51,6 +53,7 @@ namespace WebUI
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +67,10 @@ namespace WebUI
             {
                 app.UseExceptionHandler("/Error");
             }
-            app.UseCors();
+
+            //app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
+
+            app.UseForwarding(Configuration);
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
