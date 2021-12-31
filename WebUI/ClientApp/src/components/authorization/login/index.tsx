@@ -48,7 +48,7 @@ const LoginPage = () => {
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        // validationSchema={validationFields}
+        validationSchema={validationFields}
       >
         {(props: FormikProps<ILoginModel>) => {
           const { values, errors, touched, handleChange, handleSubmit } = props;
