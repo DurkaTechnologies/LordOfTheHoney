@@ -5,11 +5,7 @@ export const AuthUser = (
   token: string,
   dispatch: React.Dispatch<AuthAction>
 ) => {
-  const userTmp = jwt_decode(token) as any;
-  const user: IUser = { nickname: "", email: "", id: "" };
-  user.id = userTmp.unique_name;
-  user.email = userTmp.email;
-  user.nickname = userTmp.given_name;
+  const user = jwt_decode(token) as IUser;
 
   dispatch({
     type: AuthActionTypes.LOGIN_AUTH,

@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LordOfTheHoney.Application.Exceptions;
+using LordOfTheHoney.Application.Enums;
 
 namespace LordOfTheHoney.Infrastructure.Services.Identity
 {
@@ -136,9 +137,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
 
             var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.UniqueName, user.Id),
-                new(JwtRegisteredClaimNames.Email, user.Email),
-                new(JwtRegisteredClaimNames.GivenName, user.UserName),
+                new(JwtClaimNames.Id, user.Id),
+                new(JwtClaimNames.Email, user.Email),
+                new(JwtClaimNames.Nickname, user.UserName),
             }
             .Union(userClaims)
             .Union(roleClaims)
