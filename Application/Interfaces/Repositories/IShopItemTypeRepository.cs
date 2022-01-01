@@ -1,6 +1,6 @@
 ﻿namespace LordOfTheHoney.Application.Interfaces.Repositories
 {
-    internal interface IItemTypeRepository
+    internal interface IShopItemTypeRepository
     {
     }
 }

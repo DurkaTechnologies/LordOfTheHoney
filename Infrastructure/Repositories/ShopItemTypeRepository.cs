@@ -3,11 +3,11 @@ using LordOfTheHoney.Domain.Entities.Catalog;
 
 namespace Infrastructure.Repositories
 {
-    internal class ItemTypeRepository
+    internal class ShopItemTypeRepository
     {
-        private readonly IRepositoryAsync<Item, int> repository;
+        private readonly IRepositoryAsync<ShopItem, int> repository;
 
-        public ItemTypeRepository(IRepositoryAsync<Item, int> repository)
+        public ShopItemTypeRepository(IRepositoryAsync<ShopItem, int> repository)
         {
             this.repository = repository;
         }
