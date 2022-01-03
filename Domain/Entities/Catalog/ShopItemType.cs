@@ -7,11 +7,11 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
     {
         public ShopItemType()
         {
-            Items =  new HashSet<ShopItem>();
+            ShopItems =  new HashSet<ShopItem>();
         }
 
         public string Name { get; set; }
 
-        public ICollection<ShopItem> Items { get; set; }
+        public ICollection<ShopItem> ShopItems { get; set; }
     }
 }

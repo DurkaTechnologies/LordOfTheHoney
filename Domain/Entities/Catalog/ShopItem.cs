@@ -13,9 +13,9 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
         [Column(TypeName = "text")]
         public string ImageDataURL { get; set; }
 
-        public int ItemTypeId { get; set; }
+        public int ShopItemTypeId { get; set; }
 
-        public ShopItemType ItemType { get; set; }
+        public ShopItemType ShopItemType { get; set; }
 
     }
 }

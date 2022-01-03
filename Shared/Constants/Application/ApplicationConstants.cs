@@ -17,7 +17,7 @@
         }
         public static class Cache
         {
-            public const string GetAllBrandsCacheKey = "all-brands";
+            public const string GetAllShopItemTypesCacheKey = "all-brands";
             public const string GetAllDocumentTypesCacheKey = "all-document-types";
 
             public static string GetAllEntityExtendedAttributesCacheKey(string entityFullName)

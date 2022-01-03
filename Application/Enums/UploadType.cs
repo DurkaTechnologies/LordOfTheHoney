@@ -4,8 +4,8 @@ namespace LordOfTheHoney.Application.Enums
 {
     public enum UploadType : byte
     {
-        [Description(@"Images\Products")]
-        Product,
+        [Description(@"Images\ShopItems")]
+        ShopItem,
 
         [Description(@"Images\ProfilePictures")]
         ProfilePicture,

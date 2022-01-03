@@ -1,0 +1,47 @@
+﻿using System.ComponentModel.DataAnnotations;
+using LordOfTheHoney.Shared.Wrapper;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Interfaces.Services.Shop;
+
+namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
+{
+    public partial class PatchShopItemCommand : IRequest<IResult<bool>>
+    {
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Barcode { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        public string ImageDataURL { get; set; }
+
+        [Required]
+        public decimal Rate { get; set; }
+
+        [Required]
+        public int ShopItemTypeId { get; set; }
+    }
+
+    internal class PatchShopItemCommandHandler : IRequestHandler<PatchShopItemCommand, IResult<bool>>
+    {
+        private readonly IShopItemService shopItemService;
+
+        public PatchShopItemCommandHandler(IShopItemService shopItemService)
+        {
+            this.shopItemService = shopItemService;
+        }
+
+        public async Task<IResult<bool>> Handle(PatchShopItemCommand command, CancellationToken cancellationToken)
+        {
+            var result = await shopItemService.PatchShopItemAsync(command, cancellationToken);
+            return await Result<bool>.SuccessAsync(result);
+        }
+    }
+}
