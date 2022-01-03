@@ -7,6 +7,7 @@ import { useActions } from "src/hooks/useActions";
 
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
+  const isAdmin = user?.role === "Administrator";
   const { logoutUser } = useActions();
 
   return (
@@ -33,6 +34,13 @@ const Header = () => {
                 Home
               </Link>
             </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin/product/list">
+                  Admin panel
+                </Link>
+              </li>
+            )}
           </ul>
           {isAuth ? (
             <ul className="navbar-nav">

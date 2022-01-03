@@ -129,7 +129,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             var permissionClaims = new List<Claim>();
             foreach (var role in roles)
             {
-                roleClaims.Add(new Claim(ClaimTypes.Role, role));
+                roleClaims.Add(new Claim(JwtClaimNames.Role, role));
                 var thisRole = await _roleManager.FindByNameAsync(role);
                 var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole);
                 permissionClaims.AddRange(allPermissionsForThisRoles);
