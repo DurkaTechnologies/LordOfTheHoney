@@ -2,11 +2,22 @@ import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 
+import { Constants } from "src/constants";
+import NotPermittedPage from "src/components/noMatch/NotPermission";
+
 const RoleBasedRoute = () => {
   const { user } = useTypedSelector((redux) => redux.auth);
-  const isAdmin = user?.role === "Administrator";
+  const isAdmin = user?.role === Constants.AdminRole;
 
-  return isAdmin ? <Outlet /> : <Navigate to="/login" replace />;
+  return user ? (
+    isAdmin ? (
+      <Outlet />
+    ) : (
+      <NotPermittedPage />
+    )
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 export default RoleBasedRoute;

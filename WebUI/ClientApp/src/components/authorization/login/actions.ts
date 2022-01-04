@@ -9,7 +9,8 @@ import {
 
 import http from "../../../http_common"; //axios
 import axios, { AxiosError } from "axios";
-import { AuthUser, LogoutUser } from "./service";
+
+import jwt_decode from "jwt-decode";
 
 export const loginUser = (data: ILoginModel) => {
   return async (dispatch: React.Dispatch<AuthAction>) => {
@@ -25,8 +26,13 @@ export const loginUser = (data: ILoginModel) => {
       localStorage.token = token;
       localStorage.refreshToken = refreshToken;
 
+      const user = jwt_decode(token) as IUser;
+
       //Write to redux
-      AuthUser(token, dispatch);
+      dispatch({
+        type: AuthActionTypes.LOGIN_AUTH,
+        payload: user,
+      });
 
       return Promise.resolve();
     } catch (error) {
@@ -40,7 +46,9 @@ export const logoutUser = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
 
-      LogoutUser(dispatch);
+      dispatch({
+        type: AuthActionTypes.LOGOUT_AUTH,
+      });
 
       return Promise.resolve();
     } catch (error) {

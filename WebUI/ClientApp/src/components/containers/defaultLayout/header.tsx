@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
+import { Constants } from "src/constants";
+
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
-  const isAdmin = user?.role === "Administrator";
+  const isAdmin = user?.role === Constants.AdminRole;
   const { logoutUser } = useActions();
 
   return (

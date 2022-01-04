@@ -10,8 +10,8 @@ export interface IProduct {
   name: string;
   description: string;
   barcode: string;
-  imageDataURL: string;
-  itemType?: IProductType | null | undefined;
+  imageBlob: Blob | undefined | null;
+  itemType: number;
 }
 
 export interface ProductSetAction {
@@ -38,6 +38,7 @@ export interface IProductType {
 
 export interface ProductState {
   products: Array<IProduct>;
+  types: Array<IProductType>;
 }
 
 export type ProductAction =
