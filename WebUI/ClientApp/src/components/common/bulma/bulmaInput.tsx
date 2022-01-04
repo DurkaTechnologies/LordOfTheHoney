@@ -5,7 +5,7 @@ import classNames from "classnames";
 import "bulma/css/bulma.css";
 
 export interface IBulmaInputProps {
-  value: string | number | string[] | undefined;
+  value: string | number | string[] | undefined | null;
   field: string;
   type?: "text" | "number" | "password" | "email";
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,7 +32,7 @@ const BulmaInput = ({
           name={field}
           className={classNames("input", { "is-danger": error && touched })}
           placeholder={`Input ${label}`}
-          value={value}
+          value={value ? value : ""}
           onChange={onChange}
         />
       </div>

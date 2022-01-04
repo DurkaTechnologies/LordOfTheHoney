@@ -2,7 +2,7 @@ import * as React from "react";
 import classNames from "classnames";
 
 export interface BulmaTextareaProps {
-  value: string | number | string[] | undefined;
+  value: string | number | string[] | undefined | null;
   field: string;
   type?: "text";
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -27,7 +27,7 @@ const BulmaTextarea = ({
         <textarea
           name={field}
           placeholder={`Input ${label}`}
-          value={value}
+          value={value ? value : ""}
           onChange={onChange}
           className={classNames("textarea", { "is-danger": error && touched })}
         />

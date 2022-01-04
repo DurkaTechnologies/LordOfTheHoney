@@ -21,7 +21,7 @@ const ImageInputGroup = ({
       const url = URL.createObjectURL(file);
       setImgSrc(url);
 
-      setFieldValue("imageBlob", file);
+      setFieldValue("imageSrc", file);
     }
   };
 

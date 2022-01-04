@@ -15,6 +15,7 @@ import RegisterPage from "./components/authorization/registration";
 //admin
 import ProductList from "./components/productAdmin/pages/list";
 import AddProduct from "./components/productAdmin/pages/add";
+import EditProduct from "./components/productAdmin/pages/edit";
 
 export default () => (
   <Router>
@@ -28,6 +29,7 @@ export default () => (
         <Route path="/admin" element={<RoleBasedRoute />}>
           <Route path="/admin/product/list" element={<ProductList />} />
           <Route path="/admin/product/add" element={<AddProduct />} />
+          <Route path="/admin/product/edit/*" element={<EditProduct />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>

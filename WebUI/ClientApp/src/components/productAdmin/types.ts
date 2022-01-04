@@ -7,10 +7,10 @@ export enum AuthActionTypes {
 
 export interface IProduct {
   id: number;
-  name: string;
-  description: string;
-  barcode: string;
-  imageBlob: Blob | undefined | null;
+  name: string | null;
+  description: string | null;
+  barcode?: string | undefined | null;
+  imageSrc: Blob | undefined | null | string;
   itemType: number;
 }
 

@@ -27,7 +27,7 @@ const AddProduct = () => {
     description: "",
     barcode: "",
     itemType: 0,
-    imageBlob: null,
+    imageSrc: null,
   };
   const initialUrl = "https://static.thenounproject.com/png/3752804-200.png";
 
@@ -57,7 +57,10 @@ const AddProduct = () => {
         .name.toLowerCase();
     }
 
-    return itemTypeStr.concat(":", values.name ? values.name : "noname");
+    return itemTypeStr.concat(
+      ":",
+      values.name ? values.name.toLowerCase() : "noname"
+    );
   };
 
   return (
