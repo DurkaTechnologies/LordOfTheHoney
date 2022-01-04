@@ -18,7 +18,7 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Create
         [Required]
         public string Description { get; set; }
 
-        public string ImageDataURL { get; set; }
+        public string PicturePath { get; set; }
 
         [Required]
         public decimal Rate { get; set; }

@@ -1,67 +1,33 @@
-﻿using LordOfTheHoney.Shared.Wrapper;
+﻿using Application.Interfaces.Services.Shop;
+using LordOfTheHoney.Shared.Wrapper;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Application.Features.ShopItem.Queries.GetById
 {
-    public class GetShopItemByIdQuery : IRequest<PaginatedResult<GetShopItemByIdResponse>>
+    public class GetShopItemByIdQuery : IRequest<Domain.Entities.Catalog.ShopItem>
     {
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-        public string SearchString { get; set; }
-        public string[] OrderBy { get; set; } // of the form fieldname [ascending|descending],fieldname [ascending|descending]...
-
-        public GetShopItemByIdQuery(int pageNumber, int pageSize, string searchString, string orderBy)
+        public GetShopItemByIdQuery(int id)
         {
-            PageNumber = pageNumber;
-            PageSize = pageSize;
-            SearchString = searchString;
-
-            if (!string.IsNullOrWhiteSpace(orderBy))
-            {
-                OrderBy = orderBy.Split(',');
-            }
+            Id = id;
         }
+
+        public int Id { get; set; }
     }
 
-    //internal class GetAllShopItemsQueryHandler : IRequestHandler<GetAllShopItemsQuery, PaginatedResult<GetAllPagedShopItemsResponse>>
-    //{
-    //    private readonly IUnitOfWork<int> _unitOfWork;
+    internal class GetShopItemByIdQueryHandler : IRequestHandler<GetShopItemByIdQuery, Domain.Entities.Catalog.ShopItem>
+    {
+        private readonly IShopItemService shopItemService;
 
-    //    public GetAllShopItemsQueryHandler(IUnitOfWork<int> unitOfWork)
-    //    {
-    //        _unitOfWork = unitOfWork;
-    //    }
+        public GetShopItemByIdQueryHandler(IShopItemService shopItemService)
+        {
+            this.shopItemService = shopItemService;
+        }
 
-    //    //public async Task<PaginatedResult<GetAllPagedShopItemsResponse>> Handle(GetAllShopItemsQuery request, CancellationToken cancellationToken)
-    //    //{
-    //    //    Expression<Func<ShopItem, GetAllPagedShopItemsResponse>> expression = e => new GetAllPagedShopItemsResponse
-    //    //    {
-    //    //        Id = e.Id,
-    //    //        Name = e.Name,
-    //    //        Description = e.Description,
-    //    //        Barcode = e.Barcode,
-    //    //        ShopItemTypeId = e.ShopItemTypeId
-    //    //    };
-    //    //    var productFilterSpec = new ShopItemFilterSpecification(request.SearchString);
-    //    //    if (request.OrderBy?.Any() != true)
-    //    //    {
-    //    //        var data = await _unitOfWork.Repository<ShopItem>().Entities
-    //    //           .Specify(productFilterSpec)
-    //    //           .Select(expression)
-    //    //           .ToPaginatedListAsync(request.PageNumber, request.PageSize);
-    //    //        return data;
-    //    //    }
-    //    //    else
-    //    //    {
-    //    //        var ordering = string.Join(",", request.OrderBy); // of the form fieldname [ascending|descending], ...
-    //    //        var data = await _unitOfWork.Repository<ShopItem>().Entities
-    //    //           .Specify(productFilterSpec)
-    //    //           .OrderBy(ordering) // require system.linq.dynamic.core
-    //    //           .Select(expression)
-    //    //           .ToPaginatedListAsync(request.PageNumber, request.PageSize);
-    //    //        return data;
-
-    //    //    }
-    //    //}
-    //}
+        public async Task<Domain.Entities.Catalog.ShopItem> Handle(GetShopItemByIdQuery request, CancellationToken cancellationToken)
+        {
+            return await shopItemService.GetShopItemById(request.Id, cancellationToken);
+        }
+    }
 }

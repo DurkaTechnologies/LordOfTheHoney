@@ -12,6 +12,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LordOfTheHoney.Application.Exceptions;
+using LordOfTheHoney.Shared.Wrapper;
+using Domain.Enums;
+using AutoMapper.QueryableExtensions;
+using LordOfTheHoney.Application.Extensions;
 
 namespace Infrastructure.Services.Shop
 {
@@ -71,20 +75,44 @@ namespace Infrastructure.Services.Shop
 
         public async Task<bool> DeleteShopItemByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var product = await unitOfWork.Repository<ShopItem>().GetByIdAsync(id);
-            if (product == null)
+            var shopItem = await unitOfWork.Repository<ShopItem>().GetByIdAsync(id);
+            if (shopItem == null)
             {
                 throw new NotFoundException(nameof(ShopItem), id);
             }
-            await unitOfWork.Repository<ShopItem>().DeleteAsync(product);
+            await unitOfWork.Repository<ShopItem>().DeleteAsync(shopItem);
             return await unitOfWork.Commit(cancellationToken) != 0;
         }
 
-        public Task<GetAllPagedShopItemsResponse> GetAllPagedShopItems(GetAllPagedShopItemsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResult<GetAllPagedShopItemsResponse>> GetAllPagedShopItems(GetAllPagedShopItemsQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            bool? isSortDescending = null;
+
+            if (request.SortDirection == SortDirection.Ascending)
+                isSortDescending = true;
+            else if (request.SortDirection == SortDirection.Descending)
+                isSortDescending = false;
+
+            var data = unitOfWork
+                .Repository<ShopItem>()
+                .Entities
+                .Include(element => element.ShopItemType)
+                .ProjectTo<GetAllPagedShopItemsResponse>(mapper.ConfigurationProvider);
+
+            data = isSortDescending.Value ? data.OrderByDescending(element => element.Name)
+                  : data.OrderBy(element => element.Name);
+
+            return await data.ToPaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
         }
 
-
+        public async Task<ShopItem> GetShopItemById(int id, CancellationToken cancellationToken)
+        {
+            var shopItem = await unitOfWork.Repository<ShopItem>().GetByIdAsync(id);
+            if (shopItem == null)
+            {
+                throw new NotFoundException(nameof(ShopItem), id);
+            }
+            return shopItem;
+        }
     }
 }

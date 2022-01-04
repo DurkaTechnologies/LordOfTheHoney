@@ -11,7 +11,7 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
         public string Barcode { get; set; }
 
         [Column(TypeName = "text")]
-        public string ImageDataURL { get; set; }
+        public string PicturePath { get; set; }
 
         public int ShopItemTypeId { get; set; }
 
