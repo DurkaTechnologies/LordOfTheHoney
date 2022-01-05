@@ -16,9 +16,12 @@ import { useTypedSelector } from "src/hooks/useTypedSelector";
 import ImageInputGroup from "src/components/common/imageInputGroup";
 
 import "bulma/css/bulma.css";
-import BulmaInput from "src/components/common/bulma/bulmaInput";
-import BulmaTextarea from "src/components/common/bulma/bulmaTextarea";
-import BulmaSelect from "src/components/common/bulma/bulmaSelect";
+import {
+  BulmaInput,
+  BulmaTextarea,
+  BulmaSelect,
+  BulmaButton,
+} from "src/components/common/bulma";
 import { useNavigate } from "react-router";
 import { useActions } from "src/hooks/useActions";
 
@@ -123,12 +126,25 @@ const AddProduct = () => {
 
               <div className="field is-grouped">
                 <div className="control">
-                  <button className="button is-link" type="submit">
+                  {/* <button className="button is-link" type="submit">
                     Submit
-                  </button>
+                  </button> */}
+                  <BulmaButton
+                    label="Confirm"
+                    type="submit"
+                    className="is-link"
+                  />
                 </div>
                 <div className="control">
-                  <button className="button is-link is-light">Cancel</button>
+                  {/* <button className="button is-link is-light">Cancel</button> */}
+                  <BulmaButton
+                    label="Cancel"
+                    type="submit"
+                    className="is-link is-light"
+                    onClick={() => {
+                      navigator("/admin/product/list");
+                    }}
+                  />
                 </div>
               </div>
             </Form>

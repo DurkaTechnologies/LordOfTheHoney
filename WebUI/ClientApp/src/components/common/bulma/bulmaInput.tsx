@@ -30,7 +30,11 @@ const BulmaInput = ({
         <input
           type="text"
           name={field}
-          className={classNames("input", { "is-danger": error && touched })}
+          className={classNames(
+            "input",
+            { "is-danger": error && touched },
+            { "is-success": !error && touched }
+          )}
           placeholder={`Input ${label}`}
           value={value ? value : ""}
           onChange={onChange}

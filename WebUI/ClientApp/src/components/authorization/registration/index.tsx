@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { IRegisterModel, RegisterError } from "./types";
 import { useNavigate } from "react-router";
 
-import InputGroupFormik from "../../common/inputGroupFormik";
+import { BulmaInput, BulmaButton } from "src/components/common/bulma";
 import Button from "../../common/button";
 import {
   Formik,
@@ -18,6 +18,9 @@ import { validationFields } from "./validation";
 import { registerUser } from "./service";
 
 import { toast } from "react-toastify";
+
+import { useTypedSelector } from "src/hooks/useTypedSelector";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPage = () => {
@@ -32,6 +35,9 @@ const RegisterPage = () => {
   const [serverError, setServerError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigator = useNavigate();
+  const refFormik = useRef<FormikProps<IRegisterModel>>(null);
+
+  const { isAuth } = useTypedSelector((redux) => redux.auth);
 
   const handleSubmit = async (
     values: IRegisterModel,
@@ -39,11 +45,17 @@ const RegisterPage = () => {
   ) => {
     setLoading(true);
     try {
+      if (isAuth) {
+        toast.error("Logout first");
+        clearFormik();
+        return;
+      }
       await registerUser(values);
       setLoading(false);
       toast.success(`User ${values.userName} are successfully registered`);
       navigator("/login");
     } catch (error) {
+      clearFormik();
       toast.error("Registration with errors");
       const serverErrors = error as RegisterError;
       if (serverErrors.messages) {
@@ -53,6 +65,13 @@ const RegisterPage = () => {
     }
   };
 
+  const clearFormik = () => {
+    refFormik.current?.setFieldTouched("email", false);
+    refFormik.current?.setFieldTouched("userName", false);
+    refFormik.current?.setFieldTouched("password", false);
+    refFormik.current?.setFieldTouched("password_confirmation", false);
+  };
+
   return (
     <div>
       {serverError && <div className="alert alert-danger">{serverError}</div>}
@@ -60,12 +79,13 @@ const RegisterPage = () => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationFields}
+        innerRef={refFormik}
       >
         {(props: FormikProps<IRegisterModel>) => {
           const { values, errors, touched, handleChange, handleSubmit } = props;
           return (
             <Form onSubmit={handleSubmit}>
-              <InputGroupFormik
+              <BulmaInput
                 label="Email"
                 field="email"
                 type="email"
@@ -74,7 +94,7 @@ const RegisterPage = () => {
                 touched={touched.email}
                 onChange={handleChange}
               />
-              <InputGroupFormik
+              <BulmaInput
                 label="Nickname"
                 field="userName"
                 type="text"
@@ -83,7 +103,7 @@ const RegisterPage = () => {
                 touched={touched.userName}
                 onChange={handleChange}
               />
-              <InputGroupFormik
+              <BulmaInput
                 label="Password"
                 field="password"
                 type="password"
@@ -92,7 +112,7 @@ const RegisterPage = () => {
                 touched={touched.password}
                 onChange={handleChange}
               />
-              <InputGroupFormik
+              <BulmaInput
                 label="Password confirmation"
                 field="confirmPassword"
                 type="password"
@@ -101,7 +121,13 @@ const RegisterPage = () => {
                 touched={touched.confirmPassword}
                 onChange={handleChange}
               />
-              <Button type="submit" label="confirm" disabled={loading} />
+              {/* <Button type="submit" label="confirm" disabled={loading} /> */}
+              <BulmaButton
+                label="Confirm"
+                loading={loading}
+                className="is-success"
+                type="submit"
+              />
             </Form>
           );
         }}

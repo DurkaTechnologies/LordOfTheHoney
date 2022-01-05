@@ -1,7 +1,7 @@
 import * as React from "react";
 import classNames from "classnames";
 
-export interface BulmaTextareaProps {
+export interface IBulmaTextareaProps {
   value: string | number | string[] | undefined | null;
   field: string;
   type?: "text";
@@ -19,7 +19,7 @@ const BulmaTextarea = ({
   error,
   touched,
   type = "text",
-}: BulmaTextareaProps) => {
+}: IBulmaTextareaProps) => {
   return (
     <div className="field">
       <label className="label">{label}</label>
@@ -29,7 +29,11 @@ const BulmaTextarea = ({
           placeholder={`Input ${label}`}
           value={value ? value : ""}
           onChange={onChange}
-          className={classNames("textarea", { "is-danger": error && touched })}
+          className={classNames(
+            "textarea",
+            { "is-danger": error && touched },
+            { "is-success": !error && touched }
+          )}
         />
       </div>
       {error && touched && <p className="help is-danger">{error}</p>}

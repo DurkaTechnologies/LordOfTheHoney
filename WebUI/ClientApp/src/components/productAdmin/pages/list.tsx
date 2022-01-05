@@ -7,7 +7,7 @@ import { useTypedSelector } from "src/hooks/useTypedSelector";
 
 import * as qs from "qs";
 
-import BulmaModal from "../../common/modal";
+import { BulmaModal, BulmaButton } from "../../common/bulma";
 
 import "bulma/css/bulma.css";
 
@@ -37,6 +37,7 @@ const ProductList = () => {
   return (
     <>
       <h1 className="title is-1">Product list</h1>
+
       <Link className="button is-success" to="/admin/product/add">
         Add product
       </Link>
@@ -64,6 +65,7 @@ const ProductList = () => {
                   >
                     Edit
                   </Link>
+
                   <button
                     className="button is-danger is-light ms-3"
                     onClick={() => openModal(x.id)}

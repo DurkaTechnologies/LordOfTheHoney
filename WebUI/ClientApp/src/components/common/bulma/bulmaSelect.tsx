@@ -32,7 +32,11 @@ const BulmaSelect = ({
           value={value}
           name={field}
           onChange={onChange}
-          className={classNames("input", { "is-danger": error && touched })}
+          className={classNames(
+            "input",
+            { "is-danger": error && touched },
+            { "is-success": !error && touched }
+          )}
         >
           <option disabled value="0">
             Choose item type

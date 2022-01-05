@@ -7,9 +7,12 @@ import { IProduct } from "../types";
 
 import { Formik, Form, FormikProps } from "formik";
 
-import BulmaInput from "src/components/common/bulma/bulmaInput";
-import BulmaSelect from "src/components/common/bulma/bulmaSelect";
-import BulmaTextarea from "src/components/common/bulma/bulmaTextarea";
+import {
+  BulmaInput,
+  BulmaTextarea,
+  BulmaSelect,
+  BulmaButton,
+} from "src/components/common/bulma";
 import ImageInputGroup from "src/components/common/imageInputGroup";
 
 import { validationFields } from "../validation";
@@ -103,12 +106,25 @@ const EditProduct = () => {
 
                 <div className="field is-grouped">
                   <div className="control">
-                    <button className="button is-link" type="submit">
-                      Submit
-                    </button>
+                    {/* <button className="button is-link" type="submit">
+                    Submit
+                  </button> */}
+                    <BulmaButton
+                      label="Confirm"
+                      type="submit"
+                      className="is-link"
+                    />
                   </div>
                   <div className="control">
-                    <button className="button is-link is-light">Cancel</button>
+                    {/* <button className="button is-link is-light">Cancel</button> */}
+                    <BulmaButton
+                      label="Cancel"
+                      type="submit"
+                      className="is-link is-light"
+                      onClick={() => {
+                        navigator("/admin/product/list");
+                      }}
+                    />
                   </div>
                 </div>
               </Form>
