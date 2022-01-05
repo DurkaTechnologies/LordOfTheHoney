@@ -24,11 +24,18 @@ namespace LordOfTheHoney.Infrastructure.Models.Identity
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
         public bool IsActive { get; set; }
+
         public string RefreshToken { get; set; }
+
         public DateTime RefreshTokenExpiryTime { get; set; }
+
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryFromUsers { get; set; }
+
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryToUsers { get; set; }
+
+        public decimal BeeCoins { get; set; }
 
         public ApplicationUser()
         {

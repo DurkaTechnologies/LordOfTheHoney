@@ -4,6 +4,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces.Services.Shop;
+using FluentValidation;
 
 namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
 {
@@ -17,7 +18,6 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
         [Required]
         public string Barcode { get; set; }
 
-        [Required]
         public string Description { get; set; }
 
         public string PicturePath { get; set; }
@@ -26,7 +26,18 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
         public decimal Rate { get; set; }
 
         [Required]
+        public decimal Cost { get; set; }
+
+        [Required]
         public int ShopItemTypeId { get; set; }
+    }
+
+    public class PatchShopItemCommandValidator : AbstractValidator<PatchShopItemCommand>
+    {
+        public PatchShopItemCommandValidator()
+        {
+            RuleFor(v => v.Id).NotNull();
+        }
     }
 
     internal class PatchShopItemCommandHandler : IRequestHandler<PatchShopItemCommand, IResult<bool>>

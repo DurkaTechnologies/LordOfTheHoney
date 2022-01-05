@@ -60,6 +60,7 @@ namespace LordOfTheHoney.Infrastructure
                     UserName = "durkabee",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
+                    BeeCoins = 79228162514264,
                     CreatedOn = DateTime.Now,
                     IsActive = true
                 };
@@ -107,6 +108,7 @@ namespace LordOfTheHoney.Infrastructure
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     CreatedOn = DateTime.Now,
+                    BeeCoins = 200,
                     IsActive = true
                 };
                 var basicUserInDb = await _userManager.FindByEmailAsync(basicUser.Email);

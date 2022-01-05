@@ -15,13 +15,15 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Create
         [Required]
         public string Barcode { get; set; }
 
-        [Required]
         public string Description { get; set; }
 
         public string PicturePath { get; set; }
 
         [Required]
         public decimal Rate { get; set; }
+
+        [Required]
+        public decimal Cost { get; set; }
 
         [Required]
         public int ShopItemTypeId { get; set; }

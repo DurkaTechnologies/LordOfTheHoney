@@ -140,6 +140,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                 new(JwtClaimNames.Id, user.Id),
                 new(JwtClaimNames.Email, user.Email),
                 new(JwtClaimNames.Nickname, user.UserName),
+                new(JwtClaimNames.BeeCoins, user.BeeCoins.ToString())
             }
             .Union(userClaims)
             .Union(roleClaims)

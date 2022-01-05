@@ -12,6 +12,8 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public ICollection<ShopItem> ShopItems { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Queries.GetAllPaged
 
         public SortDirection SortDirection { get; set; }
 
-        public GetAllPagedShopItemsQuery(int pageNumber, int pageSize, string searchString, string orderBy, SortDirection sortDirection)
+        public GetAllPagedShopItemsQuery(int pageNumber, int pageSize, string searchString, SortDirection sortDirection)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;

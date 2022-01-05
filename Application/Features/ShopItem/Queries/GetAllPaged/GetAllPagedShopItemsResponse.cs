@@ -12,6 +12,8 @@
 
         public string PicturePath { get; set; }
 
+        public decimal Cost { get; set; }
+
         public int ShopItemTypeId { get; set; }
     }
 }
