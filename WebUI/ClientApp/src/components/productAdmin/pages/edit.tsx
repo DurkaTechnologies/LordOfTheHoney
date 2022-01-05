@@ -20,33 +20,11 @@ import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
 const EditProduct = () => {
-  const [initialValues, setInitialValues] = React.useState<IProduct>({
-    id: 0,
-    name: "",
-    itemType: 0,
-    imageSrc: "",
-    description: "",
-    barcode: "",
-  });
-
   const navigator = useNavigate();
-  const { types } = useTypedSelector((redux) => redux.itemShop);
+  const { types, currentProduct } = useTypedSelector((redux) => redux.itemShop);
   const { editProduct } = useActions();
 
-  React.useEffect(() => {
-    const str = window.location.href.slice(
-      window.location.href.lastIndexOf("/") + 1
-    );
-    const parsed = qs.parse(str);
-    const product: IProduct = {
-      id: +(parsed.id as string),
-      name: parsed.name as string,
-      description: parsed.description as string,
-      imageSrc: parsed.imageSrc as string,
-      itemType: +(parsed.itemType as string),
-    };
-    setInitialValues(product);
-  }, []);
+  React.useEffect(() => {}, []);
 
   const handleSubmit = (values: IProduct, action: any) => {
     editProduct(values);
@@ -55,9 +33,9 @@ const EditProduct = () => {
 
   return (
     <>
-      {initialValues.id !== 0 && (
+      {currentProduct && (
         <Formik
-          initialValues={initialValues}
+          initialValues={currentProduct}
           onSubmit={handleSubmit}
           validationSchema={validationFields}
         >
@@ -100,7 +78,7 @@ const EditProduct = () => {
                 />
 
                 <ImageInputGroup
-                  initialUrl={initialValues.imageSrc as string}
+                  initialUrl={currentProduct.imageSrc as string}
                   setFieldValue={setFieldValue}
                 />
 

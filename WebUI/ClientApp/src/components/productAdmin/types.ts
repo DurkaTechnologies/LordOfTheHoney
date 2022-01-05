@@ -1,8 +1,9 @@
-export enum AuthActionTypes {
+export enum ProductActionTypes {
   PRODUCT_SET = "PRODUCT_SET",
   PRODUCT_ADD = "PRODUCT_ADD",
   PRODUCT_REMOVE = "PRODUCT_REMOVE",
   PRODUCT_EDIT = "PRODUCT_EDIT",
+  CURRENT_PRODUCT_SET = "CURRENT_PRODUCT_SET",
 }
 
 export interface IProduct {
@@ -15,19 +16,23 @@ export interface IProduct {
 }
 
 export interface ProductSetAction {
-  type: AuthActionTypes.PRODUCT_SET;
+  type: ProductActionTypes.PRODUCT_SET;
   payload: Array<IProduct>;
 }
 export interface ProductAddAction {
-  type: AuthActionTypes.PRODUCT_ADD;
+  type: ProductActionTypes.PRODUCT_ADD;
   payload: IProduct;
 }
 export interface ProductDeleteAction {
-  type: AuthActionTypes.PRODUCT_REMOVE;
+  type: ProductActionTypes.PRODUCT_REMOVE;
   payload: number;
 }
 export interface ProductEditAction {
-  type: AuthActionTypes.PRODUCT_EDIT;
+  type: ProductActionTypes.PRODUCT_EDIT;
+  payload: IProduct;
+}
+export interface ProductCurrentSet {
+  type: ProductActionTypes.CURRENT_PRODUCT_SET;
   payload: IProduct;
 }
 
@@ -39,10 +44,12 @@ export interface IProductType {
 export interface ProductState {
   products: Array<IProduct>;
   types: Array<IProductType>;
+  currentProduct: IProduct | null;
 }
 
 export type ProductAction =
   | ProductSetAction
   | ProductAddAction
   | ProductDeleteAction
-  | ProductEditAction;
+  | ProductEditAction
+  | ProductCurrentSet;

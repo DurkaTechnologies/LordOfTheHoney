@@ -1,4 +1,5 @@
-import { ProductState, ProductAction, AuthActionTypes } from "./types";
+import { string } from "yup/lib/locale";
+import { ProductState, ProductAction, ProductActionTypes } from "./types";
 
 const initialTypesState = [
   {
@@ -53,6 +54,13 @@ const initialProductState = [
 const initialState: ProductState = {
   products: initialProductState,
   types: initialTypesState,
+  currentProduct: {
+    id: 0,
+    name: "",
+    description: "",
+    imageSrc: "",
+    itemType: 0,
+  },
 };
 
 export const itemShopReducer = (
@@ -60,13 +68,13 @@ export const itemShopReducer = (
   action: ProductAction
 ) => {
   switch (action.type) {
-    case AuthActionTypes.PRODUCT_SET: {
+    case ProductActionTypes.PRODUCT_SET: {
       return {
         ...state,
         products: action.payload,
       };
     }
-    case AuthActionTypes.PRODUCT_ADD: {
+    case ProductActionTypes.PRODUCT_ADD: {
       const tmpProducts = state.products.slice();
       tmpProducts.push(action.payload);
       return {
@@ -74,13 +82,13 @@ export const itemShopReducer = (
         products: tmpProducts,
       };
     }
-    case AuthActionTypes.PRODUCT_REMOVE: {
+    case ProductActionTypes.PRODUCT_REMOVE: {
       return {
         ...state,
         products: state.products.filter((x) => x.id !== action.payload),
       };
     }
-    case AuthActionTypes.PRODUCT_EDIT: {
+    case ProductActionTypes.PRODUCT_EDIT: {
       const tmpProducts = state.products.slice();
       const indOfEl = tmpProducts.indexOf(
         tmpProducts.filter((x) => x.id === action.payload.id)[0]
@@ -89,6 +97,12 @@ export const itemShopReducer = (
       return {
         ...state,
         products: tmpProducts,
+      };
+    }
+    case ProductActionTypes.CURRENT_PRODUCT_SET: {
+      return {
+        ...state,
+        currentProduct: action.payload,
       };
     }
     default:

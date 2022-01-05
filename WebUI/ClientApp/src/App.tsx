@@ -29,7 +29,7 @@ export default () => (
         <Route path="/admin" element={<RoleBasedRoute />}>
           <Route path="/admin/product/list" element={<ProductList />} />
           <Route path="/admin/product/add" element={<AddProduct />} />
-          <Route path="/admin/product/edit/*" element={<EditProduct />} />
+          <Route path="/admin/product/edit" element={<EditProduct />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>

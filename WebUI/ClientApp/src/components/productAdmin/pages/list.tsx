@@ -10,12 +10,13 @@ import * as qs from "qs";
 import { BulmaModal, BulmaButton } from "../../common/bulma";
 
 import "bulma/css/bulma.css";
+import { IProduct } from "../types";
 
 const ProductList = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [idToDelete, setIdToDelete] = useState<number>(0);
 
-  const { getProducts, deleteProduct } = useActions();
+  const { getProducts, deleteProduct, setCurrentProduct } = useActions();
   const { products, types } = useTypedSelector((redux) => redux.itemShop);
 
   const openModal = (id: number) => {
@@ -28,6 +29,10 @@ const ProductList = () => {
   };
   const handleModalCancel = () => {
     setModalOpen(false);
+  };
+
+  const handleEditProduct = (product: IProduct) => {
+    setCurrentProduct(product);
   };
 
   useEffect(() => {
@@ -61,7 +66,8 @@ const ProductList = () => {
                 <td>
                   <Link
                     className="button is-info is-light"
-                    to={`/admin/product/edit/${qs.stringify(x)}`}
+                    to={`/admin/product/edit/`}
+                    onClick={() => handleEditProduct(x)}
                   >
                     Edit
                   </Link>
