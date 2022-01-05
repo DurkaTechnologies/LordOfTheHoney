@@ -1,4 +1,4 @@
-import { ProductState, ProductAction, IProductType } from "./types";
+import { ProductState, ProductAction, AuthActionTypes } from "./types";
 
 const initialTypesState = [
   {
@@ -60,6 +60,37 @@ export const itemShopReducer = (
   action: ProductAction
 ) => {
   switch (action.type) {
+    case AuthActionTypes.PRODUCT_SET: {
+      return {
+        ...state,
+        products: action.payload,
+      };
+    }
+    case AuthActionTypes.PRODUCT_ADD: {
+      const tmpProducts = state.products.slice();
+      tmpProducts.push(action.payload);
+      return {
+        ...state,
+        products: tmpProducts,
+      };
+    }
+    case AuthActionTypes.PRODUCT_REMOVE: {
+      return {
+        ...state,
+        products: state.products.filter((x) => x.id !== action.payload),
+      };
+    }
+    case AuthActionTypes.PRODUCT_EDIT: {
+      const tmpProducts = state.products.slice();
+      const indOfEl = tmpProducts.indexOf(
+        tmpProducts.filter((x) => x.id === action.payload.id)[0]
+      );
+      tmpProducts[indOfEl] = action.payload;
+      return {
+        ...state,
+        products: tmpProducts,
+      };
+    }
     default:
       return state;
   }

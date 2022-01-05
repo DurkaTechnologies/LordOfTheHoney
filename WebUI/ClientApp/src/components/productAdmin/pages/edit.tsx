@@ -1,41 +1,121 @@
 import * as React from "react";
-import { useState } from "react";
 import * as qs from "qs";
 
+import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { IProduct } from "../types";
 
+import { Formik, Form, FormikProps } from "formik";
+
+import BulmaInput from "src/components/common/bulma/bulmaInput";
+import BulmaSelect from "src/components/common/bulma/bulmaSelect";
+import BulmaTextarea from "src/components/common/bulma/bulmaTextarea";
+import ImageInputGroup from "src/components/common/imageInputGroup";
+
+import { validationFields } from "../validation";
+import { useTypedSelector } from "src/hooks/useTypedSelector";
+import { useActions } from "src/hooks/useActions";
+
 const EditProduct = () => {
-  const [searchParams] = useSearchParams();
+  const [initialValues, setInitialValues] = React.useState<IProduct>({
+    id: 0,
+    name: "",
+    itemType: 0,
+    imageSrc: "",
+    description: "",
+    barcode: "",
+  });
 
-  const initialValuesFromParams: IProduct = {
-    id: searchParams.get("id") ? +(searchParams?.get("id") as string) : 0,
-    name: searchParams.get("name") ? searchParams.get("name") : "",
-    description: searchParams.get("description")
-      ? searchParams.get("description")
-      : "",
-    itemType: searchParams.get("itemType")
-      ? +(searchParams?.get("itemType") as string)
-      : 0,
-    imageSrc: searchParams.get("imageSrc") ? searchParams.get("imageSrc") : "",
+  const navigator = useNavigate();
+  const { types } = useTypedSelector((redux) => redux.itemShop);
+  const { editProduct } = useActions();
+
+  React.useEffect(() => {
+    const str = window.location.href.slice(
+      window.location.href.lastIndexOf("/") + 1
+    );
+    const parsed = qs.parse(str);
+    const product: IProduct = {
+      id: +(parsed.id as string),
+      name: parsed.name as string,
+      description: parsed.description as string,
+      imageSrc: parsed.imageSrc as string,
+      itemType: +(parsed.itemType as string),
+    };
+    setInitialValues(product);
+  }, []);
+
+  const handleSubmit = (values: IProduct, action: any) => {
+    editProduct(values);
+    navigator("/admin/product/list");
   };
-
-  const [product, setProduct] = useState<IProduct>(initialValuesFromParams);
-
-  console.log(window.location.href);
-  console.log(
-    qs.parse(
-      window.location.href.slice(window.location.href.lastIndexOf("?") + 1)
-    )
-  );
 
   return (
     <>
-      <h1>edit</h1>
-      <h2>Id {product.id}</h2>
-      <h2>Name {product.name}</h2>
-      <h2> Desc {product.description}</h2>
-      <h2>barcode{product.barcode}</h2>
+      {initialValues.id !== 0 && (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationFields}
+        >
+          {(props: FormikProps<IProduct>) => {
+            const {
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+            } = props;
+            return (
+              <Form onSubmit={handleSubmit}>
+                <BulmaInput
+                  value={values.name}
+                  field="name"
+                  onChange={handleChange}
+                  label="Name"
+                  error={errors.name}
+                  touched={touched.name}
+                />
+                <BulmaTextarea
+                  value={values.description}
+                  field="description"
+                  onChange={handleChange}
+                  label="Description"
+                  error={errors.description}
+                  touched={touched.description}
+                />
+
+                <BulmaSelect
+                  value={values.itemType}
+                  field="itemType"
+                  onChange={handleChange}
+                  label="Item type"
+                  error={errors.itemType}
+                  touched={touched.itemType}
+                  values={types}
+                />
+
+                <ImageInputGroup
+                  initialUrl={initialValues.imageSrc as string}
+                  setFieldValue={setFieldValue}
+                />
+
+                <div className="field is-grouped">
+                  <div className="control">
+                    <button className="button is-link" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                  <div className="control">
+                    <button className="button is-link is-light">Cancel</button>
+                  </div>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
+      )}
     </>
   );
 };

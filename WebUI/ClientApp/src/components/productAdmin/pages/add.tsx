@@ -19,6 +19,8 @@ import "bulma/css/bulma.css";
 import BulmaInput from "src/components/common/bulma/bulmaInput";
 import BulmaTextarea from "src/components/common/bulma/bulmaTextarea";
 import BulmaSelect from "src/components/common/bulma/bulmaSelect";
+import { useNavigate } from "react-router";
+import { useActions } from "src/hooks/useActions";
 
 const AddProduct = () => {
   const initialValues: IProduct = {
@@ -33,12 +35,16 @@ const AddProduct = () => {
 
   // const [product, setProduct] = React.useState<IProduct>(initialValues);
   const { types } = useTypedSelector((redux) => redux.itemShop);
+  const { addProduct } = useActions();
+  const navigator = useNavigate();
 
   React.useEffect(() => {}, []);
 
   const handleSubmit = (values: IProduct, actions: FormikHelpers<IProduct>) => {
     values.barcode = generateBarcode(values);
-    console.log("Product: ", values);
+    // console.log("Product: ", values);
+    addProduct(values);
+    navigator("/admin/product/list");
   };
 
   // const handleChange = (event: React.ChangeEvent<any>) => {
