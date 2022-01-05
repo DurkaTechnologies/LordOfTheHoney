@@ -36,6 +36,11 @@ const Header = () => {
                 Home
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/shop">
+                Shop
+              </Link>
+            </li>
             {isAdmin && (
               <li className="nav-item">
                 <Link className="nav-link" to="/admin/product/list">
