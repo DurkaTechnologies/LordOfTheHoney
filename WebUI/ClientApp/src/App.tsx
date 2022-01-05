@@ -19,6 +19,7 @@ import EditProduct from "./components/productAdmin/pages/edit";
 
 //shop
 import Shop from "./components/shop";
+import ItemCart from "./components/shop/cart/pages";
 
 export default () => (
   <Router>
@@ -35,6 +36,7 @@ export default () => (
           <Route path="/admin/product/edit" element={<EditProduct />} />
         </Route>
         <Route path="/shop" element={<Shop />}></Route>
+        <Route path="/shop/cart" element={<ItemCart />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

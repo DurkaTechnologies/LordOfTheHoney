@@ -57,6 +57,11 @@ const Header = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/shop/cart">
+                  Cart
+                </Link>
+              </li>
+              <li className="nav-item">
                 <button className="button is-white" onClick={logoutUser}>
                   Logout
                 </button>

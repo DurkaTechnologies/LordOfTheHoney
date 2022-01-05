@@ -10,7 +10,13 @@ const ButtonCart = ({ onChange }: IButtonCartProps) => {
   const [cartBtnIcon, setCartIcon] = useState<string>("shopping_cart");
 
   return (
-    <button className="button is-primary" onClick={() => setCartIcon("check")}>
+    <button
+      className="button is-primary"
+      onClick={() => {
+        setCartIcon("check");
+        onChange();
+      }}
+    >
       <span className="material-icons-outlined">{cartBtnIcon}</span>
     </button>
   );

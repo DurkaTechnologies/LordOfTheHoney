@@ -2,12 +2,19 @@ import * as React from "react";
 import { useState } from "react";
 
 import { useTypedSelector } from "src/hooks/useTypedSelector";
+import { useActions } from "src/hooks/useActions";
 
 import { BulmaButton } from "../common/bulma";
 import ButtonCart from "./buttonCart";
+import { IProduct } from "../productAdmin/types";
 
 const Shop = () => {
   const { products, types } = useTypedSelector((redux) => redux.itemShop);
+  const { cartAddProduct } = useActions();
+
+  const handleCartAdd = (productId: number) => {
+    cartAddProduct({ productId, quantity: 1 });
+  };
 
   return (
     <>
@@ -39,7 +46,11 @@ const Shop = () => {
                         className="is-success me-3 px-5"
                         type="button"
                       />
-                      <ButtonCart onChange={() => {}} />
+                      <ButtonCart
+                        onChange={() => {
+                          handleCartAdd(x.id);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
