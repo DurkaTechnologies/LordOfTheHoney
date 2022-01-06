@@ -23,9 +23,6 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
         public string PicturePath { get; set; }
 
         [Required]
-        public decimal Rate { get; set; }
-
-        [Required]
         public decimal Cost { get; set; }
 
         [Required]

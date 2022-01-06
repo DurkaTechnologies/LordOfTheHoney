@@ -24,6 +24,7 @@ import {
 } from "src/components/common/bulma";
 import { useNavigate } from "react-router";
 import { useActions } from "src/hooks/useActions";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
   const initialValues: IProduct = {
@@ -31,38 +32,47 @@ const AddProduct = () => {
     name: "",
     description: "",
     barcode: "",
-    itemType: 0,
-    imageSrc: null,
+    shopItemTypeId: 0,
+    picturePath: null,
+    cost: 0,
   };
   const initialUrl = "https://static.thenounproject.com/png/3752804-200.png";
 
   // const [product, setProduct] = React.useState<IProduct>(initialValues);
   const { types } = useTypedSelector((redux) => redux.itemShop);
-  const { addProduct } = useActions();
+  const { addProduct, getProductTypes } = useActions();
   const navigator = useNavigate();
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    async function fetch() {
+      try {
+        await getProductTypes();
+      } catch (error) {
+        toast.error(error as string);
+      }
+    }
+    fetch();
+  }, []);
 
   const handleSubmit = (values: IProduct, actions: FormikHelpers<IProduct>) => {
-    values.barcode = generateBarcode(values);
-    // console.log("Product: ", values);
-    addProduct(values);
-    navigator("/admin/product/list");
+    async function add() {
+      try {
+        values.barcode = generateBarcode(values);
+        await addProduct(values);
+        toast.success(`Product ${values.name} was successfully added`);
+        navigator("/admin/product/list");
+      } catch (error) {
+        toast.error(error as string);
+      }
+    }
+    add();
   };
-
-  // const handleChange = (event: React.ChangeEvent<any>) => {
-  //   //HTMLInputElement
-  //   setProduct({
-  //     ...product,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
 
   const generateBarcode = (values: IProduct) => {
     let itemTypeStr = "notype";
-    if (values.itemType) {
+    if (values.shopItemTypeId) {
       itemTypeStr = types
-        .filter((x) => x.id == values.itemType)[0]
+        .filter((x) => x.id == values.shopItemTypeId)[0]
         .name.toLowerCase();
     }
 
@@ -100,6 +110,14 @@ const AddProduct = () => {
                 error={errors.name}
                 touched={touched.name}
               />
+              <BulmaInput
+                value={values.cost}
+                field="cost"
+                onChange={handleChange}
+                label="Cost"
+                error={errors.cost}
+                touched={touched.cost}
+              />
               <BulmaTextarea
                 value={values.description}
                 field="description"
@@ -110,12 +128,12 @@ const AddProduct = () => {
               />
 
               <BulmaSelect
-                value={values.itemType}
-                field="itemType"
+                value={values.shopItemTypeId}
+                field="shopItemTypeId"
                 onChange={handleChange}
                 label="Item type"
-                error={errors.itemType}
-                touched={touched.itemType}
+                error={errors.shopItemTypeId}
+                touched={touched.shopItemTypeId}
                 values={types}
               />
 

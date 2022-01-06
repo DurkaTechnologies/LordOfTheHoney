@@ -33,8 +33,8 @@ const Shop = () => {
                     />
                     <p className="title is-4 text-center">{x.name}</p>
                     <p className="subtitle is-5 text-center">
-                      {types.filter((t) => t.id == x.itemType)[0]
-                        ? types.filter((t) => t.id == x.itemType)[0].name
+                      {types.filter((t) => t.id == x.shopItemTypeId)[0]
+                        ? types.filter((t) => t.id == x.shopItemTypeId)[0].name
                         : "Undefined type"}
                     </p>
                     <div className="d-flex align-items-start w-100">

@@ -6,26 +6,30 @@ const initialTypesState = [
   {
     id: 1,
     name: "Honeycomb",
+    description: "Honeycomb",
   },
   {
     id: 2,
     name: "Tools",
+    description: "Tools",
   },
   {
     id: 3,
     name: "Bee's",
+    description: "Bee's",
   },
 ];
 
 const initialState: ProductState = {
-  products: initialProductState,
-  types: initialTypesState,
+  products: [],
+  types: [],
   currentProduct: {
     id: 0,
     name: "",
     description: "",
-    imageSrc: "",
-    itemType: 0,
+    picturePath: "",
+    shopItemTypeId: 0,
+    cost: 0,
   },
 };
 
@@ -69,6 +73,12 @@ export const itemShopReducer = (
       return {
         ...state,
         currentProduct: action.payload,
+      };
+    }
+    case ProductActionTypes.PRODUCT_TYPES_SET: {
+      return {
+        ...state,
+        types: action.payload,
       };
     }
     default:

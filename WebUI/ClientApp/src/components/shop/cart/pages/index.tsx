@@ -57,7 +57,7 @@ const ItemCart = () => {
                 <td>
                   {
                     types.filter(
-                      (t) => t.id == getProductById(x.productId).itemType
+                      (t) => t.id == getProductById(x.productId).shopItemTypeId
                     )[0].name
                   }
                 </td>
