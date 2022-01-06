@@ -2,7 +2,8 @@ import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import RoleBasedRoute from "./routing/roleBasedRoute";
+import AdminBasedRoute from "./routing/roleBasedRoute";
+import AuthorizedRoute from "./routing/authorizedRoute";
 
 import NotFoundPage from "./components/noMatch/NotFound";
 
@@ -25,19 +26,21 @@ export default () => (
   <Router>
     <Routes>
       <Route path="/" element={<DefaultLayout />}>
-        <Route index element={<HomePage />} />
         //login
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        //admin
-        <Route path="/admin" element={<RoleBasedRoute />}>
-          <Route path="/admin/product/list" element={<ProductList />} />
-          <Route path="/admin/product/add" element={<AddProduct />} />
-          <Route path="/admin/product/edit" element={<EditProduct />} />
+        <Route element={<AuthorizedRoute />}>
+          <Route index element={<HomePage />} />
+          //admin
+          <Route path="/admin" element={<AdminBasedRoute />}>
+            <Route path="/admin/product/list" element={<ProductList />} />
+            <Route path="/admin/product/add" element={<AddProduct />} />
+            <Route path="/admin/product/edit" element={<EditProduct />} />
+          </Route>
+          <Route path="/shop" element={<Shop />}></Route>
+          <Route path="/shop/cart" element={<ItemCart />}></Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
-        <Route path="/shop" element={<Shop />}></Route>
-        <Route path="/shop/cart" element={<ItemCart />}></Route>
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
     <ToastContainer pauseOnHover={false} pauseOnFocusLoss={false} />

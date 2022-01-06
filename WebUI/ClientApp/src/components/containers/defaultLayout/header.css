@@ -1,0 +1,37 @@
+.element {
+  background-color: rgba(222, 222, 222, 0.3);
+  border-radius: 10%;
+  padding: 15px;
+  margin-top: 32px;
+}
+
+.rightElement {
+  margin-right: 32px;
+}
+.leftElement {
+  margin-left: 32px;
+}
+
+.btnOption {
+  border-radius: 10%;
+  background-color: rgba(200, 200, 200, 0.5);
+  display: inline-block;
+  height: 50px;
+  margin: auto 10px;
+}
+.btnOption:hover {
+  cursor: pointer;
+  background-color: rgba(180, 180, 180, 0.5);
+}
+
+.pt-48 {
+  font-size: 40px;
+}
+.color-inherit {
+  color: inherit;
+  text-decoration: inherit;
+}
+.headerName {
+  font-size: 26px;
+  margin: auto 30px auto 0px;
+}

@@ -28,7 +28,7 @@ const BulmaInput = ({
       <label className="label">{label}</label>
       <div className="control">
         <input
-          type="text"
+          type={type}
           name={field}
           className={classNames(
             "input",

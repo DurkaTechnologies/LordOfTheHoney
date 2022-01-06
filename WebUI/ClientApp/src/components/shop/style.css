@@ -1,0 +1,10 @@
+.color-inherit {
+  color: inherit;
+  text-decoration: inherit;
+}
+.pt-48 {
+  font-size: 48px;
+}
+.white-color {
+  color: white !important;
+}
