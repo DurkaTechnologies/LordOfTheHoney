@@ -7,6 +7,7 @@
         public string Email { get; set; }
         public bool IsActive { get; set; } = true;
         public bool EmailConfirmed { get; set; }
+        public decimal BeeCoins { get; set; }
         public string ProfilePictureDataUrl { get; set; }
     }
 }

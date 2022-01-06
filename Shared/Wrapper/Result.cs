@@ -9,9 +9,13 @@ namespace LordOfTheHoney.Shared.Wrapper
         {
         }
 
+        public bool Failed => !Succeeded;
+
         public List<string> Messages { get; set; } = new List<string>();
 
         public bool Succeeded { get; set; }
+
+        public string Type { get; set; }
 
         public static IResult Fail()
         {
@@ -26,6 +30,16 @@ namespace LordOfTheHoney.Shared.Wrapper
         public static IResult Fail(List<string> messages)
         {
             return new Result { Succeeded = false, Messages = messages };
+        }
+
+        public static IResult Fail(string message, string type = default)
+        {
+            return new Result { Succeeded = false, Messages = new List<string> { message }, Type = type };
+        }
+
+        public static IResult Fail(List<string> messages, string type = default)
+        {
+            return new Result { Succeeded = false, Messages = messages, Type = type };
         }
 
         public static Task<IResult> FailAsync()
