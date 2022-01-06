@@ -34,6 +34,13 @@ using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Application.Interfaces.Services.Shop;
+using LordOfTheHoney.Application.Interfaces.Repositories;
+using LordOfTheHoney.Infrastructure.Repositories;
+using Infrastructure.Services.Shop;
+using MediatR;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
@@ -91,6 +98,17 @@ namespace LordOfTheHoney.WebUI.Extensions
             return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
 
+        public static IApplicationBuilder UseExceptionHandling(
+            this IApplicationBuilder app,
+            IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            return app;
+        }
 
         internal static void RegisterSwagger(this IServiceCollection services)
         {
@@ -125,33 +143,31 @@ namespace LordOfTheHoney.WebUI.Extensions
                         Url = new Uri("https://opensource.org/licenses/MIT")
                     }
                 });
-
-
-                //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                //{
-                //    Name = "Authorization",
-                //    In = ParameterLocation.Header,
-                //    Type = SecuritySchemeType.ApiKey,
-                //    Scheme = "Bearer",
-                //    BearerFormat = "JWT",
-                //    Description = "Input your Bearer token in this format - Bearer {your token here} to access this API",
-                //});
-                //c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                Type = ReferenceType.SecurityScheme,
-                //                Id = "Bearer",
-                //            },
-                //            Scheme = "Bearer",
-                //            Name = "Bearer",
-                //            In = ParameterLocation.Header,
-                //        }, new List<string>()
-                //    },
-                //});
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    Description = "Input your Bearer token in this format - Bearer {your token here} to access this API",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
+                            },
+                            Scheme = "Bearer",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        }, new List<string>()
+                    },
+                });
             });
         }
 
@@ -198,6 +214,13 @@ namespace LordOfTheHoney.WebUI.Extensions
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>));
+            services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddScoped<IShopItemService, ShopItemService>();
+            services.AddTransient<IShopItemTypeService, ShopItemTypeService>();
+            services.AddMediatR(typeof(ShopItemService).Assembly);
+
             return services;
         }
 
@@ -215,58 +238,47 @@ namespace LordOfTheHoney.WebUI.Extensions
             services
                 .AddAuthentication(authentication =>
                 {
-                    //authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(bearer =>
+                .AddJwtBearer(async bearer =>
                 {
                     bearer.RequireHttpsMetadata = false;
-                    //bearer.SaveToken = true;
-                    //bearer.TokenValidationParameters = new TokenValidationParameters
-                    //{
-                    //    ValidateIssuerSigningKey = true,
-                    //    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    //    ValidateIssuer = false,
-                    //    ValidateAudience = false,
-                    //    RoleClaimType = ClaimTypes.Role,
-                    //    ClockSkew = TimeSpan.Zero
-                    //};
+                    bearer.SaveToken = true;
+                    bearer.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RoleClaimType = ClaimTypes.Role,
+                        ClockSkew = TimeSpan.Zero
+                    };
 
                     bearer.Events = new JwtBearerEvents
                     {
-                        OnAuthenticationFailed = c =>
+                        OnAuthenticationFailed = context =>
                         {
-                            if (c.Exception is SecurityTokenExpiredException)
-                            {
-                                c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                                c.Response.ContentType = "application/json";
-                                var result = JsonConvert.SerializeObject(Result.Fail("The Token is expired."));
-                                return c.Response.WriteAsync(result);
-                            }
-                            else
-                            {
-                                c.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                                c.Response.ContentType = "application/json";
-                                var result = JsonConvert.SerializeObject(Result.Fail("An unhandled error has occurred."));
-                                return c.Response.WriteAsync(result);
-                            }
+                            context.NoResult();
+                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                            context.Response.ContentType = "text/plain";
+                            return context.Response.WriteAsync(context?.Exception?.ToString());
                         },
                         OnChallenge = context =>
                         {
                             context.HandleResponse();
                             if (!context.Response.HasStarted)
                             {
-                                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                                 context.Response.ContentType = "application/json";
                                 var result = JsonConvert.SerializeObject(Result.Fail("You are not Authorized."));
                                 return context.Response.WriteAsync(result);
                             }
-
                             return Task.CompletedTask;
                         },
                         OnForbidden = context =>
                         {
-                            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
                             context.Response.ContentType = "application/json";
                             var result = JsonConvert.SerializeObject(Result.Fail("You are not authorized to access this resource."));
                             return context.Response.WriteAsync(result);

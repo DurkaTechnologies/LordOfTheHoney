@@ -11,12 +11,5 @@ namespace LordOfTheHoney.Infrastructure.Extensions
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
-
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
-        {
-            return services
-                .AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>))
-                .AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-        }
     }
 }

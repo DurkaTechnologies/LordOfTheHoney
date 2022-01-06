@@ -86,7 +86,7 @@ namespace LordOfTheHoney.Application.Extensions
             }
 
             if (validationFailures != null)
-                throw new Interfaces.Exceptions.ValidationException(validationFailures);
+                throw new ValidationException(validationFailures);
 
             return count > 0 ? source.Provider.CreateQuery<T>(expression) : source;
         }

@@ -29,8 +29,8 @@ namespace LordOfTheHoney.WebUI.Controllers.Shop
         }
 
         [HttpPost("CreateShopItem")]
-        [Authorize(Policy = Permissions.ShopItems.Create)]
-        public async Task<IActionResult> CreateProductUnitByNames(CreateShopItemCommand command)
+        //[Authorize(Policy = Permissions.ShopItems.Create)]
+        public async Task<IActionResult> CreateShopItem(CreateShopItemCommand command)
         {
             return Ok(await mediator.Send(command));
         }
@@ -46,7 +46,7 @@ namespace LordOfTheHoney.WebUI.Controllers.Shop
 
         [HttpGet("GetShopItemById")]
         [Authorize(Policy = Permissions.ShopItems.View)]
-        public async Task<IActionResult> GetShopItemByIdQuery(int id)
+        public async Task<IActionResult> GetShopItemById(int id)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace LordOfTheHoney.WebUI.Controllers.Shop
 
         [HttpPatch]
         [Authorize(Policy = Permissions.ShopItems.Edit)]
-        public async Task<IActionResult> PatchProductUnitOwner(PatchShopItemCommand command)
+        public async Task<IActionResult> PatchShopItemById(PatchShopItemCommand command)
         {
             try
             {

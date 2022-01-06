@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using WebUI;
+using Swashbuckle.AspNetCore.Swagger;
+using LordOfTheHoney.Shared.Constants.Permission;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
@@ -27,8 +29,12 @@ namespace LordOfTheHoney.WebUI.Extensions
             return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
 
-        internal static void ConfigureSwagger(this IApplicationBuilder app)
+        internal static void ConfigureSwagger(this IApplicationBuilder app, bool useSwaggerMiddleware = false)
         {
+            if (useSwaggerMiddleware)
+            {
+                app.UseMiddleware<SwaggerMiddleware>(Permissions.Swagger.View);
+            }
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
@@ -41,7 +47,6 @@ namespace LordOfTheHoney.WebUI.Extensions
         internal static IApplicationBuilder UseEndpoints(this IApplicationBuilder app)
             => app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
 

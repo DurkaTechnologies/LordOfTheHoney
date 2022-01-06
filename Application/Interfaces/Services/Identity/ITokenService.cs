@@ -2,6 +2,8 @@
 using LordOfTheHoney.Application.Requests.Identity;
 using LordOfTheHoney.Application.Responses.Identity;
 using LordOfTheHoney.Shared.Wrapper;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Application.Interfaces.Services.Identity
@@ -11,5 +13,9 @@ namespace LordOfTheHoney.Application.Interfaces.Services.Identity
         Task<Result<TokenResponse>> LoginAsync(TokenRequest model);
 
         Task<Result<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest model);
+
+        Task<string> GetUserNameAsync(string userId);
+
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }

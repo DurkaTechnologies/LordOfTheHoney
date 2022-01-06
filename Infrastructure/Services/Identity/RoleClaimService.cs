@@ -29,11 +29,11 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             _db = db;
         }
 
-        public async Task<Result<List<RoleClaimResponse>>> GetAllAsync()
+        public async Task<Result<List<RoleClaimsResponse>>> GetAllAsync()
         {
             var roleClaims = await _db.RoleClaims.ToListAsync();
-            var roleClaimsResponse = _mapper.Map<List<RoleClaimResponse>>(roleClaims);
-            return await Result<List<RoleClaimResponse>>.SuccessAsync(roleClaimsResponse);
+            var roleClaimsResponse = _mapper.Map<List<RoleClaimsResponse>>(roleClaims);
+            return await Result<List<RoleClaimsResponse>>.SuccessAsync(roleClaimsResponse);
         }
 
         public async Task<int> GetCountAsync()
@@ -42,22 +42,22 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             return count;
         }
 
-        public async Task<Result<RoleClaimResponse>> GetByIdAsync(int id)
+        public async Task<Result<RoleClaimsResponse>> GetByIdAsync(int id)
         {
             var roleClaim = await _db.RoleClaims
                 .SingleOrDefaultAsync(x => x.Id == id);
-            var roleClaimResponse = _mapper.Map<RoleClaimResponse>(roleClaim);
-            return await Result<RoleClaimResponse>.SuccessAsync(roleClaimResponse);
+            var RoleClaimsResponse = _mapper.Map<RoleClaimsResponse>(roleClaim);
+            return await Result<RoleClaimsResponse>.SuccessAsync(RoleClaimsResponse);
         }
 
-        public async Task<Result<List<RoleClaimResponse>>> GetAllByRoleIdAsync(string roleId)
+        public async Task<Result<List<RoleClaimsResponse>>> GetAllByRoleIdAsync(string roleId)
         {
             var roleClaims = await _db.RoleClaims
                 .Include(x => x.Role)
                 .Where(x => x.RoleId == roleId)
                 .ToListAsync();
-            var roleClaimsResponse = _mapper.Map<List<RoleClaimResponse>>(roleClaims);
-            return await Result<List<RoleClaimResponse>>.SuccessAsync(roleClaimsResponse);
+            var roleClaimsResponse = _mapper.Map<List<RoleClaimsResponse>>(roleClaims);
+            return await Result<List<RoleClaimsResponse>>.SuccessAsync(roleClaimsResponse);
         }
 
         public async Task<Result<string>> SaveAsync(RoleClaimRequest request)

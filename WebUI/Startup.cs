@@ -1,13 +1,19 @@
+using LordOfTheHoney.Application.Configurations;
+using LordOfTheHoney.Application.Extensions;
 using LordOfTheHoney.Infrastructure.Extensions;
 using LordOfTheHoney.WebUI.Extensions;
 using LordOfTheHoney.WebUI.Filters;
+using LordOfTheHoney.WebUI.Middlewares;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace WebUI
 {
@@ -23,69 +29,53 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddCors();
-            services.AddForwarding(Configuration);
-
-            services.AddControllersWithViews();
-
-            services.AddCurrentUserService();
+            var serviceProviderScope = services!.BuildServiceProvider()!.CreateScope();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new ApiExceptionFilterAttribute());
+                options.Filters.Add(new AuthorizeFilter());
+            });
+            services.AddLazyCache();
             services.AddDatabase(Configuration);
             services.AddIdentity();
             services.AddJwtAuthentication(services.GetApplicationSettings(Configuration));
-            //services.AddApplicationLayer();
+            services.AddCurrentUserService();
+            services.AddApplicationLayer();
             services.AddApplicationServices();
-            services.AddRepositories();
-
             services.AddSharedInfrastructure(Configuration);
             services.RegisterSwagger();
             services.AddInfrastructureMappings();
-            services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
+            services.AddControllers();
             services.AddApiVersioning(config =>
-           {
-               config.DefaultApiVersion = new ApiVersion(1, 0);
-               config.AssumeDefaultVersionWhenUnspecified = true;
-               config.ReportApiVersions = true;
-           });
-            services.AddLazyCache();
-
-            // In production, the React files will be served from this directory
+            {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+            });
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
-
+            //services.AddCors();
+            //services.AddForwarding(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IOptions<AppConfiguration> appConfiguration, IMediator mediator)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-            }
-
-            //app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
-
-            app.UseForwarding(Configuration);
-
+            app.UseExceptionHandling(env);
+            app.UseHttpsRedirection();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseRouting();
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints();
+            app.ConfigureSwagger(false);
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
-            app.ConfigureSwagger();
             app.Initialize(Configuration);
 
             app.UseSpa(spa =>
@@ -97,6 +87,7 @@ namespace WebUI
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+            //app.UseForwarding(Configuration);
         }
     }
 }

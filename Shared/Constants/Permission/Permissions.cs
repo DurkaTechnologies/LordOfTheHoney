@@ -6,6 +6,19 @@ namespace LordOfTheHoney.Shared.Constants.Permission
 {
     public static class Permissions
     {
+        public static class Swagger
+        {
+            public const string View = "Permissions.Swagger.View";
+        }
+
+        public static class Messages
+        {
+            public const string View = "Permissions.Messages.View";
+            public const string Create = "Permissions.Messages.Create";
+            public const string Edit = "Permissions.Messages.Edit";
+            public const string Delete = "Permissions.Messages.Delete";
+        }
+
         public static class ShopItems
         {
             public const string View = "Permissions.ShopItems.View";
