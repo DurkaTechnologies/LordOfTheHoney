@@ -12,7 +12,7 @@ namespace LordOfTheHoney.Infrastructure.Helpers
 {
     public static class ClaimsHelper
     {
-        public static void GetAllPermissions(this List<RoleClaimResponse> allPermissions)
+        public static void GetAllPermissions(this List<RoleClaimsResponse> allPermissions)
         {
             var modules = typeof(Permissions).GetNestedTypes();
 
@@ -25,7 +25,7 @@ namespace LordOfTheHoney.Infrastructure.Helpers
                     var propertyValue = fi.GetValue(null);
 
                     if (propertyValue is not null)
-                        allPermissions.Add(new RoleClaimResponse { Value = propertyValue.ToString(), Type = ApplicationClaimTypes.Permission, Group = module.Name });
+                        allPermissions.Add(new RoleClaimsResponse { Value = propertyValue.ToString(), Type = ApplicationClaimTypes.Permission, Group = module.Name });
                     //TODO - take descriptions from description attribute
                 }
             }

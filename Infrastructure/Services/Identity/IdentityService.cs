@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LordOfTheHoney.Application.Exceptions;
 using LordOfTheHoney.Application.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace LordOfTheHoney.Infrastructure.Services.Identity
 {
@@ -140,6 +141,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                 new(JwtClaimNames.Id, user.Id),
                 new(JwtClaimNames.Email, user.Email),
                 new(JwtClaimNames.Nickname, user.UserName),
+                new(JwtClaimNames.BeeCoins, user.BeeCoins.ToString())
             }
             .Union(userClaims)
             .Union(roleClaims)
@@ -167,7 +169,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             return encryptedToken;
         }
 
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -193,6 +195,15 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
         {
             var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
             return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
+        }
+
+        public async Task<string> GetUserNameAsync(string userId)
+        {
+            var user = await _userManager
+                .Users
+                .FirstAsync(u => u.Id == userId);
+
+            return user.UserName;
         }
     }
 }

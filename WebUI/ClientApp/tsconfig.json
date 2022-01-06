@@ -18,15 +18,7 @@
     ],
     "skipLibCheck": false,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./",
-    "paths": {
-      "crypto": [
-        "../../node_modules/crypto-js"
-      ],
-      "stream": [
-        "node_modules/stream-browserify"
-      ]
-    }
+    "baseUrl": "./"
   },
   "include": [
     "src"

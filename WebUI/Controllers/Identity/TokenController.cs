@@ -2,11 +2,13 @@
 using LordOfTheHoney.Application.Interfaces.Services.Identity;
 using LordOfTheHoney.Application.Requests.Identity;
 using LordOfTheHoney.Shared.Wrapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Server.Controllers.Identity
 {
+    [Authorize]
     [Route("api/identity/token")]
     [ApiController]
     public class TokenController : ControllerBase
@@ -26,6 +28,7 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// <returns>Status 400 BadRequest</returns>
         /// <returns>Status 404 Not Found</returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Get(TokenRequest model)
         {
             var response = await _identityService.LoginAsync(model);
@@ -42,6 +45,7 @@ namespace LordOfTheHoney.Server.Controllers.Identity
         /// <returns>Status 200 OK</returns>
         /// <returns>Status 404 Not Found</returns>
         [HttpPost("refresh")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result>> Refresh([FromBody] RefreshTokenRequest model)
         {
             return await _identityService.GetRefreshTokenAsync(model);

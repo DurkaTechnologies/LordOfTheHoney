@@ -1,6 +1,6 @@
 ﻿namespace LordOfTheHoney.Application.Responses.Identity
 {
-    public class RoleClaimResponse
+    public class RoleClaimsResponse
     {
         public int Id { get; set; }
         public string RoleId { get; set; }

@@ -7,15 +7,17 @@ namespace LordOfTheHoney.Domain.Entities.Catalog
     public class ShopItem : AuditableEntity<int>, IItem
     {
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public string Barcode { get; set; }
 
-        [Column(TypeName = "text")]
-        public string ImageDataURL { get; set; }
+        public string PicturePath { get; set; }
 
-        public int ItemTypeId { get; set; }
+        public decimal Cost { get; set; }
 
-        public ShopItemType ItemType { get; set; }
+        public int ShopItemTypeId { get; set; }
 
+        public ShopItemType ShopItemType { get; set; }
     }
 }

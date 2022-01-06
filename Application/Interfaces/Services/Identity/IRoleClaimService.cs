@@ -9,13 +9,13 @@ namespace LordOfTheHoney.Application.Interfaces.Services.Identity
 {
     public interface IRoleClaimService : IService
     {
-        Task<Result<List<RoleClaimResponse>>> GetAllAsync();
+        Task<Result<List<RoleClaimsResponse>>> GetAllAsync();
 
         Task<int> GetCountAsync();
 
-        Task<Result<RoleClaimResponse>> GetByIdAsync(int id);
+        Task<Result<RoleClaimsResponse>> GetByIdAsync(int id);
 
-        Task<Result<List<RoleClaimResponse>>> GetAllByRoleIdAsync(string roleId);
+        Task<Result<List<RoleClaimsResponse>>> GetAllByRoleIdAsync(string roleId);
 
         Task<Result<string>> SaveAsync(RoleClaimRequest request);
 
