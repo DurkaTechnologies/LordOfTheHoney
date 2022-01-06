@@ -7,7 +7,7 @@ const DefaultLayout = () => {
   return (
     <>
       <Header />
-      <div className="container">
+      <div className="container-fluid">
         <Outlet />
       </div>
     </>

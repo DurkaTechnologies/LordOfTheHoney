@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
+import { Constants } from "src/constants";
+
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
+  const isAdmin = user?.role === Constants.AdminRole;
   const { logoutUser } = useActions();
 
   return (
@@ -33,6 +36,18 @@ const Header = () => {
                 Home
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/shop">
+                Shop
+              </Link>
+            </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin/product/list">
+                  Admin panel
+                </Link>
+              </li>
+            )}
           </ul>
           {isAuth ? (
             <ul className="navbar-nav">
@@ -42,7 +57,12 @@ const Header = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <button className="nav-link" onClick={logoutUser}>
+                <Link className="nav-link" to="/shop/cart">
+                  Cart
+                </Link>
+              </li>
+              <li className="nav-item">
+                <button className="button is-white" onClick={logoutUser}>
                   Logout
                 </button>
               </li>

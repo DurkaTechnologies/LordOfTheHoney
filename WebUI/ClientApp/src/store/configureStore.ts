@@ -5,11 +5,15 @@ import { History } from "history";
 import { ApplicationState, reducers } from "./";
 
 import { loginReducer } from "../components/authorization/login/reducer";
+import { itemShopReducer } from "../components/productAdmin/reducer";
+import { cartReducer } from "../components/shop/cart/reducer";
 
 const rootReducer = combineReducers({
   ...reducers,
   router: connectRouter(history),
   auth: loginReducer,
+  itemShop: itemShopReducer,
+  cart: cartReducer,
 });
 
 export default function configureStore(
