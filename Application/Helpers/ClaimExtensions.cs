@@ -30,7 +30,7 @@ namespace LordOfTheHoney.Application.Helpers
             }
         }
 
-        public static async Task GeneratePermissionClaimByModule(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
+        public static async Task GeneratePermissionClaimByModuleAsync(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
         {
             var allClaims = await roleManager.GetClaimsAsync(role);
             var allPermissions = PermissionModules.GeneratePermissionsForModule(module);
