@@ -6,6 +6,7 @@ export interface IUser {
   id: string | null | undefined;
   nickname: string;
   email: string;
+  beeCoins?: number;
   role?: string | null | undefined;
 }
 export interface ILoginModel {

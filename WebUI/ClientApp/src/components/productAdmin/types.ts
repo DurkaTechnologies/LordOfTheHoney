@@ -4,6 +4,8 @@ export enum ProductActionTypes {
   PRODUCT_REMOVE = "PRODUCT_REMOVE",
   PRODUCT_EDIT = "PRODUCT_EDIT",
   CURRENT_PRODUCT_SET = "CURRENT_PRODUCT_SET",
+
+  PRODUCT_TYPES_SET = "PRODUCT_TYPES_GET",
 }
 
 export interface IProduct {
@@ -11,8 +13,14 @@ export interface IProduct {
   name: string | null;
   description: string | null;
   barcode?: string | undefined | null;
-  imageSrc: Blob | undefined | null | string;
-  itemType: number;
+  picturePath: Blob | undefined | null | string;
+  shopItemTypeId: number;
+  cost: number;
+}
+export interface IProductType {
+  id: number;
+  name: string;
+  description: string;
 }
 
 export interface ProductSetAction {
@@ -35,10 +43,9 @@ export interface ProductCurrentSet {
   type: ProductActionTypes.CURRENT_PRODUCT_SET;
   payload: IProduct;
 }
-
-export interface IProductType {
-  id: number;
-  name: string;
+export interface ProductTypesSet {
+  type: ProductActionTypes.PRODUCT_TYPES_SET;
+  payload: Array<IProductType>;
 }
 
 export interface ProductState {
@@ -47,9 +54,49 @@ export interface ProductState {
   currentProduct: IProduct | null;
 }
 
+export interface IProductFilter {
+  pageNumber: number;
+  pageSize: number;
+  searchString: string;
+  sortDirection: number;
+}
+
+export interface IProductResponse {
+  data: boolean | Array<IProduct> | null | undefined;
+  type: any;
+  failed: boolean;
+  Messages: Array<string>;
+  succeeded: boolean;
+}
+export interface IProductGetResponse extends IProductResponse {
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  pageSize: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+export interface IProductTypesGetResponse {
+  data: Array<IProductType>;
+}
+
+export interface IProductError {
+  Type: any;
+  Failed: boolean;
+  Messages: Array<string>;
+  Succeeded: boolean;
+}
+export interface IProductServerError {
+  detail: string;
+  status: number;
+  title: string;
+  type: any;
+}
+
 export type ProductAction =
   | ProductSetAction
   | ProductAddAction
   | ProductDeleteAction
   | ProductEditAction
-  | ProductCurrentSet;
+  | ProductCurrentSet
+  | ProductTypesSet;

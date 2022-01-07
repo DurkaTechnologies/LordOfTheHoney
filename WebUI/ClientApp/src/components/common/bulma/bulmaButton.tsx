@@ -8,12 +8,14 @@ export interface IBulmaButtonInterface {
   onClick?: () => any;
   className: string;
   type: "button" | "submit" | "reset" | undefined;
+  iconSpan?: any;
 }
 
 const BulmaButton = ({
   label,
   onClick,
   className,
+  iconSpan,
   loading = false,
   type = "button",
 }: IBulmaButtonInterface) => {
@@ -23,6 +25,7 @@ const BulmaButton = ({
       onClick={onClick}
       type={type}
     >
+      {iconSpan}
       {label}
     </button>
   );

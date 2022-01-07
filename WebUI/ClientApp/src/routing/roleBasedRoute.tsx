@@ -5,7 +5,7 @@ import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { Constants } from "src/constants";
 import NotPermittedPage from "src/components/noMatch/NotPermission";
 
-const RoleBasedRoute = () => {
+const AdminBasedRoute = () => {
   const { user } = useTypedSelector((redux) => redux.auth);
   const isAdmin = user?.role === Constants.AdminRole;
 
@@ -20,7 +20,7 @@ const RoleBasedRoute = () => {
   );
 };
 
-export default RoleBasedRoute;
+export default AdminBasedRoute;
 // import * as React from "react";
 // import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 

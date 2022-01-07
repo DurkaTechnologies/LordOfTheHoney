@@ -18,6 +18,10 @@ namespace LordOfTheHoney.Infrastructure.Mappings
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description));
 
+            CreateMap<ShopItemType, CreateShopItemTypeCommand>()
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description));
+
             CreateMap<CreateShopItemTypeCommand, ShopItemType>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description));
