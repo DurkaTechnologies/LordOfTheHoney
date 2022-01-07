@@ -6,6 +6,8 @@ export enum ProductActionTypes {
   CURRENT_PRODUCT_SET = "CURRENT_PRODUCT_SET",
 
   PRODUCT_TYPES_SET = "PRODUCT_TYPES_GET",
+
+  PRODUCT_PAGINATION_SET = "PRODUCT_PAGINATION_SET",
 }
 
 export interface IProduct {
@@ -39,21 +41,31 @@ export interface ProductEditAction {
   type: ProductActionTypes.PRODUCT_EDIT;
   payload: IProduct;
 }
-export interface ProductCurrentSet {
+export interface ProductCurrentSetAction {
   type: ProductActionTypes.CURRENT_PRODUCT_SET;
   payload: IProduct;
 }
-export interface ProductTypesSet {
+export interface ProductTypesSetAction {
   type: ProductActionTypes.PRODUCT_TYPES_SET;
   payload: Array<IProductType>;
+}
+export interface ProductPaginationSetAction {
+  type: ProductActionTypes.PRODUCT_PAGINATION_SET;
+  payload: ProductPaginationState;
 }
 
 export interface ProductState {
   products: Array<IProduct>;
   types: Array<IProductType>;
   currentProduct: IProduct | null;
+  pagination: ProductPaginationState;
 }
-
+export interface ProductPaginationState {
+  totalPages: number;
+  currentPage: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
 export interface IProductFilter {
   pageNumber: number;
   pageSize: number;
@@ -98,5 +110,6 @@ export type ProductAction =
   | ProductAddAction
   | ProductDeleteAction
   | ProductEditAction
-  | ProductCurrentSet
-  | ProductTypesSet;
+  | ProductCurrentSetAction
+  | ProductTypesSetAction
+  | ProductPaginationSetAction;

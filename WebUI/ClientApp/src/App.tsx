@@ -37,8 +37,8 @@ export default () => (
             <Route path="/admin/product/add" element={<AddProduct />} />
             <Route path="/admin/product/edit" element={<EditProduct />} />
           </Route>
-          <Route path="/shop" element={<Shop />}></Route>
-          <Route path="/shop/cart" element={<ItemCart />}></Route>
+          {/* <Route path="/shop" element={<Shop />}></Route> */}
+          {/* <Route path="/shop/cart" element={<ItemCart />}></Route> */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Route>

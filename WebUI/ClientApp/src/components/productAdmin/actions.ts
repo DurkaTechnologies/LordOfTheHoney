@@ -9,6 +9,7 @@ import {
   IProductTypesGetResponse,
   IProductType,
   IProductError,
+  ProductPaginationState,
 } from "./types";
 import { Dispatch } from "react";
 import http from "../../http_common";
@@ -54,9 +55,12 @@ export const getFilterProducts = (dataFilter: IProductFilter) => {
         return Promise.reject(response.data.Messages);
       }
       const { data } = response.data;
+      // const pagination: ProductPaginationState = response.data;
+      // console.log("pagination: ", pagination);
 
       //Write to redux
       SetProducts(data as Array<IProduct>, dispatch);
+      // SetPagination(pagination, dispatch);
 
       return Promise.resolve();
     } catch (error) {
@@ -225,6 +229,15 @@ const SetProductTypes = (
 ) => {
   dispatch({
     type: ProductActionTypes.PRODUCT_TYPES_SET,
+    payload: data,
+  });
+};
+const SetPagination = (
+  data: ProductPaginationState,
+  dispatch: Dispatch<ProductAction>
+) => {
+  dispatch({
+    type: ProductActionTypes.PRODUCT_PAGINATION_SET,
     payload: data,
   });
 };

@@ -7,6 +7,7 @@ import { ApplicationState, reducers } from "./";
 import { loginReducer } from "../components/authorization/login/reducer";
 import { itemShopReducer } from "../components/productAdmin/reducer";
 import { cartReducer } from "../components/shop/cart/reducer";
+import { homeReducer } from "../components/app/reducer";
 
 const rootReducer = combineReducers({
   ...reducers,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   auth: loginReducer,
   itemShop: itemShopReducer,
   cart: cartReducer,
+  home: homeReducer,
 });
 
 export default function configureStore(

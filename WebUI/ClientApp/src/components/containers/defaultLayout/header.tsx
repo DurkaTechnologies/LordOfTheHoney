@@ -10,9 +10,9 @@ import { Constants } from "src/constants";
 import "./header.css";
 
 const Header = () => {
-    const { isAuth, user } = useTypedSelector((redux) => redux.auth);
-    const isAdmin = user?.role === Constants.AdminRole;
-    const { logoutUser } = useActions();
+  const { isAuth, user } = useTypedSelector((redux) => redux.auth);
+  const isAdmin = user?.role === Constants.AdminRole;
+  const { logoutUser, switchIsShop } = useActions();
 
   return (
     <>
@@ -27,11 +27,12 @@ const Header = () => {
           <div className="element rightElement d-flex">
             <p className="headerName">{user?.nickname}</p>
             <div className="btnOption">
-              <Link to="/shop" className="color-inherit">
-                <span className="material-icons-outlined pt-48 mt-1">
-                  store
-                </span>
-              </Link>
+              <span
+                className="material-icons-outlined pt-48 mt-1"
+                onClick={() => switchIsShop(true)}
+              >
+                store
+              </span>
             </div>
             <div className="btnOption">
               <Link to="/settings" className="color-inherit">

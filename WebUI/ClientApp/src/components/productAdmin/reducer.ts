@@ -1,4 +1,3 @@
-import { string } from "yup/lib/locale";
 import { ProductState, ProductAction, ProductActionTypes } from "./types";
 import { initialProductState } from "./seeders";
 
@@ -30,6 +29,12 @@ const initialState: ProductState = {
     picturePath: "",
     shopItemTypeId: 0,
     cost: 0,
+  },
+  pagination: {
+    totalPages: 1,
+    currentPage: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
   },
 };
 
@@ -79,6 +84,12 @@ export const itemShopReducer = (
       return {
         ...state,
         types: action.payload,
+      };
+    }
+    case ProductActionTypes.PRODUCT_PAGINATION_SET: {
+      return {
+        ...state,
+        pagination: action.payload,
       };
     }
     default:
