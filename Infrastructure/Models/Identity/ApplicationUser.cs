@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using LordOfTheHoney.Application.Interfaces.Chat;
 using LordOfTheHoney.Application.Models.Chat;
+using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Infrastructure.Models.Identity
 {
@@ -34,6 +35,8 @@ namespace LordOfTheHoney.Infrastructure.Models.Identity
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryFromUsers { get; set; }
 
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryToUsers { get; set; }
+
+        public virtual ICollection<StorageItem> StorageItems { get; set; }
 
         public decimal BeeCoins { get; set; }
 

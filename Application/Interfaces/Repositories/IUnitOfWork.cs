@@ -1,4 +1,5 @@
-﻿using LordOfTheHoney.Domain.Contracts;
+﻿using Domain.Contracts;
+using LordOfTheHoney.Domain.Contracts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

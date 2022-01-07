@@ -1,7 +1,7 @@
 ﻿using LordOfTheHoney.Domain.Contracts;
 using System.Collections.Generic;
 
-namespace LordOfTheHoney.Domain.Entities.Catalog
+namespace LordOfTheHoney.Domain.Entities.Shop
 {
     public class ShopItemType : AuditableEntity<int>
     {

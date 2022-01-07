@@ -4,7 +4,7 @@ using LordOfTheHoney.Application.Features.ShopItemType.Commands.Create;
 using LordOfTheHoney.Application.Features.ShopItemType.Commands.Patch;
 using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetAllPaged;
 using LordOfTheHoney.Application.Interfaces.Repositories;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

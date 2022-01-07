@@ -1,5 +1,5 @@
 ﻿using LordOfTheHoney.Application.Interfaces.Repositories;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace Infrastructure.Repositories
 {

@@ -1,12 +1,13 @@
 ﻿using Application.Interfaces.Services.Shop;
-using LordOfTheHoney.Shared.Wrapper;
+using AutoMapper;
+using LordOfTheHoney.Domain.Entities.Shop;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Application.Features.ShopItemType.Queries.GetById
 {
-    public class GetShopItemTypeByIdQuery : IRequest<Domain.Entities.Catalog.ShopItemType>
+    public class GetShopItemTypeByIdQuery : IRequest<GetShopItemTypeByIdResponse>
     {
         public GetShopItemTypeByIdQuery(int id)
         {
@@ -16,18 +17,20 @@ namespace LordOfTheHoney.Application.Features.ShopItemType.Queries.GetById
         public int Id { get; set; }
     }
 
-    internal class GetShopItemTypeByIdQueryHandler : IRequestHandler<GetShopItemTypeByIdQuery, Domain.Entities.Catalog.ShopItemType>
+    internal class GetShopItemTypeByIdQueryHandler : IRequestHandler<GetShopItemTypeByIdQuery, GetShopItemTypeByIdResponse>
     {
         private readonly IShopItemTypeService shopItemTypeService;
+        private readonly IMapper mapper;
 
-        public GetShopItemTypeByIdQueryHandler(IShopItemTypeService shopItemTypeService)
+        public GetShopItemTypeByIdQueryHandler(IShopItemTypeService shopItemTypeService, IMapper mapper)
         {
             this.shopItemTypeService = shopItemTypeService;
+            this.mapper = mapper;
         }
 
-        public async Task<Domain.Entities.Catalog.ShopItemType> Handle(GetShopItemTypeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetShopItemTypeByIdResponse> Handle(GetShopItemTypeByIdQuery request, CancellationToken cancellationToken)
         {
-            return await shopItemTypeService.GetShopItemTypeById(request.Id, cancellationToken);
+            return mapper.Map<GetShopItemTypeByIdResponse>(await shopItemTypeService.GetShopItemTypeById(request.Id, cancellationToken));
         }
     }
 }

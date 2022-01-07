@@ -69,5 +69,24 @@ namespace LordOfTheHoney.Server.Controllers.Identity
             else
                 return BadRequest(response.Messages);
         }
+
+        /// <summary>
+        /// Update Profile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Status 200 OK</returns>
+        /// <returns>Status 400 BadRequest</returns>
+        /// <returns>Status 404 OK </returns>
+        [HttpPost(nameof(BuyShopItemsAsync))]
+        public async Task<IActionResult> BuyShopItemsAsync(BuyShopItemRequest model)
+        {
+            var response = await _accountService.BuyShopItemsAsync(model);
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+            else
+                return BadRequest(response);
+        }
     }
 }

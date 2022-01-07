@@ -12,5 +12,7 @@ namespace LordOfTheHoney.Application.Interfaces.Services.Account
         Task<IResult> ChangePasswordAsync(ChangePasswordRequest model, string userId);
 
         Task<IResult<string>> GetProfilePictureAsync(string userId);
+
+        Task<IResult<decimal>> BuyShopItemsAsync(BuyShopItemRequest model);
     }
 }

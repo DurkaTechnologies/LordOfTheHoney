@@ -2,7 +2,7 @@
 using LordOfTheHoney.Domain.Contracts.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LordOfTheHoney.Domain.Entities.Catalog
+namespace LordOfTheHoney.Domain.Entities.Shop
 {
     public class ShopItem : AuditableEntity<int>, IItem
     {

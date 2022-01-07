@@ -36,9 +36,7 @@ namespace LordOfTheHoney.Infrastructure.Repositories
             if (!_repositories.ContainsKey(type))
             {
                 var repositoryType = typeof(RepositoryAsync<,>);
-
                 var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity), typeof(TId)), _dbContext);
-
                 _repositories.Add(type, repositoryInstance);
             }
 

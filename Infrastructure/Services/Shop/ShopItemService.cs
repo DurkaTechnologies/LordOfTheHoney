@@ -4,7 +4,7 @@ using LordOfTheHoney.Application.Features.ShopItem.Commands.Create;
 using LordOfTheHoney.Application.Features.ShopItem.Commands.Patch;
 using LordOfTheHoney.Application.Features.ShopItem.Queries.GetAllPaged;
 using LordOfTheHoney.Application.Interfaces.Repositories;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -62,6 +62,7 @@ namespace Infrastructure.Services.Shop
             {
                 shopItem.Name = command.Name ?? shopItem.Name;
                 shopItem.Description = command.Description ?? shopItem.Description;
+                shopItem.Cost = command.Cost;
 
                 shopItem.ShopItemTypeId = (command.ShopItemTypeId == 0) ? shopItem.ShopItemTypeId : command.ShopItemTypeId;
                 await unitOfWork.Repository<ShopItem>().UpdateAsync(shopItem);

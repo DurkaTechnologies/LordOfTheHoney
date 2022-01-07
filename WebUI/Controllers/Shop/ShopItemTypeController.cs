@@ -5,7 +5,7 @@ using LordOfTheHoney.Application.Features.ShopItemType.Commands.Delete;
 using LordOfTheHoney.Application.Features.ShopItemType.Commands.Patch;
 using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetAllPaged;
 using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetById;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 using LordOfTheHoney.Server.Controllers;
 using LordOfTheHoney.Shared.Constants.Permission;
 using LordOfTheHoney.Shared.Wrapper;

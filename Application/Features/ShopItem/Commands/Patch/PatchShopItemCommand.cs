@@ -33,8 +33,11 @@ namespace LordOfTheHoney.Application.Features.ShopItem.Commands.Patch
     {
         public PatchShopItemCommandValidator()
         {
-            RuleFor(v => v.Id).NotNull();
+            RuleFor(v => v.Id).NotNull().WithMessage("Required");
+            RuleFor(v => v.Cost).Must(BeOverZero).WithMessage("Shop item cost must be over zero"); ;
         }
+
+        protected bool BeOverZero(decimal cost) => cost > 0;
     }
 
     internal class PatchShopItemCommandHandler : IRequestHandler<PatchShopItemCommand, IResult<bool>>
