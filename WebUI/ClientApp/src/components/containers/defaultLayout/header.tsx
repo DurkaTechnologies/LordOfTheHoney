@@ -10,9 +10,9 @@ import { Constants } from "src/constants";
 import "./header.css";
 
 const Header = () => {
-  const { isAuth, user } = useTypedSelector((redux) => redux.auth);
-  const isAdmin = user?.role === Constants.AdminRole;
-  const { logoutUser } = useActions();
+    const { isAuth, user } = useTypedSelector((redux) => redux.auth);
+    const isAdmin = user?.role === Constants.AdminRole;
+    const { logoutUser } = useActions();
 
   return (
     <>

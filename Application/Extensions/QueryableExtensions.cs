@@ -8,6 +8,7 @@ using System.Threading;
 using System.Linq.Expressions;
 using FluentValidation.Results;
 using System;
+using LordOfTheHoney.Application.Specifications.Base;
 
 namespace LordOfTheHoney.Application.Extensions
 {
@@ -28,11 +29,15 @@ namespace LordOfTheHoney.Application.Extensions
             return PaginatedResult<T>.Success(items, count, pageNumber, pageSize);
         }
 
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string? sortModels)
+        public static IQueryable<T> Specify<T>(this IQueryable<T> query, ISpecification<T> spec) where T : class
         {
-            if (sortModels == null) return source;
-
-            return source.OrderBy(sortModels.Split(","));
+            var queryableResultWithIncludes = spec.Includes
+                .Aggregate(query,
+                    (current, include) => current.Include(include));
+            var secondaryResult = spec.IncludeStrings
+                .Aggregate(queryableResultWithIncludes,
+                    (current, include) => current.Include(include));
+            return secondaryResult.Where(spec.Criteria);
         }
 
         public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, IEnumerable<string> sortModels)

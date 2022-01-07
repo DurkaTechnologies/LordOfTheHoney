@@ -16,6 +16,7 @@ using LordOfTheHoney.Shared.Wrapper;
 using Domain.Enums;
 using AutoMapper.QueryableExtensions;
 using LordOfTheHoney.Application.Extensions;
+using LordOfTheHoney.Application.Specifications;
 
 namespace Infrastructure.Services.Shop
 {
@@ -93,10 +94,12 @@ namespace Infrastructure.Services.Shop
             else if (request.SortDirection == SortDirection.Descending)
                 isSortDescending = false;
 
+            ShopItemFilterSpecification specification = new ShopItemFilterSpecification(request.SearchString);
             var data = unitOfWork
                 .Repository<ShopItem>()
                 .Entities
                 .Include(element => element.ShopItemType)
+                .Specify(specification)
                 .ProjectTo<GetAllPagedShopItemsResponse>(mapper.ConfigurationProvider);
 
             data = isSortDescending.Value ? data.OrderByDescending(element => element.Name)

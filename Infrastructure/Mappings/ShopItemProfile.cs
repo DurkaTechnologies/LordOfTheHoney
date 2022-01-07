@@ -33,7 +33,7 @@ namespace LordOfTheHoney.Infrastructure.Mappings
             .ForMember(dst => dst.PicturePath, opt => opt.MapFrom(src => src.PicturePath))
             .ForMember(dst => dst.Cost, opt => opt.MapFrom(src => src.Cost))
             .ForMember(dst => dst.ShopItemTypeId, opt => opt.MapFrom(src => src.ShopItemTypeId));
-
+            
             CreateMap<CreateShopItemCommand, ShopItem>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description))
