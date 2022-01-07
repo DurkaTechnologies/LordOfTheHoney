@@ -55,12 +55,11 @@ export const getFilterProducts = (dataFilter: IProductFilter) => {
         return Promise.reject(response.data.Messages);
       }
       const { data } = response.data;
-      // const pagination: ProductPaginationState = response.data;
-      // console.log("pagination: ", pagination);
+      const pagination: ProductPaginationState = response.data;
 
       //Write to redux
       SetProducts(data as Array<IProduct>, dispatch);
-      // SetPagination(pagination, dispatch);
+      SetPagination(pagination, dispatch);
 
       return Promise.resolve();
     } catch (error) {
@@ -91,8 +90,8 @@ export const getProductTypes = () => {
 
         localStorage.setItem("itemTypes", JSON.stringify(data));
       }
-      SetProductTypes(data, dispatch);
       //Write to redux
+      SetProductTypes(data, dispatch);
 
       return Promise.resolve();
     } catch (error) {

@@ -1,5 +1,10 @@
-.filterPanel {
-  background-color: rgb(180, 180, 180);
-  margin-right: 30px;
-  border-radius: 2%;
+.whiteColor {
+  color: #ffffff;
+}
+
+.orangeBackColor {
+  background-color: #ffbb00;
+}
+.orangeBackColor:hover {
+  background-color: #dca100;
 }

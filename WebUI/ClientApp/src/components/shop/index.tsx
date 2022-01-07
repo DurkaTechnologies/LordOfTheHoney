@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
-import { BulmaButton } from "../common/bulma";
+import { BulmaButton, BulmaPagination, BulmaTabs } from "../common/bulma";
 import ButtonCart from "./buttonCart";
 import { IProduct, IProductFilter } from "../productAdmin/types";
 
 import classNames from "classnames";
 import { toast } from "react-toastify";
+import ItemCart from "./cart/pages";
 
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,19 +22,26 @@ const Shop = () => {
   const { products, types, pagination } = useTypedSelector(
     (redux) => redux.itemShop
   );
-  const { cartAddProduct, getFilterProducts, getProducts, switchIsShop } =
-    useActions();
+  const {
+    cartAddProduct,
+    getFilterProducts,
+    getProducts,
+    switchIsShop,
+    switchIsShopCart,
+    getProductTypes,
+  } = useActions();
 
   const { isShopActive } = useTypedSelector((redux) => redux.home);
 
   const [filter, setFilter] = useState<IProductFilter>({
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: 2,
     searchString: "",
     sortDirection: 1,
   });
 
   React.useEffect(() => {
+    getProductTypes();
     // fetch();
   }, []);
 
@@ -45,22 +53,34 @@ const Shop = () => {
     }
   };
 
-  const handleCartAdd = (productId: number) => {
-    cartAddProduct({ productId, quantity: 1 });
+  const handleCartAdd = (product: IProduct) => {
+    cartAddProduct({ ...product, quantity: 1 });
   };
 
   const handleNextPage = () => {
-    // setFilter({
-    //   ...filter,
-    //   pageNumber: pageNumber + 1,
-    // });
+    filter.pageNumber += 1;
+    fetch();
+  };
+  const handlePrevPage = () => {
+    filter.pageNumber -= 1;
+    fetch();
+  };
+  const handleChangePage = (page: number) => {
+    filter.pageNumber = page;
+    fetch();
+  };
+
+  const handleTypeChange = (value: number | string) => {
+    filter.searchString = value.toString();
+    filter.pageNumber = 1;
+    fetch();
   };
 
   return (
     <div>
       <Modal
         show={isShopActive}
-        size="xl"
+        // size="xl"
         fullscreen={true}
         onHide={() => switchIsShop(false)}
         onShow={fetch}
@@ -73,16 +93,19 @@ const Shop = () => {
 
             <div>
               <BulmaButton
-                className="me-5"
+                className="me-5 orangeBackColor"
                 label=""
                 type="button"
                 iconSpan={
                   <span className="material-icons-outlined">shopping_cart</span>
                 }
-                onClick={() => switchIsShop(false)}
+                onClick={() => {
+                  switchIsShopCart(true);
+                  switchIsShop(false);
+                }}
               />
               <BulmaButton
-                className="me-5"
+                className="me-2"
                 label=""
                 type="button"
                 iconSpan={
@@ -94,8 +117,8 @@ const Shop = () => {
           </div>
         </Modal.Header>
         <Modal.Body>
+          <BulmaTabs handleChange={handleTypeChange} elements={types} />
           <div className="row">
-            <div className="col-3 filterPanel"></div>
             <div className="col">
               <div className="d-flex flex-wrap justify-content-around">
                 {products.map((x, id) => {
@@ -132,7 +155,7 @@ const Shop = () => {
                               />
                               <ButtonCart
                                 onChange={() => {
-                                  handleCartAdd(x.id);
+                                  handleCartAdd(x);
                                 }}
                               />
                             </div>
@@ -145,66 +168,15 @@ const Shop = () => {
               </div>
             </div>
           </div>
-          <div className="row">
-            <nav
-              className="pagination is-centered"
-              role="navigation"
-              aria-label="pagination"
-            >
-              <button
-                className="pagination-previous"
-                disabled={!pagination.hasPreviousPage}
-              >
-                Previous
-              </button>
-              <button
-                className="pagination-next"
-                disabled={!pagination.hasNextPage}
-                // onClick={}
-              >
-                Next page
-              </button>
-              <ul className="pagination-list">
-                <li>
-                  <a className="pagination-link" aria-label="Goto page 1">
-                    1
-                  </a>
-                </li>
-                <li>
-                  <span className="pagination-ellipsis">&hellip;</span>
-                </li>
-                <li>
-                  <a className="pagination-link" aria-label="Goto page 45">
-                    45
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="pagination-link is-current"
-                    aria-label="Page 46"
-                    aria-current="page"
-                  >
-                    46
-                  </a>
-                </li>
-                <li>
-                  <a className="pagination-link" aria-label="Goto page 47">
-                    47
-                  </a>
-                </li>
-                <li>
-                  <span className="pagination-ellipsis">&hellip;</span>
-                </li>
-                <li>
-                  <a className="pagination-link" aria-label="Goto page 86">
-                    86
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <BulmaPagination
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+            handleChangePage={handleChangePage}
+            pagination={pagination}
+          />
         </Modal.Body>
       </Modal>
+      <ItemCart />
     </div>
   );
 };

@@ -1,14 +1,20 @@
 export enum HomeActionTypes {
   SWITCH_SHOP = "SWITCH_SHOP",
+  SWITCH_SHOP_CART = "SWITCH_SHOP_CART",
 }
 
 export interface HomeSwitchShopAction {
   type: HomeActionTypes.SWITCH_SHOP;
   payload: boolean;
 }
+export interface HomeSwitchShopCartAction {
+  type: HomeActionTypes.SWITCH_SHOP_CART;
+  payload: boolean;
+}
 
 export interface IHomeState {
   isShopActive: boolean;
+  isShopCartActive: boolean;
 }
 
-export type HomeAction = HomeSwitchShopAction;
+export type HomeAction = HomeSwitchShopAction | HomeSwitchShopCartAction;

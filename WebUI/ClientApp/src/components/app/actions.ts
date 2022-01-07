@@ -9,3 +9,11 @@ export const switchIsShop = (data: boolean) => {
     });
   };
 };
+export const switchIsShopCart = (data: boolean) => {
+  return async (dispatch: Dispatch<HomeAction>) => {
+    dispatch({
+      type: HomeActionTypes.SWITCH_SHOP_CART,
+      payload: data,
+    });
+  };
+};

@@ -13,11 +13,11 @@ export enum ProductActionTypes {
 export interface IProduct {
   id: number;
   name: string | null;
+  shopItemTypeId: number;
+  picturePath: Blob | undefined | null | string;
+  cost: number;
   description: string | null;
   barcode?: string | undefined | null;
-  picturePath: Blob | undefined | null | string;
-  shopItemTypeId: number;
-  cost: number;
 }
 export interface IProductType {
   id: number;

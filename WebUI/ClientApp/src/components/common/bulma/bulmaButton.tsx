@@ -9,6 +9,7 @@ export interface IBulmaButtonInterface {
   className: string;
   type: "button" | "submit" | "reset" | undefined;
   iconSpan?: any;
+  disabled?: boolean;
 }
 
 const BulmaButton = ({
@@ -16,6 +17,7 @@ const BulmaButton = ({
   onClick,
   className,
   iconSpan,
+  disabled = false,
   loading = false,
   type = "button",
 }: IBulmaButtonInterface) => {
@@ -24,6 +26,7 @@ const BulmaButton = ({
       className={classNames("button", className, { "is-loading": loading })}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {iconSpan}
       {label}

@@ -7,7 +7,11 @@ export enum CartActionTypes {
 }
 
 export interface ICartProduct {
-  productId: number;
+  id: number;
+  name: string | null;
+  shopItemTypeId: number;
+  picturePath: Blob | undefined | null | string;
+  cost: number;
   quantity: number;
 }
 
