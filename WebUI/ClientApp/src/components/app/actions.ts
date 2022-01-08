@@ -17,3 +17,11 @@ export const switchIsShopCart = (data: boolean) => {
     });
   };
 };
+export const switchIsStorage = (data: boolean) => {
+  return async (dispatch: Dispatch<HomeAction>) => {
+    dispatch({
+      type: HomeActionTypes.SWITCH_STORAGE,
+      payload: data,
+    });
+  };
+};

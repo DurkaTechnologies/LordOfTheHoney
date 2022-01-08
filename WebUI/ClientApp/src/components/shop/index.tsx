@@ -28,6 +28,7 @@ const Shop = () => {
     getProducts,
     switchIsShop,
     switchIsShopCart,
+    switchIsStorage,
     getProductTypes,
   } = useActions();
 
@@ -75,6 +76,11 @@ const Shop = () => {
     filter.pageNumber = 1;
     fetch();
   };
+  const handleBuyItem = (product: IProduct) => {
+    handleCartAdd(product);
+    switchIsShop(false);
+    switchIsShopCart(true);
+  };
 
   return (
     <div>
@@ -93,7 +99,19 @@ const Shop = () => {
 
             <div>
               <BulmaButton
-                className="me-5 orangeBackColor"
+                className="me-2 orangeBackColor"
+                label=""
+                type="button"
+                iconSpan={
+                  <span className="material-icons-outlined">inventory_2</span>
+                }
+                onClick={() => {
+                  switchIsStorage(true);
+                  switchIsShop(false);
+                }}
+              />
+              <BulmaButton
+                className="me-2 orangeBackColor"
                 label=""
                 type="button"
                 iconSpan={
@@ -146,12 +164,18 @@ const Shop = () => {
                             </p>
                             <div className="d-flex align-items-start w-100">
                               <div className="me-auto align-self-center">
-                                <p>{x.cost} </p>
+                                <p className="subtitle is-4">
+                                  <span className="material-icons-outlined coinPrice">
+                                    monetization_on
+                                  </span>
+                                  {x.cost}
+                                </p>
                               </div>
                               <BulmaButton
                                 label="BUY"
-                                className="is-success me-3 px-5"
+                                className="is-success me-3 btnBuy"
                                 type="button"
+                                onClick={() => handleBuyItem(x)}
                               />
                               <ButtonCart
                                 onChange={() => {

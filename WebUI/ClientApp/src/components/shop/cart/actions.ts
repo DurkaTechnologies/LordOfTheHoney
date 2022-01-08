@@ -6,6 +6,7 @@ import {
   ICartProduct,
   SetQuantityType,
 } from "./types";
+import http from "../../../http_common";
 
 export const cartAddProduct = (data: ICartProduct) => {
   return async (dispatch: Dispatch<CartAction>) => {
@@ -51,6 +52,16 @@ export const cartSetProducts = (data: Array<ICartProduct>) => {
   return async (dispatch: Dispatch<CartAction>) => {
     try {
       SetProducts(data, dispatch);
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject();
+    }
+  };
+};
+export const cartBuy = () => {
+  return async (dispatch: Dispatch<CartAction>) => {
+    try {
+      // const response = http.post("asd");
       return Promise.resolve();
     } catch (error) {
       return Promise.reject();

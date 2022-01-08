@@ -12,7 +12,7 @@ import "./header.css";
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
   const isAdmin = user?.role === Constants.AdminRole;
-  const { logoutUser, switchIsShop } = useActions();
+  const { logoutUser, switchIsShop, switchIsStorage } = useActions();
 
   return (
     <>
@@ -32,6 +32,14 @@ const Header = () => {
                 onClick={() => switchIsShop(true)}
               >
                 store
+              </span>
+            </div>
+            <div className="btnOption">
+              <span
+                className="material-icons-outlined pt-48 mt-1"
+                onClick={() => switchIsStorage(true)}
+              >
+                inventory_2
               </span>
             </div>
             <div className="btnOption">

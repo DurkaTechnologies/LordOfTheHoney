@@ -11,6 +11,8 @@ export interface ICartProduct {
   name: string | null;
   shopItemTypeId: number;
   picturePath: Blob | undefined | null | string;
+  description: string | null;
+  barcode?: string | undefined | null;
   cost: number;
   quantity: number;
 }

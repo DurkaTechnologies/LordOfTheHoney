@@ -8,3 +8,12 @@
 .orangeBackColor:hover {
   background-color: #dca100;
 }
+.coinPrice {
+  position: relative;
+  top: 4px;
+  margin-right: 4px;
+}
+.btnBuy {
+  padding-left: 30px;
+  padding-right: 30px;
+}

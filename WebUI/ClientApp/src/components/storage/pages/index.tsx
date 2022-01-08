@@ -1,98 +1,45 @@
 import * as React from "react";
+
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
 import { BulmaButton } from "src/components/common/bulma";
 
-import { ICartProduct } from "../types";
-
 import Modal from "react-bootstrap/Modal";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { IStorageItem } from "src/components/storage/types";
-import { toast } from "react-toastify";
 
-const ItemCart = () => {
-  const { cartProducts } = useTypedSelector((redux) => redux.cart);
-  const { types } = useTypedSelector((redux) => redux.itemShop);
-  const { isShopCartActive } = useTypedSelector((redux) => redux.home);
-  const { user } = useTypedSelector((redux) => redux.auth);
-  const {
-    cartDeleteProduct,
-    cartClear,
-    cartSetProducts,
-    cartSetQuantity,
-    switchIsShopCart,
-    switchIsShop,
-    cartBuy,
-    storageAddItems,
-    userCoinsSpend,
-  } = useActions();
+const Storage = () => {
+  const { isStorageActive } = useTypedSelector((redux) => redux.home);
+  const { items } = useTypedSelector((redux) => redux.storage);
+  const { switchIsStorage, switchIsShop, storageRemoveItem } = useActions();
 
-  React.useEffect(() => {
-    const cartItemsJson = localStorage.getItem("cartItems");
-    if (cartItemsJson) {
-      const items = JSON.parse(cartItemsJson) as Array<ICartProduct>;
-      cartSetProducts(items);
-    }
-  }, []);
-
-  const handleDelete = (id: number) => {
-    cartDeleteProduct(id);
-  };
-  const handleQuantityChange = (productId: number, newQuantity: number) => {
-    cartSetQuantity({ productId, newQuantity });
-  };
-  const getFinalPrice = () => {
-    let finalPrice = 0;
-    cartProducts.map((x) => {
-      finalPrice += x.cost * x.quantity;
-    });
-    return finalPrice;
-  };
-  const getButtonDisabled = () => {
-    if (cartProducts.length === 0) return true;
-    return user?.beeCoins
-      ? parseInt(user?.beeCoins.toString()) < getFinalPrice()
-      : true;
-  };
-
-  const handleCartBuy = async () => {
-    try {
-      await cartBuy();
-      await storageAddItems(cartProducts as Array<IStorageItem>);
-      await cartClear();
-      await userCoinsSpend(getFinalPrice());
-      switchIsShopCart(false);
-      switchIsShop(true);
-    } catch (error) {
-      toast.error("Some errors. Check and try again");
-    }
+  const handleSendToInventory = (id: number) => {
+    storageRemoveItem(id);
   };
 
   return (
     <>
       <Modal
-        show={isShopCartActive}
+        show={isStorageActive}
         onHide={() => {
-          switchIsShopCart(false);
+          switchIsStorage(false);
         }}
         size="xl"
       >
         <Modal.Header>
           <div className="d-flex justify-content-between w-100">
-            <Modal.Title>Item Cart</Modal.Title>
+            <Modal.Title>Item storage</Modal.Title>
 
             <div>
               <BulmaButton
-                className="me-2"
+                className="me-2 orangeBackColor"
                 label=""
                 type="button"
                 iconSpan={
-                  <span className="material-icons-outlined">arrow_back</span>
+                  <span className="material-icons-outlined">store</span>
                 }
                 onClick={() => {
+                  switchIsStorage(false);
                   switchIsShop(true);
-                  switchIsShopCart(false);
                 }}
               />
               <BulmaButton
@@ -103,7 +50,7 @@ const ItemCart = () => {
                   <span className="material-icons-outlined">close</span>
                 }
                 onClick={() => {
-                  switchIsShopCart(false);
+                  switchIsStorage(false);
                 }}
               />
             </div>
@@ -115,22 +62,32 @@ const ItemCart = () => {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Cost/one</th>
                 <th>Quantity</th>
-                <th>Price</th>
                 <th>Options</th>
+                {/* <th>Type</th>
+                <th>Cost/one</th>
+                <th>Price</th>
+                */}
               </tr>
             </thead>
             <tbody>
-              {cartProducts.length !== 0 && (
+              {items.length !== 0 && (
                 <>
-                  {cartProducts.map((x, id) => {
+                  {items.map((x, id) => {
                     return (
                       <tr key={id}>
                         <td>{x.id}</td>
                         <td>{x.name}</td>
+                        <td>{x.quantity}</td>
                         <td>
+                          <BulmaButton
+                            label="Send to inventory"
+                            className="orangeBackColor"
+                            type="button"
+                            onClick={() => handleSendToInventory(x.id)}
+                          />
+                        </td>
+                        {/* <td>
                           {
                             types.filter((t) => t.id == x.shopItemTypeId)[0]
                               .name
@@ -157,7 +114,7 @@ const ItemCart = () => {
                             type="button"
                             onClick={() => handleDelete(x.id)}
                           />
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })}
@@ -166,7 +123,7 @@ const ItemCart = () => {
             </tbody>
           </table>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="offset-5 col-3">
               <p className="title t-1">TOTAL: {getFinalPrice()}</p>
             </div>
@@ -185,11 +142,11 @@ const ItemCart = () => {
                 onClick={cartClear}
               />
             </div>
-          </div>
+          </div> */}
         </Modal.Body>
       </Modal>
     </>
   );
 };
 
-export default ItemCart;
+export default Storage;

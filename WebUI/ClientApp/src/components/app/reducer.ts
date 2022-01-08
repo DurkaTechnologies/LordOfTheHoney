@@ -3,6 +3,7 @@ import { IHomeState, HomeActionTypes, HomeAction } from "./types";
 const initialState: IHomeState = {
   isShopActive: false,
   isShopCartActive: false,
+  isStorageActive: false,
 };
 
 export const homeReducer = (state = initialState, action: HomeAction) => {
@@ -17,6 +18,12 @@ export const homeReducer = (state = initialState, action: HomeAction) => {
       return {
         ...state,
         isShopCartActive: action.payload,
+      };
+    }
+    case HomeActionTypes.SWITCH_STORAGE: {
+      return {
+        ...state,
+        isStorageActive: action.payload,
       };
     }
     default:
