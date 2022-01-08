@@ -21,7 +21,11 @@ const ImageInputGroup = ({
       const url = URL.createObjectURL(file);
       setImgSrc(url);
 
-      setFieldValue("imageSrc", file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        setFieldValue("imageSrc", reader.result);
+      };
     }
   };
 

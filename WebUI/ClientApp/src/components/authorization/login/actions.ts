@@ -56,3 +56,11 @@ export const logoutUser = () => {
     }
   };
 };
+export const userCoinsSpend = (value: number) => {
+  return async (dispatch: React.Dispatch<AuthAction>) => {
+    dispatch({
+      type: AuthActionTypes.USER_COINS_SPEND,
+      payload: value,
+    });
+  };
+};

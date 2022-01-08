@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using WebUI;
 using Swashbuckle.AspNetCore.Swagger;
 using LordOfTheHoney.Shared.Constants.Permission;
+using System.Threading.Tasks;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
@@ -50,7 +51,7 @@ namespace LordOfTheHoney.WebUI.Extensions
                 endpoints.MapControllers();
             });
 
-        internal static IApplicationBuilder Initialize(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
+        internal static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
         {
             using var serviceScope = app.ApplicationServices.CreateScope();
 
@@ -58,7 +59,7 @@ namespace LordOfTheHoney.WebUI.Extensions
 
             foreach (var initializer in initializers)
             {
-                initializer.Initialize();
+                await initializer.InitializeAsync();
             }
 
             return app;

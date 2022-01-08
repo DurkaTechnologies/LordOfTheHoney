@@ -9,11 +9,8 @@ export const cartReducer = (state = initialState, action: CartAction) => {
   switch (action.type) {
     case CartActionTypes.CART_ADD_PRODUCT: {
       const tmpProducts = state.cartProducts.slice();
-      if (
-        tmpProducts.filter((x) => x.productId === action.payload.productId)[0]
-      ) {
-        tmpProducts.filter((x) => x.productId === action.payload.productId)[0]
-          .quantity++;
+      if (tmpProducts.filter((x) => x.id === action.payload.id)[0]) {
+        tmpProducts.filter((x) => x.id === action.payload.id)[0].quantity++;
       } else {
         tmpProducts.push(action.payload);
       }
@@ -25,7 +22,7 @@ export const cartReducer = (state = initialState, action: CartAction) => {
     }
     case CartActionTypes.CART_DELETE_PRODUCT: {
       const tmpProducts = state.cartProducts.filter(
-        (x) => x.productId != action.payload
+        (x) => x.id != action.payload
       );
       localStorage.setItem("cartItems", JSON.stringify(tmpProducts));
       return {
@@ -42,9 +39,8 @@ export const cartReducer = (state = initialState, action: CartAction) => {
     }
     case CartActionTypes.CART_QUANTITY_SET: {
       const tmpProducts = state.cartProducts.slice();
-      tmpProducts.filter(
-        (x) => x.productId == action.payload.productId
-      )[0]!.quantity = action.payload.newQuantity;
+      tmpProducts.filter((x) => x.id == action.payload.productId)[0]!.quantity =
+        action.payload.newQuantity;
       localStorage.setItem("cartItems", JSON.stringify(tmpProducts));
       return {
         ...state,

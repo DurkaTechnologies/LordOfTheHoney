@@ -4,16 +4,20 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { ApplicationState, reducers } from "./";
 
+import { homeReducer } from "../components/app/reducer";
 import { loginReducer } from "../components/authorization/login/reducer";
 import { itemShopReducer } from "../components/productAdmin/reducer";
 import { cartReducer } from "../components/shop/cart/reducer";
+import { storageReducer } from "src/components/storage/reducer";
 
 const rootReducer = combineReducers({
   ...reducers,
   router: connectRouter(history),
+  home: homeReducer,
   auth: loginReducer,
   itemShop: itemShopReducer,
   cart: cartReducer,
+  storage: storageReducer,
 });
 
 export default function configureStore(

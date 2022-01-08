@@ -11,21 +11,47 @@ import { BulmaModal, BulmaButton } from "../../common/bulma";
 
 import "bulma/css/bulma.css";
 import { IProduct } from "../types";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [idToDelete, setIdToDelete] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const { getProducts, deleteProduct, setCurrentProduct } = useActions();
+  const { getProducts, deleteProduct, setCurrentProduct, getProductTypes } =
+    useActions();
   const { products, types } = useTypedSelector((redux) => redux.itemShop);
+
+  const fetch = async () => {
+    setLoading(true);
+    try {
+      await getProducts();
+      await getProductTypes();
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (products.length === 0) {
+      fetch();
+    }
+  }, []);
 
   const openModal = (id: number) => {
     setModalOpen(true);
     setIdToDelete(id);
   };
-  const handleModalConfirm = () => {
+  const handleModalConfirm = async () => {
     setModalOpen(false);
-    deleteProduct(idToDelete);
+    try {
+      await deleteProduct(idToDelete);
+      toast.success(`Product with id ${idToDelete} are successfully deleted`);
+    } catch (error) {
+      toast.error(error as string);
+    }
   };
   const handleModalCancel = () => {
     setModalOpen(false);
@@ -35,9 +61,9 @@ const ProductList = () => {
     setCurrentProduct(product);
   };
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  const handleUpdate = () => {
+    fetch();
+  };
 
   return (
     <>
@@ -46,6 +72,17 @@ const ProductList = () => {
       <Link className="button is-success" to="/admin/product/add">
         Add product
       </Link>
+
+      <BulmaButton
+        label="Update with db"
+        className="is-info ms-3"
+        type="submit"
+        onClick={handleUpdate}
+        iconSpan={
+          <span className="material-icons-outlined icon me-1">update</span>
+        }
+        loading={loading}
+      />
 
       <table className="table">
         <thead>
@@ -60,9 +97,11 @@ const ProductList = () => {
           {products.map((x, id) => {
             return (
               <tr key={id}>
-                <th>{x.id}</th>
+                <th>{x.id === 0 ? "-" : x.id}</th>
                 <td>{x.name}</td>
-                <td>{types.filter((t) => t.id == x.itemType)[0].name}</td>
+                <td>
+                  {types.filter((t) => t.id == x.shopItemTypeId)[0]?.name}
+                </td>
                 <td>
                   <Link
                     className="button is-info is-light"

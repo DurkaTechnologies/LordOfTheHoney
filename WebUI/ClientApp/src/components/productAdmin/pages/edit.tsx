@@ -18,17 +18,32 @@ import ImageInputGroup from "src/components/common/imageInputGroup";
 import { validationFields } from "../validation";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
+import { toast } from "react-toastify";
 
 const EditProduct = () => {
   const navigator = useNavigate();
   const { types, currentProduct } = useTypedSelector((redux) => redux.itemShop);
-  const { editProduct } = useActions();
+  const { editProduct, getProductTypes } = useActions();
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    async function fetch() {
+      try {
+        await getProductTypes();
+      } catch (error) {
+        toast.error(error as string);
+      }
+    }
+    fetch();
+  }, []);
 
-  const handleSubmit = (values: IProduct, action: any) => {
-    editProduct(values);
-    navigator("/admin/product/list");
+  const handleSubmit = async (values: IProduct, action: any) => {
+    try {
+      await editProduct(values);
+      navigator("/admin/product/list");
+      toast.success(`Product with id ${values.id} was successfully edited`);
+    } catch (error) {
+      toast.error(error as string);
+    }
   };
 
   return (
@@ -68,17 +83,17 @@ const EditProduct = () => {
                 />
 
                 <BulmaSelect
-                  value={values.itemType}
-                  field="itemType"
+                  value={values.shopItemTypeId}
+                  field="shopItemTypeId"
                   onChange={handleChange}
                   label="Item type"
-                  error={errors.itemType}
-                  touched={touched.itemType}
+                  error={errors.shopItemTypeId}
+                  touched={touched.shopItemTypeId}
                   values={types}
                 />
 
                 <ImageInputGroup
-                  initialUrl={currentProduct.imageSrc as string}
+                  initialUrl={currentProduct.picturePath as string}
                   setFieldValue={setFieldValue}
                 />
 
