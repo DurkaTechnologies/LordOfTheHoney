@@ -4,7 +4,11 @@ import { useActions } from "src/hooks/useActions";
 
 import { BulmaButton } from "src/components/common/bulma";
 
-import { ICartProduct } from "../types";
+import {
+  ICartProduct,
+  IBuyResponseCartProduct,
+  IBuyResponseSend,
+} from "../types";
 
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -56,9 +60,21 @@ const ItemCart = () => {
       : true;
   };
 
+  const getProductCartToSend = async () => {
+    let cartProductsSend: Array<IBuyResponseCartProduct> = [];
+    cartProducts.forEach((x) => {
+      cartProductsSend.push({ shopItemId: x.id, quantity: x.quantity });
+    });
+    const cartSend: IBuyResponseSend = {
+      userId: user.id,
+      cartItems: cartProductsSend,
+    };
+    return cartSend;
+  };
+
   const handleCartBuy = async () => {
     try {
-      await cartBuy();
+      await cartBuy(await getProductCartToSend());
       await storageAddItems(cartProducts as Array<IStorageItem>);
       await cartClear();
       await userCoinsSpend(getFinalPrice());

@@ -2,6 +2,7 @@
 using LordOfTheHoney.Application.Requests.Identity;
 using LordOfTheHoney.Domain.Entities.Shop;
 using LordOfTheHoney.Shared.Wrapper;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Application.Interfaces.Services.Account
@@ -17,5 +18,8 @@ namespace LordOfTheHoney.Application.Interfaces.Services.Account
         Task<IResult<decimal>> BuyShopItemsAsync(BuyShopItemRequest model);
 
         Task<IResult<StorageItem>> GetDeleteItemFromStorageAsync(GetDeleteItemFromStorage model);
+
+        Task<IResult<IEnumerable<StorageItem>>> GetUserStorageAsync(string userId);
+
     }
 }

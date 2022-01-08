@@ -1,12 +1,39 @@
 import * as React from "react";
 import { Dispatch } from "react";
 
-import { IStorageItem, StorageAction, StorageActionTypes } from "./types";
+import {
+  IStorageItem,
+  StorageAction,
+  StorageActionTypes,
+  IFetchStorageResponse,
+} from "./types";
+
+import http from "../../http_common";
 
 export const storageSetItems = (items: Array<IStorageItem>) => {
   return async (dispatch: Dispatch<StorageAction>) => {
     try {
       SetProducts(items, dispatch);
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject();
+    }
+  };
+};
+export const storageFetchItems = (userId: string) => {
+  return async (dispatch: Dispatch<StorageAction>) => {
+    try {
+      const response = await http.get<IFetchStorageResponse>(
+        `api/identity/account/GetUserStorage?userId=${userId}`
+      );
+
+      const { data } = response.data;
+      let storageItems: Array<IStorageItem> = [];
+      data.forEach((x) => {
+        storageItems.push({ ...x.shopItem, quantity: x.quantity });
+      });
+
+      SetProducts(storageItems, dispatch);
       return Promise.resolve();
     } catch (error) {
       return Promise.reject();
