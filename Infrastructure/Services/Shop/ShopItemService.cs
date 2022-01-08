@@ -1,10 +1,10 @@
 ﻿using Application.Interfaces.Services.Shop;
 using AutoMapper;
-using LordOfTheHoney.Application.Features.ShopItem.Commands.Create;
-using LordOfTheHoney.Application.Features.ShopItem.Commands.Patch;
-using LordOfTheHoney.Application.Features.ShopItem.Queries.GetAllPaged;
+using LordOfTheHoney.Application.Features.ShopItems.Commands.Create;
+using LordOfTheHoney.Application.Features.ShopItems.Commands.Patch;
+using LordOfTheHoney.Application.Features.ShopItems.Queries.GetAllPaged;
 using LordOfTheHoney.Application.Interfaces.Repositories;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,20 +17,24 @@ using Domain.Enums;
 using AutoMapper.QueryableExtensions;
 using LordOfTheHoney.Application.Extensions;
 using LordOfTheHoney.Application.Specifications;
+using LordOfTheHoney.Application.Interfaces.Services;
 
 namespace Infrastructure.Services.Shop
 {
     public class ShopItemService : IShopItemService
     {
-        private readonly IUnitOfWork<int> unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMediator mediator;
         private readonly IMapper mapper;
+        private readonly IUploadService uploadService;
 
-        public ShopItemService(IUnitOfWork<int> unitOfWork, IMapper mapper, IMediator mediator)
+        public ShopItemService(IUnitOfWork unitOfWork, IMapper mapper, 
+            IMediator mediator, IUploadService uploadService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.mediator = mediator;
+            this.uploadService = uploadService;
         }
 
         public async Task<bool> CreateShopItemAsync(CreateShopItemCommand command, CancellationToken cancellationToken)
@@ -42,6 +46,13 @@ namespace Infrastructure.Services.Shop
             }
 
             var shopItem = mapper.Map<ShopItem>(command);
+
+            var uploadRequest = command.UploadRequest;
+            if (uploadRequest != null)
+            {
+                uploadRequest.FileName = $"ShopItem-{command.Barcode}{uploadRequest.Extension}";
+                shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
+            }
 
             await unitOfWork.Repository<ShopItem>().AddAsync(shopItem);
 
@@ -60,8 +71,16 @@ namespace Infrastructure.Services.Shop
             var shopItem = await unitOfWork.Repository<ShopItem>().GetByIdAsync(command.Id);
             if (shopItem != null)
             {
+                var uploadRequest = command.UploadRequest;
+                if (uploadRequest != null)
+                {
+                    uploadRequest.FileName = $"ShopItem-{command.Barcode}{uploadRequest.Extension}";
+                    shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
+                }
+
                 shopItem.Name = command.Name ?? shopItem.Name;
                 shopItem.Description = command.Description ?? shopItem.Description;
+                shopItem.Cost = command.Cost;
 
                 shopItem.ShopItemTypeId = (command.ShopItemTypeId == 0) ? shopItem.ShopItemTypeId : command.ShopItemTypeId;
                 await unitOfWork.Repository<ShopItem>().UpdateAsync(shopItem);

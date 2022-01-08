@@ -1,11 +1,11 @@
 ﻿using Domain.Enums;
 using LordOfTheHoney.Application.Exceptions;
-using LordOfTheHoney.Application.Features.ShopItem.Commands.Create;
-using LordOfTheHoney.Application.Features.ShopItem.Commands.Delete;
-using LordOfTheHoney.Application.Features.ShopItem.Commands.Patch;
-using LordOfTheHoney.Application.Features.ShopItem.Queries.GetAllPaged;
-using LordOfTheHoney.Application.Features.ShopItem.Queries.GetById;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Application.Features.ShopItems.Commands.Create;
+using LordOfTheHoney.Application.Features.ShopItems.Commands.Delete;
+using LordOfTheHoney.Application.Features.ShopItems.Commands.Patch;
+using LordOfTheHoney.Application.Features.ShopItems.Queries.GetAllPaged;
+using LordOfTheHoney.Application.Features.ShopItems.Queries.GetById;
+using LordOfTheHoney.Domain.Entities.Shop;
 using LordOfTheHoney.Server.Controllers;
 using LordOfTheHoney.Shared.Constants.Permission;
 using LordOfTheHoney.Shared.Wrapper;

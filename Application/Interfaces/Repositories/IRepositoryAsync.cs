@@ -5,11 +5,11 @@ using LordOfTheHoney.Domain.Contracts;
 
 namespace LordOfTheHoney.Application.Interfaces.Repositories
 {
-    public interface IRepositoryAsync<T, in TId> where T : class, IEntity<TId>
+    public interface IRepositoryAsync<T> where T : class
     {
         IQueryable<T> Entities { get; }
 
-        Task<T> GetByIdAsync(TId id);
+        Task<T> GetByIdAsync(int id);
 
         Task<List<T>> GetAllAsync();
 

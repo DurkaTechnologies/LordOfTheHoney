@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using LordOfTheHoney.Application.Features.ShopItemType.Commands.Create;
-using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetAllPaged;
-using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetById;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Create;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Queries.GetAllPaged;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Queries.GetById;
+using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Infrastructure.Mappings
 {
@@ -24,7 +24,7 @@ namespace LordOfTheHoney.Infrastructure.Mappings
 
             CreateMap<CreateShopItemTypeCommand, ShopItemType>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description));
+            .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description)).ReverseMap();
         }
     }
 }

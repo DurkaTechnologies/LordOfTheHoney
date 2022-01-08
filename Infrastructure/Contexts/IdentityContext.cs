@@ -2,7 +2,7 @@
 using LordOfTheHoney.Application.Models.Chat;
 using LordOfTheHoney.Infrastructure.Models.Identity;
 using LordOfTheHoney.Domain.Contracts;
-using LordOfTheHoney.Domain.Entities.Catalog;
+using LordOfTheHoney.Domain.Entities.Shop;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -26,6 +26,7 @@ namespace LordOfTheHoney.Infrastructure.Contexts
         public DbSet<ChatHistory<ApplicationUser>> ChatHistories { get; set; }
         public DbSet<ShopItem> ShopItems { get; set; }
         public DbSet<ShopItemType> ShopItemTypes { get; set; }
+        public DbSet<StorageItem> StorageItems { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {

@@ -45,7 +45,7 @@ namespace WebUI
             services.AddSharedInfrastructure(Configuration);
             services.RegisterSwagger();
             services.AddInfrastructureMappings();
-            services.AddControllers();
+            services.AddControllers().AddValidators();
             services.AddApiVersioning(config =>
             {
                 config.DefaultApiVersion = new ApiVersion(1, 0);

@@ -47,7 +47,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("ChatHistory");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.ShopItem", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("ShopItems");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.ShopItemType", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,9 +116,37 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("ShopItemTypes");
+                });
+
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShopItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ShopItemId");
+
+                    b.ToTable("StorageItems");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Audit.Audit", b =>
@@ -435,15 +463,30 @@ namespace Infrastructure.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.ShopItem", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItem", b =>
                 {
-                    b.HasOne("LordOfTheHoney.Domain.Entities.Catalog.ShopItemType", "ShopItemType")
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", "ShopItemType")
                         .WithMany("ShopItems")
                         .HasForeignKey("ShopItemTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ShopItemType");
+                });
+
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
+                {
+                    b.HasOne("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationUser", null)
+                        .WithMany("StorageItems")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.ShopItem", "ShopItem")
+                        .WithMany()
+                        .HasForeignKey("ShopItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShopItem");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationRoleClaim", b =>
@@ -499,7 +542,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.ShopItemType", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", b =>
                 {
                     b.Navigation("ShopItems");
                 });
@@ -514,6 +557,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("ChatHistoryFromUsers");
 
                     b.Navigation("ChatHistoryToUsers");
+
+                    b.Navigation("StorageItems");
                 });
 #pragma warning restore 612, 618
         }

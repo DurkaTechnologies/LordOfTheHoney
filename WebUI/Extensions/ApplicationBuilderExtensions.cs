@@ -7,11 +7,19 @@ using WebUI;
 using Swashbuckle.AspNetCore.Swagger;
 using LordOfTheHoney.Shared.Constants.Permission;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
+using System.Linq;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
     internal static class ApplicationBuilderExtensions
     {
+        internal static IMvcBuilder AddValidators(this IMvcBuilder builder)
+        {
+            builder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AppConfiguration>());
+            return builder;
+        }
+
         internal static IApplicationBuilder UseForwarding(this IApplicationBuilder app, IConfiguration configuration)
         {
             AppConfiguration config = GetApplicationSettings(configuration);

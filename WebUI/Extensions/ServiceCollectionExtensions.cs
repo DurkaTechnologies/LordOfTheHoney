@@ -41,6 +41,7 @@ using LordOfTheHoney.Application.Interfaces.Repositories;
 using LordOfTheHoney.Infrastructure.Repositories;
 using Infrastructure.Services.Shop;
 using MediatR;
+using BlazorHero.CleanArchitecture.Infrastructure.Services;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
@@ -214,9 +215,10 @@ namespace LordOfTheHoney.WebUI.Extensions
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUploadService, UploadService>();
 
-            services.AddTransient(typeof(IRepositoryAsync<,>), typeof(RepositoryAsync<,>));
-            services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
+            services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped<IShopItemService, ShopItemService>();
             services.AddTransient<IShopItemTypeService, ShopItemTypeService>();
             services.AddMediatR(typeof(ShopItemService).Assembly);
