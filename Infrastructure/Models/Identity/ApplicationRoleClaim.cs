@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LordOfTheHoney.Infrastructure.Models.Identity
 {
-    public class ApplicationRoleClaim : IdentityRoleClaim<string>, IAuditableEntity<int>
+    public class ApplicationRoleClaim : IdentityRoleClaim<string>, IAuditableEntity
     {
         public string Description { get; set; }
         public string Group { get; set; }

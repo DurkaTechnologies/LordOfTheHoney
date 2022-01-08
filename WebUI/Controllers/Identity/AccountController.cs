@@ -88,5 +88,17 @@ namespace LordOfTheHoney.Server.Controllers.Identity
             else
                 return BadRequest(response);
         }
+
+        [HttpDelete(nameof(GetDeleteItemFromStorageAsync))]
+        public async Task<IActionResult> GetDeleteItemFromStorageAsync(GetDeleteItemFromStorage model)
+        {
+            var response = await _accountService.GetDeleteItemFromStorageAsync(model);
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+            else
+                return BadRequest(response);
+        }
     }
 }

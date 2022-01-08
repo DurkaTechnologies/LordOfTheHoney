@@ -1,6 +1,6 @@
-﻿using LordOfTheHoney.Application.Features.ShopItemType.Commands.Create;
-using LordOfTheHoney.Application.Features.ShopItemType.Commands.Patch;
-using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetAllPaged;
+﻿using LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Create;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Patch;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Queries.GetAllPaged;
 using LordOfTheHoney.Domain.Entities.Shop;
 using LordOfTheHoney.Shared.Wrapper;
 using System;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Infrastructure.Repositories
 {
-    public class RepositoryAsync<T, TId> : IRepositoryAsync<T, TId> where T : AuditableEntity<TId>
+    public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class
     {
         private readonly IdentityContext _dbContext;
 
@@ -38,7 +38,7 @@ namespace LordOfTheHoney.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(TId id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
@@ -55,8 +55,8 @@ namespace LordOfTheHoney.Infrastructure.Repositories
 
         public Task UpdateAsync(T entity)
         {
-            T exist = _dbContext.Set<T>().Find(entity.Id);
-            _dbContext.Entry(exist).CurrentValues.SetValues(entity);
+            _dbContext.Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Modified;
             return Task.CompletedTask;
         }
     }

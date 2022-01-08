@@ -8,10 +8,11 @@ using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Contracts;
 
 namespace LordOfTheHoney.Infrastructure.Repositories
 {
-    public class UnitOfWork<TId> : IUnitOfWork<TId>
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IdentityContext _dbContext;
@@ -26,7 +27,7 @@ namespace LordOfTheHoney.Infrastructure.Repositories
             _cache = cache;
         }
 
-        public IRepositoryAsync<TEntity, TId> Repository<TEntity>() where TEntity : AuditableEntity<TId>
+        public IRepositoryAsync<TEntity> Repository<TEntity>() where TEntity : AuditableEntity
         {
             if (_repositories == null)
                 _repositories = new Hashtable();
@@ -35,12 +36,34 @@ namespace LordOfTheHoney.Infrastructure.Repositories
 
             if (!_repositories.ContainsKey(type))
             {
-                var repositoryType = typeof(RepositoryAsync<,>);
-                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity), typeof(TId)), _dbContext);
+                var repositoryType = typeof(RepositoryAsync<>);
+
+                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _dbContext);
+
                 _repositories.Add(type, repositoryInstance);
             }
 
-            return (IRepositoryAsync<TEntity, TId>)_repositories[type];
+            return (IRepositoryAsync<TEntity>)_repositories[type];
+        }
+
+
+        public IRepositoryAsync<TEntity> RepositoryClassic<TEntity>() where TEntity : Entity
+        {
+            if (_repositories == null)
+                _repositories = new Hashtable();
+
+            var type = typeof(TEntity).Name;
+
+            if (!_repositories.ContainsKey(type))
+            {
+                var repositoryType = typeof(RepositoryAsync<>);
+
+                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _dbContext);
+
+                _repositories.Add(type, repositoryInstance);
+            }
+
+            return (IRepositoryAsync<TEntity>)_repositories[type];
         }
 
         public async Task<int> Commit(CancellationToken cancellationToken)

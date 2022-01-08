@@ -9,8 +9,15 @@ using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Infrastructure.Models.Identity
 {
-    public class ApplicationUser : IdentityUser<string>, IChatUser, IAuditableEntity<string>
+    public class ApplicationUser : IdentityUser<string>, IChatUser, IAuditableEntity
     {
+        public ApplicationUser()
+        {
+            ChatHistoryFromUsers = new HashSet<ChatHistory<ApplicationUser>>();
+            ChatHistoryToUsers = new HashSet<ChatHistory<ApplicationUser>>();
+            StorageItems = new HashSet<StorageItem>();
+        }
+
         public string CreatedBy { get; set; }
 
         [Column(TypeName = "text")]
@@ -40,10 +47,5 @@ namespace LordOfTheHoney.Infrastructure.Models.Identity
 
         public decimal BeeCoins { get; set; }
 
-        public ApplicationUser()
-        {
-            ChatHistoryFromUsers = new HashSet<ChatHistory<ApplicationUser>>();
-            ChatHistoryToUsers = new HashSet<ChatHistory<ApplicationUser>>();
-        }
     }
 }

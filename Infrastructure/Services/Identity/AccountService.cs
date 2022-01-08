@@ -10,6 +10,7 @@ using LordOfTheHoney.Application.Interfaces.Repositories;
 using LordOfTheHoney.Domain.Entities.Shop;
 using LordOfTheHoney.Application.Models.Shop;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace LordOfTheHoney.Infrastructure.Services.Identity
 {
@@ -17,10 +18,10 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager; 
-        private readonly IUnitOfWork<int> unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
         public AccountService(UserManager<ApplicationUser> userManager, 
-            SignInManager<ApplicationUser> signInManager, IUnitOfWork<int> unitOfWork)
+            SignInManager<ApplicationUser> signInManager, IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -75,11 +76,22 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             return await Result<string>.SuccessAsync(data: user.ProfilePictureDataUrl);
         }
 
-        private async Task<IResult> CreateAndAddItemsToStorage(IEnumerable<StorageItem> storageItems, string userId)
+        private async Task<IdentityResult> CreateAndAddItemsToStorage(IEnumerable<StorageItem> storageItems, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user != null)
             {
+                try
+                {
+                    foreach (var item in storageItems)
+                        user.StorageItems.Add(item);
+
+                    return await userManager.UpdateAsync(user);
+                }
+                catch (System.Exception)
+                {
+                    throw;
+                }
             }
             throw new NotFoundException(nameof(ApplicationUser), userId);
         }
@@ -117,15 +129,52 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
 
                     if (user.BeeCoins >= totalPrice)
                     {
-                        user.BeeCoins -= totalPrice;
-                        var identityResult = await userManager.UpdateAsync(user);
-                        var errors = identityResult.Errors.Select(e => e.Description).ToList();
-                        return identityResult.Succeeded ? Result<decimal>.Success(totalPrice) : Result<decimal>.Fail(errors);
+                        var storageItems = sortedCart.Select(sc => new StorageItem()
+                        {
+                            ApplicationUserId = user.Id,
+                            Quantity = sc.Quantity,
+                            ShopItemId = sc.ShopItemId
+                        });
+
+                        var addToStorageResult = await CreateAndAddItemsToStorage(storageItems, user.Id);
+
+                        if (addToStorageResult.Succeeded)
+                        {
+                            user.BeeCoins -= totalPrice;
+                            var identityResult = await userManager.UpdateAsync(user);
+                            var errors = identityResult.Errors.Select(e => e.Description).ToList();
+
+                            return identityResult.Succeeded ? Result<decimal>.Success(totalPrice) : Result<decimal>.Fail(errors);
+                        }
+                        else
+                            return Result<decimal>.Fail(addToStorageResult.Errors.Select(e => e.Description).ToList());
                     }
                     else
                         return await Result<decimal>.FailAsync($"The user haven't enough BeeCoins.");
                 }
                 return await Result<decimal>.FailAsync($"Cart is empty!");
+            }
+            throw new NotFoundException(nameof(ApplicationUser), model.UserId);
+        }
+
+        public async Task<IResult<StorageItem>> GetDeleteItemFromStorageAsync(GetDeleteItemFromStorage model)
+        {
+            var user = await userManager.Users.Include(user => user.StorageItems)
+                .Where(user => user.Id == model.UserId).FirstOrDefaultAsync();
+            if (user != null || user.StorageItems.Count() == 0)
+            {
+                var gettedItem = user.StorageItems.Where(si => si.ApplicationUserId == model.UserId)
+                    .Where(si => si.ShopItemId == model.ShopItemId).Where(si => si.Quantity == model.Quantity).FirstOrDefault();
+
+                if (gettedItem != null)
+                {
+                    await unitOfWork.RepositoryClassic<StorageItem>().DeleteAsync(gettedItem);
+                    unitOfWork.Commit();
+
+                    return await Result<StorageItem>.SuccessAsync(gettedItem);
+                }
+                else
+                    throw new NotFoundException($"User haven`t item with shopItemId:{model.ShopItemId} in the ItemStorage");
             }
             throw new NotFoundException(nameof(ApplicationUser), model.UserId);
         }

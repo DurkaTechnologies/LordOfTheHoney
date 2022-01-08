@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using LordOfTheHoney.Application.Features.ShopItemType.Commands.Create;
-using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetAllPaged;
-using LordOfTheHoney.Application.Features.ShopItemType.Queries.GetById;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Create;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Queries.GetAllPaged;
+using LordOfTheHoney.Application.Features.ShopItemTypes.Queries.GetById;
 using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Infrastructure.Mappings

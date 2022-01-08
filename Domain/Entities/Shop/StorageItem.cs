@@ -3,7 +3,7 @@ using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Domain.Entities.Shop
 {
-    public class StorageItem : Entity<int>
+    public class StorageItem : Entity
     {
         public string ApplicationUserId { get; set; }
 

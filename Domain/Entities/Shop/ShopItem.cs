@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LordOfTheHoney.Domain.Entities.Shop
 {
-    public class ShopItem : AuditableEntity<int>, IItem
+    public class ShopItem : AuditableEntity, IItem
     {
         public string Name { get; set; }
 

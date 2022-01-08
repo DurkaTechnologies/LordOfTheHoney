@@ -116,9 +116,37 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("ShopItemTypes");
+                });
+
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShopItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ShopItemId");
+
+                    b.ToTable("StorageItems");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Audit.Audit", b =>
@@ -446,6 +474,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("ShopItemType");
                 });
 
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
+                {
+                    b.HasOne("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationUser", null)
+                        .WithMany("StorageItems")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.ShopItem", "ShopItem")
+                        .WithMany()
+                        .HasForeignKey("ShopItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShopItem");
+                });
+
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationRoleClaim", b =>
                 {
                     b.HasOne("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationRole", "Role")
@@ -514,6 +557,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("ChatHistoryFromUsers");
 
                     b.Navigation("ChatHistoryToUsers");
+
+                    b.Navigation("StorageItems");
                 });
 #pragma warning restore 612, 618
         }

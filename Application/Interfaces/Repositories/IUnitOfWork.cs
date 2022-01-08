@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Application.Interfaces.Repositories
 {
-    public interface IUnitOfWork<TId> : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        IRepositoryAsync<T, TId> Repository<T>() where T : AuditableEntity<TId>;
+        IRepositoryAsync<T> Repository<T>() where T : AuditableEntity;
+        IRepositoryAsync<T> RepositoryClassic<T>() where T : Entity;
 
-        Task<int> Commit(CancellationToken cancellationToken);
+        Task<int> Commit(CancellationToken cancellationToken = default);
 
         Task<int> CommitAndRemoveCache(CancellationToken cancellationToken, params string[] cacheKeys);
 
