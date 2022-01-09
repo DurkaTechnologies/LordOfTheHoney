@@ -5,6 +5,7 @@ import {
   CartActionTypes,
   ICartProduct,
   SetQuantityType,
+  IBuyResponseSend,
 } from "./types";
 import http from "../../../http_common";
 
@@ -58,10 +59,13 @@ export const cartSetProducts = (data: Array<ICartProduct>) => {
     }
   };
 };
-export const cartBuy = () => {
+export const cartBuy = (cart: IBuyResponseSend) => {
   return async (dispatch: Dispatch<CartAction>) => {
     try {
-      // const response = http.post("asd");
+      const response = await http.post(
+        "api/identity/account/BuyShopItemsAsync",
+        cart
+      );
       return Promise.resolve();
     } catch (error) {
       return Promise.reject();

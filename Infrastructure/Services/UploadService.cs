@@ -15,7 +15,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
         {
             if (request.Data == null)
                 return string.Empty;
-
+                
             var streamData = new MemoryStream(request.Data);
 
             if (streamData.Length > 0)

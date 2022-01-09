@@ -35,6 +35,12 @@ const AddProduct = () => {
     shopItemTypeId: 0,
     picturePath: null,
     cost: 0,
+    uploadRequest: {
+      fileName: "",
+      extension: "",
+      uploadType: 0,
+      data: null,
+    },
   };
   const initialUrl = "https://static.thenounproject.com/png/3752804-200.png";
 
@@ -57,6 +63,7 @@ const AddProduct = () => {
   const handleSubmit = (values: IProduct, actions: FormikHelpers<IProduct>) => {
     async function add() {
       try {
+        console.log("values: ", values);
         values.barcode = generateBarcode(values);
         await addProduct(values);
         toast.success(`Product ${values.name} was successfully added`);

@@ -15,7 +15,7 @@ export interface IStorageItem {
   picturePath: Blob | undefined | null | string;
   description: string | null;
   barcode?: string | undefined | null;
-  quantity: 0;
+  quantity: number;
 }
 
 export interface StorageSetItemsAction {
@@ -29,6 +29,20 @@ export interface StorageAddItemsAction {
 export interface StorageRemoveItemAction {
   type: StorageActionTypes.STORAGE_REMOVE_ITEM;
   payload: number;
+}
+
+export interface IFetchStorageResponseDataItem {}
+export interface IFetchStorageResponseData {
+  // data: Array<IFetchStorageResponseDataItem>;
+  shopItem: IStorageItem;
+  quantity: number;
+}
+export interface IFetchStorageResponse {
+  data: Array<IFetchStorageResponseData>;
+  failed: boolean;
+  messages: Array<string>;
+  succeeded: boolean;
+  type: any;
 }
 
 export type StorageAction =

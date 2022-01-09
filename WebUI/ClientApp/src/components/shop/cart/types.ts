@@ -16,6 +16,14 @@ export interface ICartProduct {
   cost: number;
   quantity: number;
 }
+export interface IBuyResponseCartProduct {
+  shopItemId: number;
+  quantity: number;
+}
+export interface IBuyResponseSend {
+  userId: string;
+  cartItems: Array<IBuyResponseCartProduct>;
+}
 
 export interface CartState {
   cartProducts: Array<ICartProduct>;

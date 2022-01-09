@@ -1,5 +1,4 @@
 ﻿using LordOfTheHoney.Application.Enums;
-using Microsoft.AspNetCore.Http;
 
 namespace LordOfTheHoney.Application.Requests
 {

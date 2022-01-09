@@ -1,10 +1,15 @@
 import * as React from "react";
+import { useState } from "react";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
 import { BulmaButton } from "src/components/common/bulma";
 
-import { ICartProduct } from "../types";
+import {
+  ICartProduct,
+  IBuyResponseCartProduct,
+  IBuyResponseSend,
+} from "../types";
 
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,6 +32,8 @@ const ItemCart = () => {
     storageAddItems,
     userCoinsSpend,
   } = useActions();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   React.useEffect(() => {
     const cartItemsJson = localStorage.getItem("cartItems");
@@ -56,16 +63,34 @@ const ItemCart = () => {
       : true;
   };
 
+  const getProductCartToSend = async () => {
+    let cartProductsSend: Array<IBuyResponseCartProduct> = [];
+    cartProducts.forEach((x) => {
+      cartProductsSend.push({ shopItemId: x.id, quantity: x.quantity });
+    });
+    const cartSend: IBuyResponseSend = {
+      userId: user.id,
+      cartItems: cartProductsSend,
+    };
+    return cartSend;
+  };
+
   const handleCartBuy = async () => {
     try {
-      await cartBuy();
+      setLoading(true);
+      const total = await getProductCartToSend();
+      const totalPrice = await getFinalPrice();
+      await cartBuy(total);
       await storageAddItems(cartProducts as Array<IStorageItem>);
       await cartClear();
       await userCoinsSpend(getFinalPrice());
       switchIsShopCart(false);
       switchIsShop(true);
+      toast.success(`You spend ${totalPrice} bee coins. Thanks`);
     } catch (error) {
       toast.error("Some errors. Check and try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -177,12 +202,14 @@ const ItemCart = () => {
                 type="button"
                 onClick={handleCartBuy}
                 disabled={getButtonDisabled()}
+                loading={loading}
               />
               <BulmaButton
                 type="button"
                 label="Clear cart"
                 className="is-danger ml-4"
                 onClick={cartClear}
+                loading={loading}
               />
             </div>
           </div>

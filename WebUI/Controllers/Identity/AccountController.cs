@@ -100,5 +100,19 @@ namespace LordOfTheHoney.Server.Controllers.Identity
             else
                 return BadRequest(response);
         }
+        /// <summary>
+        /// Get user storage by user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Status 200 OK Status; 400 BadRequest; Status 404 NotFound</returns>
+        [HttpGet(nameof(GetUserStorage))]
+        public async Task<IActionResult> GetUserStorage(string userId)
+        {
+            var response = await _accountService.GetUserStorageAsync(userId);
+            if (response.Succeeded)
+                return Ok(response);
+            else
+                return BadRequest(response);
+        }
     }
 }
