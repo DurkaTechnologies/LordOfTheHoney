@@ -7,8 +7,6 @@ namespace LordOfTheHoney.Application.Requests
         public string FileName { get; set; }
         public string Extension { get; set; }
         public UploadType UploadType { get; set; }
-        public string Data { get; set; }
-        //public byte[] Data { get; set; }
-        //public IFormFile Data { get; set; }
+        public byte[] Data { get; set; }
     }
 }

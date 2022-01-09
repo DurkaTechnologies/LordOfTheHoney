@@ -7,6 +7,9 @@ namespace LordOfTheHoney.Application.Enums
         [Description(@"Images\ShopItems")]
         ShopItem,
 
+        [Description(@"Images\ShopItemTypes")]
+        ShopItemType,
+
         [Description(@"Images\ProfilePictures")]
         ProfilePicture,
 

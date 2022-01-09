@@ -11,6 +11,7 @@ using LordOfTheHoney.Shared.Constants.Permission;
 using LordOfTheHoney.Shared.Wrapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,6 +34,12 @@ namespace LordOfTheHoney.WebUI.Controllers.Shop
         public async Task<IActionResult> CreateShopItem(CreateShopItemCommand command)
         {
             return Ok(await mediator.Send(command));
+        }
+
+
+        public async Task<IActionResult> UploadShopItemPicture(IFormFile formFile, int id)
+        {
+            return Ok();
         }
 
         [HttpGet]

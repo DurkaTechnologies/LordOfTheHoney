@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces.Services.Shop;
 using LordOfTheHoney.Application.Requests;
+using Microsoft.AspNetCore.Http;
 
 namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Create
 {
@@ -26,7 +27,7 @@ namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Create
         [Required]
         public int ShopItemTypeId { get; set; }
 
-        public UploadRequest UploadRequest { get; set; }
+        public IFormFile FormFile { get; set; }
     }
 
     internal class CreateShopItemCommandHandler : IRequestHandler<CreateShopItemCommand, IResult<bool>>

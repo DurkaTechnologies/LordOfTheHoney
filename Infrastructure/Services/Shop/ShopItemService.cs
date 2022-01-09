@@ -18,6 +18,8 @@ using AutoMapper.QueryableExtensions;
 using LordOfTheHoney.Application.Extensions;
 using LordOfTheHoney.Application.Specifications;
 using LordOfTheHoney.Application.Interfaces.Services;
+using LordOfTheHoney.Application.Enums;
+using System.IO;
 
 namespace Infrastructure.Services.Shop
 {
@@ -28,7 +30,7 @@ namespace Infrastructure.Services.Shop
         private readonly IMapper mapper;
         private readonly IUploadService uploadService;
 
-        public ShopItemService(IUnitOfWork unitOfWork, IMapper mapper, 
+        public ShopItemService(IUnitOfWork unitOfWork, IMapper mapper,
             IMediator mediator, IUploadService uploadService)
         {
             this.unitOfWork = unitOfWork;
@@ -39,19 +41,17 @@ namespace Infrastructure.Services.Shop
 
         public async Task<bool> CreateShopItemAsync(CreateShopItemCommand command, CancellationToken cancellationToken)
         {
-            if (await unitOfWork.Repository<ShopItem>().Entities
-                    .AnyAsync(p => p.Barcode == command.Barcode, cancellationToken))
+            if (await unitOfWork.Repository<ShopItem>().Entities.AnyAsync(p => p.Barcode == command.Barcode, cancellationToken))
             {
                 throw new Exception("Barcode already exists!");
             }
 
             var shopItem = mapper.Map<ShopItem>(command);
-
-            var uploadRequest = command.UploadRequest;
-            if (uploadRequest != null)
+            if (command.FormFile != null)
             {
-                uploadRequest.FileName = $"ShopItem-{command.Name}.{uploadRequest.Extension}";
-                shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
+                string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
+                shopItem.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
+                    UploadType.ShopItem, fileName);
             }
 
             await unitOfWork.Repository<ShopItem>().AddAsync(shopItem);
@@ -71,11 +71,11 @@ namespace Infrastructure.Services.Shop
             var shopItem = await unitOfWork.Repository<ShopItem>().GetByIdAsync(command.Id);
             if (shopItem != null)
             {
-                var uploadRequest = command.UploadRequest;
-                if (uploadRequest != null)
+                if (command.FormFile != null)
                 {
-                    uploadRequest.FileName = $"ShopItem-{command.Name}.{uploadRequest.Extension}";
-                    shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
+                    string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
+                    shopItem.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
+                        UploadType.ShopItem, fileName);
                 }
 
                 shopItem.Name = command.Name ?? shopItem.Name;
