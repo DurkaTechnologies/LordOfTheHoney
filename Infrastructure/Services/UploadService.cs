@@ -1,28 +1,22 @@
-﻿using LordOfTheHoney.Application.Extensions;
+﻿using LordOfTheHoney.Application.Enums;
+using LordOfTheHoney.Application.Extensions;
 using LordOfTheHoney.Application.Interfaces.Services;
 using LordOfTheHoney.Application.Requests;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace BlazorHero.CleanArchitecture.Infrastructure.Services
 {
     public class UploadService : IUploadService
     {
-        public string UploadAsync(UploadRequest request)
+        public async Task<string> UploadAsync(UploadRequest request)
         {
-            if (request.Data == null) return string.Empty;
+            if (request.Data == null)
+                return string.Empty;
 
-            // If request.Data is byte[]  ***********
             var streamData = new MemoryStream(request.Data);
-            //*****************
-
-            // If request.Data is IFormFile  ***********
-            //MemoryStream streamData;
-
-            //using (streamData = new MemoryStream())
-            //{
-            //    request.Data.CopyTo(streamData);
-            //}
-            //*****************
 
             if (streamData.Length > 0)
             {
@@ -46,7 +40,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
 
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    streamData.CopyTo(stream);
+                    await streamData.CopyToAsync(stream);
                 }
                 return dbPath;
             }
@@ -99,6 +93,37 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
             }
 
             return string.Format(pattern, max);
+        }
+
+        public async Task<string> UploadByFormFileAsync(IFormFile formFile, UploadType uploadType, string fileName = null)
+        {
+            if (formFile == null)
+                return "";
+
+            byte[] fileBytes = new byte[formFile.Length];
+
+            using (var memoryStream = new MemoryStream())
+            {
+                formFile.CopyTo(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+
+            UploadRequest request = new UploadRequest
+            {
+                Extension = Path.GetExtension(formFile.FileName),
+                FileName = string.IsNullOrWhiteSpace(fileName) ? formFile.FileName : fileName,
+                UploadType = uploadType,
+                Data = fileBytes
+            };
+
+            try
+            {
+                return await UploadAsync(request);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

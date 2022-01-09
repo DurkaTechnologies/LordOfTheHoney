@@ -17,6 +17,8 @@ using AutoMapper.QueryableExtensions;
 using LordOfTheHoney.Application.Extensions;
 using System.Collections.Generic;
 using LordOfTheHoney.Application.Interfaces.Services;
+using System.IO;
+using LordOfTheHoney.Application.Enums;
 
 namespace Infrastructure.Services.Shop
 {
@@ -46,11 +48,11 @@ namespace Infrastructure.Services.Shop
 
             var shopItemType = mapper.Map<ShopItemType>(command);
 
-            var uploadRequest = command.UploadRequest;
-            if (uploadRequest != null)
+            if (command.FormFile != null)
             {
-                uploadRequest.FileName = $"ShopItemType-{command.Name}{uploadRequest.Extension}";
-                shopItemType.PicturePath = uploadService.UploadAsync(uploadRequest);
+                string fileName = $"ShopItemType-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
+                shopItemType.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
+                    UploadType.ShopItemType, fileName);
             }
 
             await unitOfWork.Repository<ShopItemType>().AddAsync(shopItemType);
@@ -70,11 +72,11 @@ namespace Infrastructure.Services.Shop
             var shopItemType = await unitOfWork.Repository<ShopItemType>().GetByIdAsync(command.Id);
             if (shopItemType != null)
             {
-                var uploadRequest = command.UploadRequest;
-                if (uploadRequest != null)
+                if (command.FormFile != null)
                 {
-                    uploadRequest.FileName = $"ShopItemType-{command.Name}{uploadRequest.Extension}";
-                    shopItemType.PicturePath = uploadService.UploadAsync(uploadRequest);
+                    string fileName = $"ShopItemType-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
+                    shopItemType.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
+                        UploadType.ShopItemType, fileName);
                 }
 
                 shopItemType.Name = command.Name ?? shopItemType.Name;

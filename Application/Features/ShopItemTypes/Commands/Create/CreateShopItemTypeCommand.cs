@@ -4,7 +4,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces.Services.Shop;
-using LordOfTheHoney.Application.Requests;
+using Microsoft.AspNetCore.Http;
 
 namespace LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Create
 {
@@ -17,7 +17,7 @@ namespace LordOfTheHoney.Application.Features.ShopItemTypes.Commands.Create
 
         public string PicturePath { get; set; }
 
-        public UploadRequest UploadRequest { get; set; }
+        public IFormFile FormFile { get; set; }
     }
 
     internal class CreateShopItemTypeCommandHandler : IRequestHandler<CreateShopItemTypeCommand, IResult<bool>>

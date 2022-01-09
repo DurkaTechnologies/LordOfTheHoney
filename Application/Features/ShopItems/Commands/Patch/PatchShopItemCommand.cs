@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Interfaces.Services.Shop;
 using FluentValidation;
 using LordOfTheHoney.Application.Requests;
+using Microsoft.AspNetCore.Http;
 
 namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Patch
 {
@@ -29,7 +30,7 @@ namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Patch
         [Required]
         public int ShopItemTypeId { get; set; }
 
-        public UploadRequest UploadRequest { get; set; }
+        public IFormFile FormFile { get; set; }
     }
 
     public class PatchShopItemCommandValidator : AbstractValidator<PatchShopItemCommand>
