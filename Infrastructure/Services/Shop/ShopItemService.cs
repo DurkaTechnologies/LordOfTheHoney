@@ -50,7 +50,7 @@ namespace Infrastructure.Services.Shop
             var uploadRequest = command.UploadRequest;
             if (uploadRequest != null)
             {
-                uploadRequest.FileName = $"ShopItem-{command.Barcode}{uploadRequest.Extension}";
+                uploadRequest.FileName = $"ShopItem-{command.Name}.{uploadRequest.Extension}";
                 shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
             }
 
@@ -74,7 +74,7 @@ namespace Infrastructure.Services.Shop
                 var uploadRequest = command.UploadRequest;
                 if (uploadRequest != null)
                 {
-                    uploadRequest.FileName = $"ShopItem-{command.Barcode}{uploadRequest.Extension}";
+                    uploadRequest.FileName = $"ShopItem-{command.Name}.{uploadRequest.Extension}";
                     shopItem.PicturePath = uploadService.UploadAsync(uploadRequest);
                 }
 

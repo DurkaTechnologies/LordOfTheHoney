@@ -18,6 +18,13 @@ export interface IProduct {
   cost: number;
   description: string | null;
   barcode?: string | undefined | null;
+  uploadRequest?: IProductImage;
+}
+export interface IProductImage {
+  fileName: string;
+  extension: string;
+  uploadType: number;
+  data: Uint8Array | null;
 }
 export interface IProductType {
   id: number;

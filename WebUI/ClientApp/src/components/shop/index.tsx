@@ -150,6 +150,7 @@ const Shop = () => {
                         <div className="card-content">
                           <div className="content d-flex flex-column align-items-center">
                             <img
+                              // src=""
                               src="https://upload.wikimedia.org/wikipedia/commons/6/63/Icon_Bird_512x512.png"
                               alt="Image"
                               width="128px"

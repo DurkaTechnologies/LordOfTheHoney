@@ -6,14 +6,29 @@ import { useActions } from "src/hooks/useActions";
 import { BulmaButton } from "src/components/common/bulma";
 
 import Modal from "react-bootstrap/Modal";
+import { toast } from "react-toastify";
 
 const Storage = () => {
   const { isStorageActive } = useTypedSelector((redux) => redux.home);
+  const { user } = useTypedSelector((redux) => redux.auth);
   const { items } = useTypedSelector((redux) => redux.storage);
-  const { switchIsStorage, switchIsShop, storageRemoveItem } = useActions();
+  const {
+    switchIsStorage,
+    switchIsShop,
+    storageRemoveItem,
+    storageFetchItems,
+  } = useActions();
 
   const handleSendToInventory = (id: number) => {
     storageRemoveItem(id);
+  };
+
+  const fetch = async () => {
+    try {
+      await storageFetchItems(user.id);
+    } catch (error) {
+      toast.error("Some error. Check and try again");
+    }
   };
 
   return (
@@ -23,6 +38,7 @@ const Storage = () => {
         onHide={() => {
           switchIsStorage(false);
         }}
+        onShow={fetch}
         size="xl"
       >
         <Modal.Header>

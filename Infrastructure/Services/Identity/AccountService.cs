@@ -178,5 +178,22 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             }
             throw new NotFoundException(nameof(ApplicationUser), model.UserId);
         }
+        public async Task<IResult<IEnumerable<StorageItem>>> GetUserStorageAsync(string userId)
+        {
+            var user = await userManager.Users.Include(user => user.StorageItems)
+                .Where(user => user.Id == userId).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                var userStorageIds = user.StorageItems.Select(item => item.ShopItemId).ToList();
+                var shopItemsGroups = unitOfWork.Repository<ShopItem>().Entities.Where(item => userStorageIds.Contains(item.Id)).ToDictionary(item => item.Id);
+
+                foreach (var item in user.StorageItems)
+                    item.ShopItem = shopItemsGroups[item.ShopItemId];
+                
+                return await Result<IEnumerable<StorageItem>>.SuccessAsync(user.StorageItems);
+            }
+
+            throw new NotFoundException(nameof(ApplicationUser), userId);
+        }
     }
 }
