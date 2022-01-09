@@ -1,3 +1,8 @@
+.ownHeader {
+  background-color: transparent;
+  position: absolute;
+  width: 100%;
+}
 .element {
   background-color: rgba(222, 222, 222, 0.3);
   border-radius: 16px;
