@@ -1,0 +1,11 @@
+#webgl {
+  position: absolute;
+  outline: none;
+}
+.ownHeader {
+  z-index: 3;
+}
+html,
+body {
+  overflow: hidden;
+}

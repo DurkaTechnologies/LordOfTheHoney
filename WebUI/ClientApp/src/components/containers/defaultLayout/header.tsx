@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <>
       {isAuth && (
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between ownHeader">
           <div className="element leftElement d-flex">
             <span className="material-icons-outlined pt-48 my-auto">
               monetization_on

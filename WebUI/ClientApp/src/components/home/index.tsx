@@ -5,11 +5,7 @@ const HomePage = () => {
   React.useState(() => {
     console.log("Render ");
   });
-  return (
-    <>
-      <h1 className="title is-1">Home page</h1>
-    </>
-  );
+  return <></>;
 };
 
 export default HomePage;
