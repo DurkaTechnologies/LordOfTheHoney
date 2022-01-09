@@ -33,13 +33,8 @@ namespace LordOfTheHoney.WebUI.Controllers.Shop
         //[Authorize(Policy = Permissions.ShopItems.Create)]
         public async Task<IActionResult> CreateShopItem(CreateShopItemCommand command)
         {
+            //command.FormFile = file;
             return Ok(await mediator.Send(command));
-        }
-
-
-        public async Task<IActionResult> UploadShopItemPicture(IFormFile formFile, int id)
-        {
-            return Ok();
         }
 
         [HttpGet]

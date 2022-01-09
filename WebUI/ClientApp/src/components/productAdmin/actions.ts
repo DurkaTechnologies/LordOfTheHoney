@@ -108,9 +108,28 @@ export const getProductTypes = () => {
 export const addProduct = (data: IProduct) => {
   return async (dispatch: Dispatch<ProductAction>) => {
     try {
+      console.log("WORKS");
+
+      const form = new FormData();
+      form.append("id", data.id.toString());
+      form.append("name", data.name as string);
+      form.append("description", data.description as string);
+      form.append("barcode", data.barcode as string);
+      form.append("cost", data.cost.toString());
+      form.append("picturePath", "");
+      form.append("shopItemTypeId", data.shopItemTypeId.toString());
+      form.append("formFile", data.formFile as Blob);
+
+      console.log("form: ", form.get("name"));
+
       const response = await http.post<IProductResponse>(
         `/api/shop/shopItem/CreateShopItem/`,
-        data
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       AddProduct(data, dispatch);
       return Promise.resolve();

@@ -35,16 +35,10 @@ const AddProduct = () => {
     shopItemTypeId: 0,
     picturePath: null,
     cost: 0,
-    uploadRequest: {
-      fileName: "",
-      extension: "",
-      uploadType: 0,
-      data: null,
-    },
+    formFile: null,
   };
   const initialUrl = "https://static.thenounproject.com/png/3752804-200.png";
 
-  // const [product, setProduct] = React.useState<IProduct>(initialValues);
   const { types } = useTypedSelector((redux) => redux.itemShop);
   const { addProduct, getProductTypes } = useActions();
   const navigator = useNavigate();
