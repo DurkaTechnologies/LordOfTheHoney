@@ -31,7 +31,16 @@
   color: inherit;
   text-decoration: inherit;
 }
+.color-inherit:hover {
+  color: inherit;
+}
 .headerName {
   font-size: 26px;
   margin: auto 30px auto 0px;
+}
+a {
+  text-decoration: inherit;
+}
+.button {
+  text-decoration: inherit;
 }

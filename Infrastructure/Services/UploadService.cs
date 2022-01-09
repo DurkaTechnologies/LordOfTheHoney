@@ -1,7 +1,9 @@
 ﻿using LordOfTheHoney.Application.Extensions;
 using LordOfTheHoney.Application.Interfaces.Services;
 using LordOfTheHoney.Application.Requests;
+using System;
 using System.IO;
+using System.Text;
 
 namespace BlazorHero.CleanArchitecture.Infrastructure.Services
 {
@@ -12,7 +14,10 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
             if (request.Data == null) return string.Empty;
 
             // If request.Data is byte[]  ***********
-            var streamData = new MemoryStream(request.Data);
+            //var byteArr = Convert.FromBase64String(request.Data);
+            //var byteArr = Encoding.ASCII.GetBytes(request.Data);
+            var byteArr = Convert.FromBase64String(request.Data);
+            var streamData = new MemoryStream(byteArr);
             //*****************
 
             // If request.Data is IFormFile  ***********

@@ -22,7 +22,9 @@ const Header = () => {
             <span className="material-icons-outlined pt-48 my-auto">
               monetization_on
             </span>
-            <span className="headerName">{user?.beeCoins}</span>
+            <span className="headerName">
+              {parseInt(user?.beeCoins.toString())}
+            </span>
           </div>
           <div className="element rightElement d-flex">
             <p className="headerName">{user?.nickname}</p>

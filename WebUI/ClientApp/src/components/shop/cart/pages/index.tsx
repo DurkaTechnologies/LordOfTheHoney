@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
 
@@ -31,6 +32,8 @@ const ItemCart = () => {
     storageAddItems,
     userCoinsSpend,
   } = useActions();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   React.useEffect(() => {
     const cartItemsJson = localStorage.getItem("cartItems");
@@ -74,14 +77,20 @@ const ItemCart = () => {
 
   const handleCartBuy = async () => {
     try {
-      await cartBuy(await getProductCartToSend());
+      setLoading(true);
+      const total = await getProductCartToSend();
+      const totalPrice = await getFinalPrice();
+      await cartBuy(total);
       await storageAddItems(cartProducts as Array<IStorageItem>);
       await cartClear();
       await userCoinsSpend(getFinalPrice());
       switchIsShopCart(false);
       switchIsShop(true);
+      toast.success(`You spend ${totalPrice} bee coins. Thanks`);
     } catch (error) {
       toast.error("Some errors. Check and try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -193,12 +202,14 @@ const ItemCart = () => {
                 type="button"
                 onClick={handleCartBuy}
                 disabled={getButtonDisabled()}
+                loading={loading}
               />
               <BulmaButton
                 type="button"
                 label="Clear cart"
                 className="is-danger ml-4"
                 onClick={cartClear}
+                loading={loading}
               />
             </div>
           </div>
