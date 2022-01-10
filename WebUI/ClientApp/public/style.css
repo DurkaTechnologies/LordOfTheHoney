@@ -122,13 +122,8 @@ td {
     font-weight: 500 !important;
 }
 
-input {
-    color: white !important;
-    font-weight: 500 !important;
-}
-
 .modal-body {
-    overflow-y: scroll !important;
+    padding: 16px !important;
 }
 
 .modal-title {
@@ -158,6 +153,7 @@ input {
 input {
     outline: none !important;
     background-color: transparent !important;
+    font-weight: 500 !important;
 }
 
 p {
