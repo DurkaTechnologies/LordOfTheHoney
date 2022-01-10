@@ -105,7 +105,7 @@ const ItemCart = () => {
       >
         <Modal.Header>
           <div className="d-flex justify-content-between w-100">
-            <Modal.Title>Item Cart</Modal.Title>
+            <Modal.Title>Shop Cart</Modal.Title>
 
             <div>
               <BulmaButton
@@ -121,7 +121,7 @@ const ItemCart = () => {
                 }}
               />
               <BulmaButton
-                className="me-2"
+                className=""
                 label=""
                 type="button"
                 iconSpan={
@@ -175,13 +175,16 @@ const ItemCart = () => {
                           />
                         </td>
                         <td>{x.cost * x.quantity}</td>
-                        <td>
-                          <BulmaButton
-                            label="Remove from cart"
-                            className="is-danger"
-                            type="button"
-                            onClick={() => handleDelete(x.id)}
-                          />
+                            <td className="text-end">
+                            <BulmaButton
+                                className="btnRemove"
+                                label=""
+                                type="button"
+                                iconSpan={
+                                    <span className="material-icons-outlined">close</span>
+                                }
+                                onClick={ () => handleDelete(x.id) }
+                            />
                         </td>
                       </tr>
                     );
@@ -191,11 +194,8 @@ const ItemCart = () => {
             </tbody>
           </table>
 
-          <div className="row">
-            <div className="offset-5 col-3">
-              <p className="title t-1">TOTAL: {getFinalPrice()}</p>
-            </div>
-            <div className="col-4">
+          <div className="d-flex justify-content-start align-items-center">
+              <p className="title mr-auto">TOTAL: {getFinalPrice()}</p>
               <BulmaButton
                 label="BUY"
                 className="is-success"
@@ -207,12 +207,11 @@ const ItemCart = () => {
               <BulmaButton
                 type="button"
                 label="Clear cart"
-                className="is-danger ml-4"
+                className="is-danger ml-2"
                 onClick={cartClear}
                 loading={loading}
               />
             </div>
-          </div>
         </Modal.Body>
       </Modal>
     </>

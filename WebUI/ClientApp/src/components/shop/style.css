@@ -5,15 +5,74 @@
 .orangeBackColor {
   background-color: #ffbb00;
 }
+
 .orangeBackColor:hover {
   background-color: #dca100;
 }
+
 .coinPrice {
   position: relative;
   top: 4px;
   margin-right: 4px;
 }
+
 .btnBuy {
-  padding-left: 30px;
-  padding-right: 30px;
+    margin-right: 8px !important;
+    font-weight: 500 !important;
+}
+
+.btnRemove {
+    border: none !important;
+}
+
+.tabs li a {
+    border-radius: 8px 8px 0px 0px !important;
+    padding: 4px 18px !important;
+}
+
+.tabs li.is-active a {
+    border: 3px solid #ffbb00 !important;
+    border-bottom: hidden;
+    position: relative !important;
+    color: black !important;
+}
+
+.tabs a {
+    margin-bottom: -3px;
+    color: gray !important;
+}
+
+.tabs ul {
+    border-bottom: 3px solid #ffbb00 !important;
+}
+
+.card {
+    border-radius: 8px !important;
+}
+
+.card-content {
+    padding: 16px !important;
+}
+
+.card-content img {
+    margin-bottom: 8px !important;
+}
+
+.product-name {
+    margin-bottom: 8px !important;
+    font-size: 20px !important; 
+    font-weight: 600 !important;
+}
+
+.product-category {
+    margin-bottom: 0px !important;
+}
+
+.price-title {
+    margin: 0px !important;
+    font-size: 22px !important;
+}
+
+.title {
+    font-size: 24px !important;
 }
