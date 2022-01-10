@@ -9,6 +9,10 @@ src: local("Material Icons"), local("MaterialIcons-Regular"),
   url(https://example.com/MaterialIcons-Regular.woff) format("woff"),
   url(https://example.com/MaterialIcons-Regular.ttf) format("truetype");*/
 
+* {
+    box-sizing: border-box !important;
+}
+
 /*ubrat*/
 canvas {
     display: none !important;
@@ -77,6 +81,7 @@ html, body {
 .button {
     padding: 8px !important;
     border-radius: 8px !important;
+    border: none !important;
 }
 
 * {
@@ -104,7 +109,22 @@ html, body {
     overflow: hidden !important;
 
     background-color: rgba(222, 222, 222, 0.4) !important;
-    backdrop-filter: blur(5px) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.card {
+    border-radius: 16px !important;
+}
+
+td {
+    vertical-align: middle !important;
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+input {
+    color: white !important;
+    font-weight: 500 !important;
 }
 
 .modal-body {
@@ -137,10 +157,15 @@ html, body {
 
 input {
     outline: none !important;
+    background-color: transparent !important;
 }
 
 p {
     margin-bottom: 0px !important;
+}
+
+.table {
+    background-color: transparent !important;
 }
 
 /*scroll redesign*/

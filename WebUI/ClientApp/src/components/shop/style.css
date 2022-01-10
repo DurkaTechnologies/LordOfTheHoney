@@ -23,27 +23,56 @@
 
 .btnRemove {
     border: none !important;
+    background-color: transparent !important;
+}
+
+.btnRemove:hover {
+    border: 1px solid rgba(222, 222, 222, 1) !important;
+}
+
+.mw-auto {
+    width: auto !important;
+}
+
+.mw-128 {
+    width: 128px !important;
+}
+
+.mw-32 {
+    width: 32px !important;
+}
+
+.tabs {
+    margin-bottom: 0px !important;
+}
+
+.tabs ul {
+    margin-bottom: 0px !important;
 }
 
 .tabs li a {
     border-radius: 8px 8px 0px 0px !important;
     padding: 4px 18px !important;
+    border: none !important;
+    color: white !important;
 }
 
 .tabs li.is-active a {
-    border: 3px solid #ffbb00 !important;
+    border: none !important;
     border-bottom: hidden;
     position: relative !important;
     color: black !important;
+    background-color: rgba(222, 222, 222, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
 }
 
 .tabs a {
-    margin-bottom: -3px;
+    margin-bottom: 0px;
     color: gray !important;
 }
 
 .tabs ul {
-    border-bottom: 3px solid #ffbb00 !important;
+    border-bottom: none !important;
 }
 
 .card {
@@ -75,4 +104,13 @@
 
 .title {
     font-size: 24px !important;
+}
+
+.shop-content {
+    background-color: rgba(222, 222, 222, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 0px !important;
+    padding: 32px !important;
+    border-radius: 8px !important;
+    height: auto !important;
 }

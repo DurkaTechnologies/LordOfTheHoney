@@ -136,7 +136,7 @@ const Shop = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <BulmaTabs handleChange={handleTypeChange} elements={types} />
-                    <div className="row">
+                    <div className="row shop-content">
                         <div className="col">
                             <div className="d-flex flex-wrap justify-content-center">
                                 {products.map((x, id) => {
@@ -192,14 +192,14 @@ const Shop = () => {
                                 })}
                             </div>
                         </div>
-                    </div>
-                    <div className="mt-5">
-                        <BulmaPagination
-                            handlePrevPage={handlePrevPage}
-                            handleNextPage={handleNextPage}
-                            handleChangePage={handleChangePage}
-                            pagination={pagination}
-                        />
+                        <div className="mt-5">
+                            <BulmaPagination
+                                handlePrevPage={handlePrevPage}
+                                handleNextPage={handleNextPage}
+                                handleChangePage={handleChangePage}
+                                pagination={pagination}
+                            />
+                        </div>
                     </div>
                 </Modal.Body>
             </Modal>

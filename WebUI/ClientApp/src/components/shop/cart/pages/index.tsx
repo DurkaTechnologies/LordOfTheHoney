@@ -138,13 +138,13 @@ const ItemCart = () => {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th className="mw-32">ID</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Cost/one</th>
-                <th>Quantity</th>
+                <th className="mw-32">Cost/one</th>
+                <th className="mw-128">Quantity</th>
                 <th>Price</th>
-                <th>Options</th>
+                <th className="mw-32">Options</th>
               </tr>
             </thead>
             <tbody>
