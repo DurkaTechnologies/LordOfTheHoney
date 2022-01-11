@@ -1,14 +1,14 @@
 import * as THREE from "three";
-import { ColorRepresentation } from "three";
+import { ColorRepresentation, NumberKeyframeTrack } from "three";
 
-class LightSettings {
-    public color?: ColorRepresentation = 0xFFFFFF;
-    public intensity?: number = 1;
-    public distance?: number = 0;
-    public decay?: number = 2;
-    public power?: number = 200;
+export class LightSettings {
+    public color?: ColorRepresentation;
+    public intensity?: number;
+    public distance?: number;
+    public decay?: number;
+    public power?: number;
 
-    constructor(color?: ColorRepresentation, intensity?: number, distance?: number, decay?: number, power?: number) {
+    constructor(color: ColorRepresentation = 0xFFFFFF, intensity: number = 1, distance: number = 0, decay: number = 2, power: number = 2000) {
         this.color = color;
         this.intensity = intensity;
         this.distance = distance;
@@ -17,20 +17,20 @@ class LightSettings {
     }
 }
 
-class SpotLightSettings extends LightSettings {
-    public angle?: number = 60;
-    public penumbra?: number = 0;
+export class SpotLightSettings extends LightSettings {
+    public angle?: number;
+    public penumbra?: number;
 
-    constructor(color?: ColorRepresentation, intensity?: number, distance?: number,
-        angle?: number, penumbra?: number, decay?: number){
-        super(color, intensity, distance, decay);
+    constructor(color: ColorRepresentation = 0xFFFFFF, intensity: number = 1, distance: number = 5,
+        angle: number = 15, penumbra: number = 0, decay: number = 2, power?: number){
+        super(color, intensity, distance, decay, power);
 
         this.angle = angle;
         this.penumbra = penumbra;
     }
 }
 
-class HemisphereLightSettings {
+export class HemisphereLightSettings {
 
     public skyColor?: ColorRepresentation;
     public groundColor?: ColorRepresentation;
@@ -43,17 +43,24 @@ class HemisphereLightSettings {
     }
 }
 
-class Lights {
+export class Lights {
     static AddDirectionalLight(lightSettings: LightSettings, vector: THREE.Vector3, scene: THREE.Scene) {
         const light = new THREE.DirectionalLight(lightSettings.color, lightSettings.intensity);
         light.position.set(vector.x, vector.y, vector.z);
         scene.add(light);
+
+        return light;
     }
 
-    static AddAmbientLight(lightSettings: LightSettings, vector: THREE.Vector3, scene: THREE.Scene) {
+    static AddAmbientLight(lightSettings: LightSettings, vector?: THREE.Vector3, scene?: THREE.Scene) {
         const light = new THREE.AmbientLight(lightSettings.color, lightSettings.intensity);
-        light.position.set(vector.x, vector.y, vector.z);
-        scene.add(light);
+
+        if (vector != null)
+            light.position.set(vector.x, vector.y, vector.z);
+        if (scene != null)
+            scene.add(light);
+
+        return light;
     }
 
     static AddPointLight(lightSettings: LightSettings, vector: THREE.Vector3, scene: THREE.Scene) {
@@ -69,6 +76,8 @@ class Lights {
 
         light.position.set(vector.x, vector.y, vector.z);
         scene.add(light);
+
+        return light;
     }
 
     static AddSpotLight(spotLightSettings: SpotLightSettings, vector: THREE.Vector3, scene: THREE.Scene) {
@@ -78,7 +87,6 @@ class Lights {
             spotLightSettings.distance, 
             spotLightSettings.angle, 
             spotLightSettings.penumbra, 
-            spotLightSettings.decay
         );
 
         if (spotLightSettings.power !== undefined)
@@ -86,6 +94,8 @@ class Lights {
 
         light.position.set(vector.x, vector.y, vector.z);
         scene.add(light);
+
+        return light;
     }
 
     static AddRectAreaLight(lightSettings: LightSettings, vector: THREE.Vector3, size: THREE.Vector2, scene: THREE.Scene) {
@@ -98,6 +108,8 @@ class Lights {
 
         light.position.set(vector.x, vector.y, vector.z);
         scene.add(light);
+
+        return light;
     }
 
     static AddHemisphereLight(hemisphereLightSettings: HemisphereLightSettings, vector: THREE.Vector3, scene: THREE.Scene) {
@@ -105,5 +117,7 @@ class Lights {
             hemisphereLightSettings.groundColor, hemisphereLightSettings.intensity);
         light.position.set(vector.x, vector.y, vector.z);
         scene.add(light);
+
+        return light;
     }
 }
