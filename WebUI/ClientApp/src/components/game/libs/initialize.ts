@@ -41,7 +41,7 @@ export const initializeThree = () => {
 
   //Events
   resizeEvent(sizes, camera, renderer);
-  dblClickEvent(canvas);
+  /*  dblClickEvent(canvas);*/
   escClickEvent();
 
   // Animate
