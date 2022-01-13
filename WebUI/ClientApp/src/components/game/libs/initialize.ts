@@ -259,7 +259,7 @@ export const initializeThree = () => {
     }
 
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('/textures/flourish-cc-by-nc-sa.png', render);
+    const texture = loader.load('textures/flourish-cc-by-nc-sa.png', render);
     console.log(texture)
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.NearestFilter;
