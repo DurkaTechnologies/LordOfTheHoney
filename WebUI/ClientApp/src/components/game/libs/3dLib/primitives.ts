@@ -2,10 +2,9 @@ import * as THREE from "three";
 import * as CANNON from "cannon-es";
 
 export type CreateCubePrimitiveResponse = {
-  mesh: THREE.Mesh;
+  //   mesh: THREE.Mesh;
   body: CANNON.Body;
 };
-
 
 class GeometrySettings {
   width?: number;
@@ -15,8 +14,14 @@ class GeometrySettings {
   heightSegments?: number;
   depthSegments?: number;
 
-  constructor(width?: number, height?: number, depth?: number,
-    widthSegments?: number, heightSegments?: number, depthSegments?: number) {
+  constructor(
+    width?: number,
+    height?: number,
+    depth?: number,
+    widthSegments?: number,
+    heightSegments?: number,
+    depthSegments?: number
+  ) {
     this.width = width;
     this.height = height;
     this.depth = depth;
@@ -27,9 +32,13 @@ class GeometrySettings {
 }
 
 class CubeSettings extends GeometrySettings {
-  constructor(size?: number, widthSegments?: number,
-    heightSegments?: number, depthSegments?: number) {
-    super(size, size, size, widthSegments, heightSegments, depthSegments)
+  constructor(
+    size?: number,
+    widthSegments?: number,
+    heightSegments?: number,
+    depthSegments?: number
+  ) {
+    super(size, size, size, widthSegments, heightSegments, depthSegments);
   }
 }
 
@@ -52,34 +61,33 @@ class Primitives {
       halfExtents.z * 2
     );
 
-    const boxBody = new CANNON.Body({ mass: 5, type: CANNON.BODY_TYPES.STATIC });
+    const boxBody = new CANNON.Body({
+      mass: 5,
+      type: CANNON.BODY_TYPES.STATIC,
+    });
     boxBody.addShape(boxShape);
-    const boxMesh = new THREE.Mesh(boxGeometry, this.defaultMaterial);
+    // const boxMesh = new THREE.Mesh(boxGeometry, this.defaultMaterial);
 
     const x = (Math.random() - 0.5) * 20;
     const y = (Math.random() - 0.5) * 1 + 1;
     const z = (Math.random() - 0.5) * 20;
 
     boxBody.position.set(position.x, position.y, position.z);
-    boxMesh.position.copy(
-      new THREE.Vector3(
-        position.x,
-        position.y,
-        position.z
-      )
-    );
+    // boxMesh.position.copy(
+    //   new THREE.Vector3(position.x, position.y, position.z)
+    // );
 
-    boxMesh.castShadow = true;
-    boxMesh.receiveShadow = true;
+    // boxMesh.castShadow = true;
+    // boxMesh.receiveShadow = true;
 
     this.world.addBody(boxBody);
-    this.scene.add(boxMesh);
+    // this.scene.add(boxMesh);
     // boxes.push(boxBody);
     // boxMeshes.push(boxMesh);
 
     const response: CreateCubePrimitiveResponse = {
       body: boxBody,
-      mesh: boxMesh,
+      //   mesh: boxMesh,
     };
 
     return response;
@@ -116,7 +124,7 @@ class Primitives {
       geometrySettings.width,
       geometrySettings.height,
       geometrySettings.widthSegments,
-      geometrySettings.heightSegments,
+      geometrySettings.heightSegments
     );
 
     return geometry;
