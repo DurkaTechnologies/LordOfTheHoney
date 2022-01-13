@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.55",
+    "@react-three/cannon": "^4.5.0",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/select2": "^4.0.54",
     "@types/three": "^0.136.1",
