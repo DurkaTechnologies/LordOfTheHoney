@@ -6,6 +6,8 @@ import VoxelWorld from "./3dLib/VoxelWorld/VoxelWorld";
 import Primitives from "./3dLib/primitives";
 
 import { PointerLockControlsCannon } from "./controlers/PersonController";
+//@ts-ignore
+import { GPUPicker } from 'three_gpu_picking';
 
 export class InitializeGame {
   initialize: () => void;
@@ -30,11 +32,17 @@ export class InitializeGame {
 
   time = Date.now();
 
+  //@ts-ignore
+  floor: THREE.Mesh;
+
+  groundBody: CANNON.Body;
+
   constructor() {
     this.world = new CANNON.World();
     this.scene = new THREE.Scene();
-
+    
     this.physicsMaterial = new CANNON.Material("physics");
+    this.groundBody = new CANNON.Body({ mass: 0, material: this.physicsMaterial });
     this.sphereBody = new CANNON.Body({
       mass: 5,
       material: this.physicsMaterial,
@@ -52,6 +60,8 @@ export class InitializeGame {
       };
       //Setting Renderer size
       this.renderer.setSize(sizes.width, sizes.height);
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       const cellSize = 32;
 
@@ -60,6 +70,7 @@ export class InitializeGame {
       const near = 0.1;
       const far = 1000;
       this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
       // this.camera.position.set(
       //   -cellSize * 0.3,
       //   cellSize * 0.8,
@@ -141,6 +152,13 @@ export class InitializeGame {
         }
       }
 
+      // const materialA = new THREE.MeshLambertMaterial({ color: 0xdddddd });
+      // const floorGeometry = new THREE.PlaneBufferGeometry(300, 300, 100, 100);
+      // floorGeometry.rotateX(-Math.PI / 2);
+      // this.floor = new THREE.Mesh(floorGeometry, materialA);
+      // this.floor.receiveShadow = true;
+      // this.scene.add(this.floor);
+
       function randInt(min: number, max: number) {
         return Math.floor(Math.random() * (max - min) + min);
       }
@@ -198,8 +216,30 @@ export class InitializeGame {
         }
       };
 
+      const stayBlock = () => {
+        const lookAtV = new THREE.Vector3();
+        this.camera.getWorldDirection(lookAtV);
+
+        const ray = new CANNON.Ray(new CANNON.Vec3(this.sphereBody.position.x, this.sphereBody.position.y, this.sphereBody.position.z), new CANNON.Vec3(lookAtV.x, lookAtV.y, lookAtV.z));
+        const result = new CANNON.RaycastResult();
+        ray.intersectBody(this.groundBody, result);
+        console.log("RAY: ", result)
+        console.log("DIRECTION: ", ray.direction);
+
+        const resV = new CANNON.Vec3(result.rayFromWorld.x + result.hitNormalWorld.x, 0.5, result.rayFromWorld.z + result.hitNormalWorld.z)
+
+        this.primitives.createCube(resV)
+
+        // this.primitives.createCube(result.rayFromWorld)
+        // this.primitives.createCube(result.rayToWorld)
+        // this.primitives.createCube(result.hitPointWorld)
+        // this.primitives.createCube(result.hitNormalWorld)
+        // this.primitives.createCube(ray.direction)
+      }
+
       // controls.addEventListener("change", requestRenderIfNotRequested);
       window.addEventListener("resize", requestRenderIfNotRequested);
+      window.addEventListener("click", stayBlock );
     };
     this.initCannon = () => {
       let sphereShape: CANNON.Sphere;
@@ -219,14 +259,13 @@ export class InitializeGame {
       // use this to test non-split solver
       // world.solver = solver
 
-      this.world.gravity.set(0, -20, 0);
+      this.world.gravity.set(0, -9.8, 0);
 
       // Create a slippery material (friction coefficient = 0.0)
       const physics_physics = new CANNON.ContactMaterial(
         this.physicsMaterial,
         this.physicsMaterial,
         {
-          friction: 0.0,
           restitution: 0.3,
         }
       );
@@ -238,9 +277,14 @@ export class InitializeGame {
       const radius = 1.3;
       sphereShape = new CANNON.Sphere(radius);
       this.sphereBody.addShape(sphereShape);
-      this.sphereBody.position.set(0, 5, 0);
+      this.sphereBody.position.set(5, 5, 5);
       this.sphereBody.linearDamping = 0.9;
       this.world.addBody(this.sphereBody);
+
+      // const groundShape = new CANNON.Plane();
+      // this.groundBody.addShape(groundShape);
+      // this.groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+      // this.world.addBody(this.groundBody);
     };
 
     this.initControls = () => {
@@ -263,6 +307,9 @@ export class InitializeGame {
       //   this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
       //   this.camera.updateProjectionMatrix();
       // }
+
+      this.world.step(1/60, deltaTime);
+      this.world.stepnumber = 1/60;
 
       this.controls.update(deltaTime);
       this.renderer.render(this.scene, this.camera);

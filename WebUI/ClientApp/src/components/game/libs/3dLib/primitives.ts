@@ -66,22 +66,22 @@ class Primitives {
       type: CANNON.BODY_TYPES.STATIC,
     });
     boxBody.addShape(boxShape);
-    // const boxMesh = new THREE.Mesh(boxGeometry, this.defaultMaterial);
+    const boxMesh = new THREE.Mesh(boxGeometry, this.defaultMaterial);
 
     const x = (Math.random() - 0.5) * 20;
     const y = (Math.random() - 0.5) * 1 + 1;
     const z = (Math.random() - 0.5) * 20;
 
     boxBody.position.set(position.x, position.y, position.z);
-    // boxMesh.position.copy(
-    //   new THREE.Vector3(position.x, position.y, position.z)
-    // );
+    boxMesh.position.copy(
+      new THREE.Vector3(position.x, position.y, position.z)
+    );
 
-    // boxMesh.castShadow = true;
-    // boxMesh.receiveShadow = true;
+    boxMesh.castShadow = true;
+    boxMesh.receiveShadow = true;
 
     this.world.addBody(boxBody);
-    // this.scene.add(boxMesh);
+    this.scene.add(boxMesh);
     // boxes.push(boxBody);
     // boxMeshes.push(boxMesh);
 
