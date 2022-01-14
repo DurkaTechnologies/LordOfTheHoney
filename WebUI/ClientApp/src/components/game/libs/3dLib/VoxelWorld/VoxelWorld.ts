@@ -43,12 +43,21 @@ export default class VoxelWorld {
     }
     return this.cell;
   }
-  setVoxel(x: number, y: number, z: number, v: number, primitives: Primitives) {
+  setVoxel(
+    x: number,
+    y: number,
+    z: number,
+    v: number,
+    primitives: Primitives,
+    isPrimitive: boolean
+  ) {
     const cell = this.getCellForVoxel(x, y, z);
     if (!cell) {
       return; // TODO: add a new cell?
     }
-    primitives.createCube(new THREE.Vector3(x, y, z));
+    if (isPrimitive) {
+      primitives.createCube(new THREE.Vector3(x, y, z));
+    }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     cell[voxelOffset] = v;
   }

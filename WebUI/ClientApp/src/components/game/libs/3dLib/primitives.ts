@@ -62,7 +62,7 @@ class Primitives {
     );
 
     const boxBody = new CANNON.Body({
-      mass: 5,
+      mass: 0,
       type: CANNON.BODY_TYPES.STATIC,
     });
     boxBody.addShape(boxShape);
@@ -77,8 +77,8 @@ class Primitives {
       new THREE.Vector3(position.x, position.y, position.z)
     );
 
-    boxMesh.castShadow = true;
-    boxMesh.receiveShadow = true;
+    // boxMesh.castShadow = true;
+    // boxMesh.receiveShadow = true;
 
     this.world.addBody(boxBody);
     this.scene.add(boxMesh);

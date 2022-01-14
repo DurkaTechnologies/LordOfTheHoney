@@ -7,7 +7,10 @@ import Primitives from "./3dLib/primitives";
 
 import { PointerLockControlsCannon } from "./controlers/PersonController";
 //@ts-ignore
-import { GPUPicker } from 'three_gpu_picking';
+import { GPUPicker } from "three_gpu_picking";
+import { Vector3 } from "three";
+
+import { VoxelLandscape } from "./3dLib/VoxelWorld/VoxelLandscape";
 
 export class InitializeGame {
   initialize: () => void;
@@ -29,26 +32,50 @@ export class InitializeGame {
   physicsMaterial: CANNON.Material;
 
   primitives: Primitives;
+  voxels: VoxelLandscape;
 
   time = Date.now();
 
   //@ts-ignore
   floor: THREE.Mesh;
 
-  groundBody: CANNON.Body;
+  // groundBody: CANNON.Body;
+  defaultMaterial: THREE.MeshLambertMaterial;
+
+  nx = 10;
+  ny = 1;
+  nz = 10;
+  sx = 0.5;
+  sy = 0.5;
+  sz = 0.5;
 
   constructor() {
     this.world = new CANNON.World();
     this.scene = new THREE.Scene();
-    
+
     this.physicsMaterial = new CANNON.Material("physics");
-    this.groundBody = new CANNON.Body({ mass: 0, material: this.physicsMaterial });
+    // this.groundBody = new CANNON.Body({
+    //   mass: 0,
+    //   material: this.physicsMaterial,
+    // });
     this.sphereBody = new CANNON.Body({
       mass: 5,
       material: this.physicsMaterial,
     });
 
+    this.defaultMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd });
+
     this.primitives = new Primitives(this.world, this.scene);
+
+    this.voxels = new VoxelLandscape(
+      this.world,
+      this.nx,
+      this.ny,
+      this.nz,
+      this.sx,
+      this.sy,
+      this.sz
+    );
 
     const canvas = document.querySelector("#webgl");
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas as Element });
@@ -63,7 +90,7 @@ export class InitializeGame {
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      const cellSize = 32;
+      const cellSize = 25;
 
       const fov = 75;
       const aspect = 2; // the canvas default
@@ -142,15 +169,22 @@ export class InitializeGame {
 
       const height = 1;
 
-      for (let y = 0; y < cellSize; ++y) {
-        for (let z = 0; z < cellSize; ++z) {
-          for (let x = 0; x < cellSize; ++x) {
-            if (y < height) {
-              world.setVoxel(x, y, z, randInt(1, 17), this.primitives);
-            }
-          }
-        }
-      }
+      let counter = 0;
+
+      // for (let y = 0; y < cellSize; ++y) {
+      //   for (let z = 0; z < cellSize; ++z) {
+      //     for (let x = 0; x < cellSize; ++x) {
+      //       if (y < height) {
+      //         if (x % 2 === 0 && z % 2 === 0) {
+      //           counter++;
+      //         }
+      //         console.log("VECTOR:", new Vector3(x, y, z));
+      //         world.setVoxel(x, y, z, randInt(1, 17), this.primitives, true);
+      //       }
+      //     }
+      //   }
+      // }
+      // console.log("COUNTER: ", counter);
 
       // const materialA = new THREE.MeshLambertMaterial({ color: 0xdddddd });
       // const floorGeometry = new THREE.PlaneBufferGeometry(300, 300, 100, 100);
@@ -196,7 +230,7 @@ export class InitializeGame {
       );
       geometry.setIndex(indices);
       const mesh = new THREE.Mesh(geometry, material);
-      this.scene.add(mesh);
+      // this.scene.add(mesh);
 
       function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
         const canvas = renderer.domElement;
@@ -220,26 +254,38 @@ export class InitializeGame {
         const lookAtV = new THREE.Vector3();
         this.camera.getWorldDirection(lookAtV);
 
-        const ray = new CANNON.Ray(new CANNON.Vec3(this.sphereBody.position.x, this.sphereBody.position.y, this.sphereBody.position.z), new CANNON.Vec3(lookAtV.x, lookAtV.y, lookAtV.z));
+        const ray = new CANNON.Ray(
+          new CANNON.Vec3(
+            this.sphereBody.position.x,
+            this.sphereBody.position.y,
+            this.sphereBody.position.z
+          ),
+          new CANNON.Vec3(lookAtV.x, lookAtV.y, lookAtV.z)
+        );
         const result = new CANNON.RaycastResult();
-        ray.intersectBody(this.groundBody, result);
-        console.log("RAY: ", result)
-        console.log("DIRECTION: ", ray.direction);
+        console.log("asd", this.voxels.getBoxes());
+        ray.intersectBodies(this.voxels.getBoxes(), result);
+        console.log("RAY: ", result);
+        console.log("body: ", result.body?.position);
 
-        const resV = new CANNON.Vec3(result.rayFromWorld.x + result.hitNormalWorld.x, 0.5, result.rayFromWorld.z + result.hitNormalWorld.z)
+        const resV = new CANNON.Vec3(
+          result.rayFromWorld.x + result.hitNormalWorld.x,
+          0.5,
+          result.rayFromWorld.z + result.hitNormalWorld.z
+        );
 
-        this.primitives.createCube(resV)
+        this.primitives.createCube(result.hitPointWorld);
 
         // this.primitives.createCube(result.rayFromWorld)
         // this.primitives.createCube(result.rayToWorld)
         // this.primitives.createCube(result.hitPointWorld)
         // this.primitives.createCube(result.hitNormalWorld)
         // this.primitives.createCube(ray.direction)
-      }
+      };
 
       // controls.addEventListener("change", requestRenderIfNotRequested);
       window.addEventListener("resize", requestRenderIfNotRequested);
-      window.addEventListener("click", stayBlock );
+      window.addEventListener("click", stayBlock);
     };
     this.initCannon = () => {
       let sphereShape: CANNON.Sphere;
@@ -266,20 +312,52 @@ export class InitializeGame {
         this.physicsMaterial,
         this.physicsMaterial,
         {
+          friction: 0.0,
           restitution: 0.3,
         }
       );
 
       // We must add the contact materials to the world
-      this.world.addContactMaterial(physics_physics);
+      // this.world.addContactMaterial(physics_physics);
 
       // Create the user collision sphere
       const radius = 1.3;
       sphereShape = new CANNON.Sphere(radius);
       this.sphereBody.addShape(sphereShape);
-      this.sphereBody.position.set(5, 5, 5);
+      this.sphereBody.position.set(1, 1, 1);
       this.sphereBody.linearDamping = 0.9;
       this.world.addBody(this.sphereBody);
+
+      for (let i = 0; i < this.nx; i++) {
+        for (let j = 0; j < this.ny; j++) {
+          for (let k = 0; k < this.nz; k++) {
+            // Insert map constructing logic here
+            // if (Math.sin(i * 0.1) * Math.sin(k * 0.1) < (j / ny) * 2 - 1) {
+            // filled = true;
+            // }
+
+            this.voxels.setFilled(i, j, k, true);
+          }
+        }
+      }
+
+      this.voxels.update();
+
+      console.log(`${this.voxels.boxes.length} voxel physics bodies`);
+
+      // Voxel meshes
+      for (let i = 0; i < this.voxels.boxes.length; i++) {
+        const box = this.voxels.boxes[i];
+        const voxelGeometry = new THREE.BoxBufferGeometry(
+          this.voxels.sx * box.nx,
+          this.voxels.sy * box.ny,
+          this.voxels.sz * box.nz
+        );
+        const voxelMesh = new THREE.Mesh(voxelGeometry, this.defaultMaterial);
+        voxelMesh.castShadow = true;
+        voxelMesh.receiveShadow = true;
+        this.scene.add(voxelMesh);
+      }
 
       // const groundShape = new CANNON.Plane();
       // this.groundBody.addShape(groundShape);
@@ -308,8 +386,7 @@ export class InitializeGame {
       //   this.camera.updateProjectionMatrix();
       // }
 
-      this.world.step(1/60, deltaTime);
-      this.world.stepnumber = 1/60;
+      this.world.step(1 / 60, deltaTime);
 
       this.controls.update(deltaTime);
       this.renderer.render(this.scene, this.camera);
