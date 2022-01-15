@@ -4,6 +4,7 @@ const initialState: IHomeState = {
   isShopActive: false,
   isShopCartActive: false,
   isStorageActive: false,
+  isHeaderActive: false,
 };
 
 export const homeReducer = (state = initialState, action: HomeAction) => {
@@ -24,6 +25,13 @@ export const homeReducer = (state = initialState, action: HomeAction) => {
       return {
         ...state,
         isStorageActive: action.payload,
+      };
+    }
+    case HomeActionTypes.SWITCH_HEADER: {
+      console.log("header switch");
+      return {
+        ...state,
+        isHeaderActive: action.payload,
       };
     }
     default:

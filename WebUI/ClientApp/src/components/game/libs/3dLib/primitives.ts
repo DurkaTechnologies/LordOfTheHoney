@@ -43,7 +43,7 @@ class CubeSettings extends GeometrySettings {
 }
 
 class Primitives {
-  defaultMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd });
+  defaultMaterial = new THREE.MeshLambertMaterial({ color: 0xff1100 });
   world: CANNON.World;
   scene: THREE.Scene;
 

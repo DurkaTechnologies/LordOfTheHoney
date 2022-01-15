@@ -203,7 +203,7 @@ class VoxelLandscape {
       box.addShape(new CANNON.Box(new CANNON.Vec3(box.nx * sx * 0.5, box.ny * sy * 0.5, box.nz * sz * 0.5)))
       // box.aabbNeedsUpdate = true
       this.world.addBody(box)
-      this.boxes.push(box);
+      // this.boxes.push(box);
     }
   }
 }

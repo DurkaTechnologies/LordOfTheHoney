@@ -11,14 +11,11 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
 
         this.enabled = true
 
-        console.log("cannonBody: ", cannonBody)
-        console.log("camera: ", camera)
-
         this.cannonBody = cannonBody
 
         // var eyeYPos = 2 // eyes are 2 meters above the ground
         this.velocityFactor = 0.2
-        this.jumpVelocity = 5
+        this.jumpVelocity = 20
 
         this.pitchObject = new THREE.Object3D()
         this.pitchObject.add(camera)
@@ -35,6 +32,8 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
         this.moveRight = false
 
         this.canJump = true
+
+        this.camera = camera;
 
         const contactNormal = new CANNON.Vec3() // Normal in the contact, pointing *out* of whatever the player touched
         const upAxis = new CANNON.Vec3(0, 1, 0)
@@ -153,7 +152,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
             case 'Space':
                 if (this.canJump) {
                     console.log("SPACE")
-                    this.velocity.y = this.jumpVelocity
+                    this.cannonBody.velocity.y = this.jumpVelocity
                 }
                 this.canJump = false
                 break
@@ -210,17 +209,17 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
         this.inputVelocity.set(0, 0, 0)
 
         if (this.moveForward) {
-            this.inputVelocity.z = -this.velocityFactor * delta * 0.005
+            this.inputVelocity.z = -this.velocityFactor * delta * 1
         }
         if (this.moveBackward) {
-            this.inputVelocity.z = this.velocityFactor * delta * 0.005
+            this.inputVelocity.z = this.velocityFactor * delta * 1
         }
 
         if (this.moveLeft) {
-            this.inputVelocity.x = -this.velocityFactor * delta * 0.005
+            this.inputVelocity.x = -this.velocityFactor * delta * 1
         }
         if (this.moveRight) {
-            this.inputVelocity.x = this.velocityFactor * delta * 0.005
+            this.inputVelocity.x = this.velocityFactor * delta * 1
         }
 
         // Convert velocity to world coordinates
@@ -235,7 +234,9 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
         this.velocity.z += this.inputVelocity.z
 
         this.yawObject.position.copy(this.cannonBody.position)
-        this.cannonBody.position.copy(this.cannonBody.position)
+        // this.cannonBody.position.copy(this.cannonBody.position)
+
+        // this.camera.position.copy(this.cannonBody.position)
     }
 }
 

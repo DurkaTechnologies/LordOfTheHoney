@@ -11,12 +11,13 @@ import "./header.css";
 
 const Header = () => {
   const { isAuth, user } = useTypedSelector((redux) => redux.auth);
+  const { isHeaderActive } = useTypedSelector((redux) => redux.home);
   const isAdmin = user?.role === Constants.AdminRole;
   const { logoutUser, switchIsShop, switchIsStorage } = useActions();
 
   return (
     <>
-      {isAuth && (
+      {isHeaderActive && isAuth && (
         <div className="d-flex justify-content-between ownHeader">
           <div className="element leftElement d-flex">
             <span className="material-icons-outlined pt-48 my-auto">
