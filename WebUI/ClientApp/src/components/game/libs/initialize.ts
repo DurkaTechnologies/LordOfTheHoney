@@ -53,6 +53,8 @@ export class InitializeGame {
 
   boxes: Array<CANNON.Body> = [];
 
+  voxelWorld: VoxelWorld;
+
   nx = 50;
   ny = 8;
   nz = 50;
@@ -90,8 +92,65 @@ export class InitializeGame {
       this.sz
     );
 
+    const cellSize = 50;
+    const tileSize = 16;
+    const tileTextureWidth = 256;
+    const tileTextureHeight = 64;
+    this.voxelWorld = new VoxelWorld({
+      cellSize,
+      tileSize,
+      tileTextureWidth,
+      tileTextureHeight,
+    });
+
     const canvas = document.querySelector("#webgl");
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas as Element });
+
+    this.render = () => {
+      requestAnimationFrame(this.render);
+
+      const time = performance.now() / 1000;
+      const dt = time - this.lastCallTime;
+      this.lastCallTime = time;
+
+      // if (resizeRendererToDisplaySize(renderer)) {
+      //   const canvas = renderer.domElement;
+      //   this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      //   this.camera.updateProjectionMatrix();
+      // }
+
+      this.world.step(1 / 60);
+
+      for (let i = 0; i < this.voxels.boxes.length; i++) {
+        this.boxMeshes[i].position.copy(this.voxels.boxes[i].position);
+        this.boxMeshes[i].quaternion.copy(this.voxels.boxes[i].quaternion);
+      }
+
+      this.controls.update(dt);
+      this.renderer.render(this.scene, this.camera);
+    };
+
+    const loadingManager = new THREE.LoadingManager();
+    loadingManager.onStart = () => {
+      console.log("loadingManager: loading started");
+    };
+    loadingManager.onLoad = () => {
+      console.log("loadingManager: loading finished");
+    };
+    loadingManager.onProgress = () => {
+      console.log("loadingManager: loading progressing");
+    };
+    loadingManager.onError = () => {
+      console.log("loadingManager: loading error");
+    };
+
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load(
+      "textures/flourish-cc-by-nc-sa.png",
+      this.render
+    );
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
 
     this.initializeThree = () => {
       const sizes = {
@@ -102,8 +161,6 @@ export class InitializeGame {
       this.renderer.setSize(sizes.width, sizes.height);
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-      const cellSize = 25;
 
       const fov = 75;
       const aspect = 2; // the canvas default
@@ -145,52 +202,16 @@ export class InitializeGame {
       const axes = new THREE.AxesHelper(10);
       this.scene.add(axes);
 
-      const loadingManager = new THREE.LoadingManager();
-      loadingManager.onStart = () => {
-        console.log("loadingManager: loading started");
-      };
-      loadingManager.onLoad = () => {
-        console.log("loadingManager: loading finished");
-      };
-      loadingManager.onProgress = () => {
-        console.log("loadingManager: loading progressing");
-      };
-      loadingManager.onError = () => {
-        console.log("loadingManager: loading error");
-      };
-
       let renderRequested: boolean | undefined = false;
-
-      const loader = new THREE.TextureLoader();
-      const texture = loader.load(
-        "textures/flourish-cc-by-nc-sa.png",
-        this.render
-      );
-      console.log(texture);
-      texture.magFilter = THREE.NearestFilter;
-      texture.minFilter = THREE.NearestFilter;
-
-      const tileSize = 16;
-      const tileTextureWidth = 256;
-      const tileTextureHeight = 64;
-      const world = new VoxelWorld({
-        cellSize,
-        tileSize,
-        tileTextureWidth,
-        tileTextureHeight,
-      });
 
       const height = 1;
 
-      let counter = 0;
+      this.render;
 
       // for (let y = 0; y < cellSize; ++y) {
       //   for (let z = 0; z < cellSize; ++z) {
       //     for (let x = 0; x < cellSize; ++x) {
       //       if (y < height) {
-      //         if (x % 2 === 0 && z % 2 === 0) {
-      //           counter++;
-      //         }
       //         console.log("VECTOR:", new Vector3(x, y, z));
       //         world.setVoxel(x, y, z, randInt(1, 17), this.primitives, true);
       //       }
@@ -209,41 +230,6 @@ export class InitializeGame {
       function randInt(min: number, max: number) {
         return Math.floor(Math.random() * (max - min) + min);
       }
-
-      const { positions, normals, uvs, indices } =
-        world.generateGeometryDataForCell(0, 0, 0);
-      const geometry = new THREE.BufferGeometry();
-      const material = new THREE.MeshLambertMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-        alphaTest: 0.1,
-        transparent: true,
-      });
-
-      const positionNumComponents = 3;
-      const normalNumComponents = 3;
-      const uvNumComponents = 2;
-      geometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(
-          new Float32Array(positions),
-          positionNumComponents
-        )
-      );
-      geometry.setAttribute(
-        "normal",
-        new THREE.BufferAttribute(
-          new Float32Array(normals),
-          normalNumComponents
-        )
-      );
-      geometry.setAttribute(
-        "uv",
-        new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents)
-      );
-      geometry.setIndex(indices);
-      const mesh = new THREE.Mesh(geometry, material);
-      // this.scene.add(mesh);
 
       function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
         const canvas = renderer.domElement;
@@ -364,6 +350,9 @@ export class InitializeGame {
             }
 
             this.voxels.setFilled(i, j, k, filled);
+            if (filled) {
+              this.voxelWorld.setVoxel(i, j, k, 14);
+            }
           }
         }
       }
@@ -375,6 +364,7 @@ export class InitializeGame {
       // Voxel meshes
       for (let i = 0; i < this.voxels.boxes.length; i++) {
         const box = this.voxels.boxes[i];
+
         const voxelGeometry = new THREE.BoxBufferGeometry(
           this.voxels.sx * box.nx,
           this.voxels.sy * box.ny,
@@ -384,8 +374,43 @@ export class InitializeGame {
         voxelMesh.castShadow = true;
         voxelMesh.receiveShadow = true;
         this.boxMeshes.push(voxelMesh);
-        this.scene.add(voxelMesh);
+        // this.scene.add(voxelMesh);
       }
+
+      const { positions, normals, uvs, indices } =
+        this.voxelWorld.generateGeometryDataForCell(0, 0, 0);
+      const geometry = new THREE.BufferGeometry();
+      const material = new THREE.MeshLambertMaterial({
+        map: texture,
+        side: THREE.DoubleSide,
+        alphaTest: 0.1,
+        transparent: true,
+      });
+
+      const positionNumComponents = 3;
+      const normalNumComponents = 3;
+      const uvNumComponents = 2;
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+          new Float32Array(positions),
+          positionNumComponents
+        )
+      );
+      geometry.setAttribute(
+        "normal",
+        new THREE.BufferAttribute(
+          new Float32Array(normals),
+          normalNumComponents
+        )
+      );
+      geometry.setAttribute(
+        "uv",
+        new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents)
+      );
+      geometry.setIndex(indices);
+      const mesh = new THREE.Mesh(geometry, material);
+      this.scene.add(mesh);
 
       this.updateBoxesFromVoxels();
 
@@ -394,7 +419,6 @@ export class InitializeGame {
       // this.groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
       // this.world.addBody(this.groundBody);
     };
-
     this.initControls = () => {
       this.controls = new PointerLockControlsCannon(
         this.camera,
@@ -416,40 +440,15 @@ export class InitializeGame {
         this.controls.enabled = false;
       });
     };
-
-    this.render = () => {
-      requestAnimationFrame(this.render);
-
-      const time = performance.now() / 1000;
-      const dt = time - this.lastCallTime;
-      this.lastCallTime = time;
-
-      // if (resizeRendererToDisplaySize(renderer)) {
-      //   const canvas = renderer.domElement;
-      //   this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      //   this.camera.updateProjectionMatrix();
-      // }
-
-      this.world.step(1 / 60);
-
-      for (let i = 0; i < this.voxels.boxes.length; i++) {
-        this.boxMeshes[i].position.copy(this.voxels.boxes[i].position);
-        this.boxMeshes[i].quaternion.copy(this.voxels.boxes[i].quaternion);
-      }
-
-      this.controls.update(dt);
-      this.renderer.render(this.scene, this.camera);
+    this.updateBoxesFromVoxels = () => {
+      this.boxes = [...this.voxels.getBoxes()];
+      console.log("[...this.voxels.getBoxes()]: ", [...this.voxels.getBoxes()]);
     };
-
     this.initialize = () => {
       this.initializeThree();
       this.initControls();
       this.initCannon();
       this.render();
-    };
-    this.updateBoxesFromVoxels = () => {
-      this.boxes = [...this.voxels.getBoxes()];
-      console.log("[...this.voxels.getBoxes()]: ", [...this.voxels.getBoxes()]);
     };
   }
 }
