@@ -8,7 +8,7 @@ import Primitives from "./3dLib/primitives";
 import { PointerLockControlsCannon } from "./controlers/PersonController";
 //@ts-ignore
 import { GPUPicker } from "three_gpu_picking";
-import { Quaternion, Vector3 } from "three";
+import { Quaternion, Vector2, Vector3 } from "three";
 
 import { VoxelLandscape } from "./3dLib/VoxelWorld/VoxelLandscape";
 
@@ -27,6 +27,9 @@ export class InitializeGame {
   scene: THREE.Scene;
   renderer: THREE.WebGLRenderer;
 
+  cubeHelperMesh: THREE.Mesh | null = null;
+  cubeHelperBody: CANNON.Body | null = null;
+
   //@ts-ignore
   controls: PointerLockControlsCannon;
   //@ts-ignore
@@ -44,6 +47,9 @@ export class InitializeGame {
     [];
 
   lastCallTime = performance.now() / 1000;
+
+  lookAtVector: THREE.Vector3 = new Vector3();
+  positionVector: THREE.Vector3 = new Vector3();
 
   //@ts-ignore
   floor: THREE.Mesh;
@@ -109,6 +115,13 @@ export class InitializeGame {
     this.render = () => {
       requestAnimationFrame(this.render);
 
+      if (this.cubeHelperMesh !== null && this.cubeHelperBody !== null) {
+        this.primitives.clearCube(
+          this.cubeHelperBody as CANNON.Body,
+          this.cubeHelperMesh as THREE.Mesh
+        );
+      }
+
       const time = performance.now() / 1000;
       const dt = time - this.lastCallTime;
       this.lastCallTime = time;
@@ -124,6 +137,30 @@ export class InitializeGame {
       for (let i = 0; i < this.voxels.boxes.length; i++) {
         this.boxMeshes[i].position.copy(this.voxels.boxes[i].position);
         this.boxMeshes[i].quaternion.copy(this.voxels.boxes[i].quaternion);
+      }
+      this.camera.getWorldPosition(this.positionVector);
+      this.camera.getWorldDirection(this.lookAtVector);
+
+      this.lookAtVector.multiplyScalar(5);
+      this.lookAtVector.addVectors(this.lookAtVector, this.positionVector);
+
+      const ray = new CANNON.Ray(
+        mapFromThree(this.positionVector),
+        mapFromThree(this.lookAtVector)
+      );
+      ray.mode = CANNON.RAY_MODES.CLOSEST;
+      const result = new CANNON.RaycastResult();
+      ray.intersectBodies(this.boxes, result);
+
+      if (result.body?.position && result.hasHit) {
+        let resultVector = new CANNON.Vec3();
+        resultVector = result.body.vectorToWorldFrame(result.hitPointWorld);
+        resultVector.x = Math.floor(resultVector.x) + 0.5;
+        resultVector.z = Math.floor(resultVector.z) + 0.5;
+        resultVector.y = Math.floor(resultVector.y) + 0.5;
+        const box = this.primitives.createCube(resultVector, true);
+        this.cubeHelperBody = box.body;
+        this.cubeHelperMesh = box.mesh;
       }
 
       this.controls.update(dt);
@@ -250,17 +287,15 @@ export class InitializeGame {
       };
 
       const stayBlock = () => {
-        let lookAtVector = new THREE.Vector3();
-        let positionVector = new THREE.Vector3();
-        this.camera.getWorldPosition(positionVector);
-        this.camera.getWorldDirection(lookAtVector);
+        this.camera.getWorldPosition(this.positionVector);
+        this.camera.getWorldDirection(this.lookAtVector);
 
-        lookAtVector.multiplyScalar(100);
-        lookAtVector.addVectors(lookAtVector, positionVector);
+        this.lookAtVector.multiplyScalar(5);
+        this.lookAtVector.addVectors(this.lookAtVector, this.positionVector);
 
         const ray = new CANNON.Ray(
-          mapFromThree(positionVector),
-          mapFromThree(lookAtVector)
+          mapFromThree(this.positionVector),
+          mapFromThree(this.lookAtVector)
         );
         ray.mode = CANNON.RAY_MODES.CLOSEST;
         const result = new CANNON.RaycastResult();
@@ -273,21 +308,22 @@ export class InitializeGame {
           resultVector.x = Math.floor(resultVector.x) + 0.5;
           resultVector.z = Math.floor(resultVector.z) + 0.5;
           resultVector.y = Math.floor(resultVector.y) + 0.5;
+          console.log("resultVector: ", resultVector);
           const box = this.primitives.createCube(resultVector).body;
           this.boxes.push(box);
         }
 
-        const materialLine = new THREE.LineBasicMaterial({ color: 0x0000ff });
+        // const materialLine = new THREE.LineBasicMaterial({ color: 0x0000ff });
 
-        const points = [];
-        points.push(positionVector);
-        points.push(lookAtVector);
+        // const points = [];
+        // points.push(this.positionVector);
+        // points.push(this.lookAtVector);
 
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        // const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-        const line = new THREE.Line(geometry, materialLine);
+        // const line = new THREE.Line(geometry, materialLine);
 
-        this.scene.add(line);
+        // this.scene.add(line);
       };
 
       // controls.addEventListener("change", requestRenderIfNotRequested);

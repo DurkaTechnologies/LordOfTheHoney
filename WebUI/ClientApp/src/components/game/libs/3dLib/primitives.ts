@@ -2,7 +2,7 @@ import * as THREE from "three";
 import * as CANNON from "cannon-es";
 
 export type CreateCubePrimitiveResponse = {
-  //   mesh: THREE.Mesh;
+  mesh: THREE.Mesh;
   body: CANNON.Body;
 };
 
@@ -44,6 +44,11 @@ class CubeSettings extends GeometrySettings {
 
 class Primitives {
   defaultMaterial = new THREE.MeshLambertMaterial({ color: 0xff1100 });
+  helperMaterial = new THREE.MeshLambertMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.5,
+  });
   world: CANNON.World;
   scene: THREE.Scene;
 
@@ -52,7 +57,10 @@ class Primitives {
     this.scene = scene;
   }
 
-  createCube = (position: THREE.Vector3 | CANNON.Vec3) => {
+  createCube = (
+    position: THREE.Vector3 | CANNON.Vec3,
+    isHelper: boolean = false
+  ) => {
     const halfExtents = new CANNON.Vec3(0.5, 0.5, 0.5);
     const boxShape = new CANNON.Box(halfExtents);
     const boxGeometry = new THREE.BoxBufferGeometry(
@@ -66,7 +74,8 @@ class Primitives {
       type: CANNON.BODY_TYPES.STATIC,
     });
     boxBody.addShape(boxShape);
-    const boxMesh = new THREE.Mesh(boxGeometry, this.defaultMaterial);
+    const currMaterial = isHelper ? this.helperMaterial : this.defaultMaterial;
+    const boxMesh = new THREE.Mesh(boxGeometry, currMaterial);
 
     const x = (Math.random() - 0.5) * 20;
     const y = (Math.random() - 0.5) * 1 + 1;
@@ -87,11 +96,15 @@ class Primitives {
 
     const response: CreateCubePrimitiveResponse = {
       body: boxBody,
-      //   mesh: boxMesh,
+      mesh: boxMesh,
     };
 
     return response;
   };
+  clearCube(boxBody: CANNON.Body, mesh: THREE.Mesh) {
+    this.world.removeBody(boxBody);
+    this.scene.remove(mesh);
+  }
 
   static CreateBoxGeometry(geometrySettings: GeometrySettings) {
     const geometry = new THREE.BoxGeometry(
