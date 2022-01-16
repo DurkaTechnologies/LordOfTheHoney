@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useActions } from "src/hooks/useActions";
 import { InitializeGame } from "./libs/initialize";
+import ChestModal from "./libs/inventory/modal";
 
 import "./style.css";
 
@@ -21,6 +22,7 @@ const Game = () => {
     <>
       <img src="/images/cross.png" id="imgCross" alt="" />
       <canvas id="webgl"></canvas>;
+      <ChestModal open={false} setOpen={() => {}} />
     </>
   );
 };

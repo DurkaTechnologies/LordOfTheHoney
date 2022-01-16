@@ -7,7 +7,10 @@ export class WorldGenerator {
   worldGenerate: () => void;
   getBoxes: () => Array<CANNON.Body>;
   updateVoxelGeometry: () => void;
-  setCubeTexture: (position: THREE.Vector3 | CANNON.Vec3) => void;
+  setCubeTexture: (
+    position: THREE.Vector3 | CANNON.Vec3,
+    textureIndex: number
+  ) => void;
 
   voxelWorld: VoxelWorld;
   voxels: VoxelLandscape;
@@ -109,8 +112,16 @@ export class WorldGenerator {
     this.getBoxes = () => {
       return this.voxels.getBoxes();
     };
-    this.setCubeTexture = (position: THREE.Vector3 | CANNON.Vec3) => {
-      this.voxelWorld.setVoxel(position.x, position.y, position.z, 14);
+    this.setCubeTexture = (
+      position: THREE.Vector3 | CANNON.Vec3,
+      textureIndex: number
+    ) => {
+      this.voxelWorld.setVoxel(
+        position.x,
+        position.y,
+        position.z,
+        textureIndex
+      );
     };
 
     this.voxelWorld = new VoxelWorld({

@@ -67,6 +67,7 @@ class Primitives {
 
   createCube = (
     position: THREE.Vector3 | CANNON.Vec3,
+    textureIndex: number,
     isHelper: boolean = false,
     withTexture: boolean = true
   ) => {
@@ -86,10 +87,6 @@ class Primitives {
     const currMaterial = isHelper ? this.helperMaterial : this.defaultMaterial;
     const boxMesh = new THREE.Mesh(boxGeometry, currMaterial);
 
-    const x = (Math.random() - 0.5) * 20;
-    const y = (Math.random() - 0.5) * 1 + 1;
-    const z = (Math.random() - 0.5) * 20;
-
     boxBody.position.set(position.x, position.y, position.z);
     boxMesh.position.copy(
       new THREE.Vector3(position.x, position.y, position.z)
@@ -100,7 +97,7 @@ class Primitives {
 
     this.world.addBody(boxBody);
     if (withTexture) {
-      this.worldGenerator.setCubeTexture(position);
+      this.worldGenerator.setCubeTexture(position, textureIndex);
       this.worldGenerator.updateVoxelGeometry();
     } else {
       this.scene.add(boxMesh);

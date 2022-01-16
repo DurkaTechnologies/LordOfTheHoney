@@ -190,7 +190,6 @@ class VoxelLandscape {
     const sy = this.sy
     const sz = this.sz
 
-    console.log("update ", this.boxes.length)
     for (let i = 0; i < this.boxes.length; i++) {
       const box = this.boxes[i]
       box.position.set(

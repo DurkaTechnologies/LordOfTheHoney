@@ -6,7 +6,7 @@ import * as CANNON from 'cannon-es'
  * @author schteppe / https://github.com/schteppe
  */
 class PointerLockControlsCannon extends THREE.EventDispatcher {
-    constructor(camera, cannonBody) {
+    constructor(camera, cannonBody, onNumberClick) {
         super()
 
         this.enabled = true
@@ -34,6 +34,8 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
         this.canJump = true
 
         this.camera = camera;
+
+        this.onNumberClick = onNumberClick;
 
         const contactNormal = new CANNON.Vec3() // Normal in the contact, pointing *out* of whatever the player touched
         const upAxis = new CANNON.Vec3(0, 1, 0)
@@ -127,38 +129,44 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
     }
 
     onKeyDown = (event) => {
-
-        switch (event.code) {
-            case 'KeyW':
-            case 'ArrowUp':
-                this.moveForward = true
-                break
-
-            case 'KeyA':
-            case 'ArrowLeft':
-                this.moveLeft = true
-                break
-
-            case 'KeyS':
-            case 'ArrowDown':
-                this.moveBackward = true
-                break
-
-            case 'KeyD':
-            case 'ArrowRight':
-                this.moveRight = true
-                break
-
-            case 'Space':
-                if (this.canJump) {
-                    console.log("SPACE")
-                    this.cannonBody.velocity.y = this.jumpVelocity
-                }
-                this.canJump = false
-                break
-            default:
-                break;
+        const keyNumb = +event.key;
+        if(keyNumb){
+            this.onNumberClick(keyNumb);
         }
+        else{
+            switch (event.code) {
+                case 'KeyW':
+                case 'ArrowUp':
+                    this.moveForward = true
+                    break
+            
+                case 'KeyA':
+                case 'ArrowLeft':
+                    this.moveLeft = true
+                    break
+            
+                case 'KeyS':
+                case 'ArrowDown':
+                    this.moveBackward = true
+                    break
+            
+                case 'KeyD':
+                case 'ArrowRight':
+                    this.moveRight = true
+                    break
+            
+                case 'Space':
+                    if (this.canJump) {
+                        console.log("SPACE")
+                        this.cannonBody.velocity.y = this.jumpVelocity
+                    }
+                    this.canJump = false
+                    break;
+                default:
+                    break;
+            }
+    }
+
     }
 
     onKeyUp = (event) => {

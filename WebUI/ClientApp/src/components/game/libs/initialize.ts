@@ -10,10 +10,14 @@ import { PointerLockControlsCannon } from "./controlers/PersonController";
 import { GPUPicker } from "three_gpu_picking";
 import { Quaternion, Vector2, Vector3 } from "three";
 
-import { VoxelLandscape } from "./3dLib/VoxelWorld/VoxelLandscape";
-
 import { mapFromCannon, mapFromThree } from "./mapperVector";
 import { WorldGenerator } from "./3dLib/VoxelWorld/WorldGenerator";
+
+import {
+  initialInventoryItems,
+  InventoryItem,
+} from "./inventory/inventoryItem";
+import { Pocket } from "./inventory/pocket";
 
 export class InitializeGame {
   initialize: () => void;
@@ -23,6 +27,7 @@ export class InitializeGame {
   render: () => void;
   switchHeader: (data: boolean) => void;
   getGeneratingBlockDirection: () => CANNON.Vec3 | undefined;
+  stayBlock: () => void;
 
   world: CANNON.World;
   scene: THREE.Scene;
@@ -47,18 +52,22 @@ export class InitializeGame {
     [];
   boxes: Array<CANNON.Body> = [];
 
-  isRayLineShow = true;
+  isRayLineShow = false;
 
   lastCallTime = performance.now() / 1000;
 
   lookAtVector: THREE.Vector3 = new Vector3();
   positionVector: THREE.Vector3 = new Vector3();
 
+  pocket: Pocket;
+
   //@ts-ignore
   floor: THREE.Mesh;
 
   // groundBody: CANNON.Body;
   defaultMaterial: THREE.MeshLambertMaterial;
+
+  currentPocketItem: InventoryItem | null;
 
   constructor(switchHeader: (data: boolean) => void) {
     this.switchHeader = switchHeader;
@@ -67,10 +76,6 @@ export class InitializeGame {
     this.scene = new THREE.Scene();
 
     this.physicsMaterial = new CANNON.Material("physics");
-    // this.groundBody = new CANNON.Body({
-    //   mass: 0,
-    //   material: this.physicsMaterial,
-    // });
     this.sphereBody = new CANNON.Body({
       mass: 5,
       material: this.physicsMaterial,
@@ -104,8 +109,13 @@ export class InitializeGame {
       this.world.step(1 / 60);
 
       const direction = this.getGeneratingBlockDirection();
-      if (direction) {
-        const box = this.primitives.createCube(direction, true, false);
+      if (direction && this.currentPocketItem) {
+        const box = this.primitives.createCube(
+          direction,
+          this.currentPocketItem?.textureIndex,
+          true,
+          false
+        );
         this.cubeHelperBody = box.body;
         this.cubeHelperMesh = box.mesh;
       }
@@ -143,6 +153,15 @@ export class InitializeGame {
       this.scene,
       this.worldGenerator
     );
+
+    this.pocket = new Pocket([1, 2]);
+
+    const currentItem = this.pocket.getItem(0);
+    if (currentItem) {
+      this.currentPocketItem = currentItem;
+    } else {
+      this.currentPocketItem = null;
+    }
 
     this.initializeThree = () => {
       const sizes = {
@@ -211,35 +230,7 @@ export class InitializeGame {
         }
       };
 
-      const stayBlock = () => {
-        if (this.controls.enabled) {
-          const direction = this.getGeneratingBlockDirection();
-          if (direction) {
-            const box = this.primitives.createCube(direction).body;
-            this.boxes.push(box);
-          }
-
-          if (this.isRayLineShow) {
-            const materialLine = new THREE.LineBasicMaterial({
-              color: 0x0000ff,
-            });
-
-            const points = [];
-            points.push(this.positionVector);
-            points.push(this.lookAtVector);
-
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-            const line = new THREE.Line(geometry, materialLine);
-
-            this.scene.add(line);
-          }
-        }
-      };
-
       // controls.addEventListener("change", requestRenderIfNotRequested);
-      window.addEventListener("resize", requestRenderIfNotRequested);
-      window.addEventListener("click", stayBlock);
     };
     this.initCannon = () => {
       let sphereShape: CANNON.Sphere;
@@ -280,30 +271,45 @@ export class InitializeGame {
       this.sphereBody.addShape(sphereShape);
       this.sphereBody.position.set(1, 18.6, 1);
       this.sphereBody.linearDamping = 0.9;
+      this.sphereBody.fixedRotation = false;
       this.world.addBody(this.sphereBody);
 
       this.worldGenerator.worldGenerate();
       this.boxes = [...this.worldGenerator.getBoxes()];
     };
     this.initControls = () => {
+      const setCurrentPocketItem = (id: number) => {
+        const pocketItem = this.pocket.getItem(id - 1);
+        if (pocketItem) {
+          this.currentPocketItem = pocketItem;
+        } else {
+          this.currentPocketItem = null;
+        }
+
+        console.log("current: ", this.currentPocketItem);
+      };
       this.controls = new PointerLockControlsCannon(
         this.camera,
-        this.sphereBody
+        this.sphereBody,
+        setCurrentPocketItem
       );
       this.scene.add(this.controls.getObject());
 
       this.renderer.domElement.addEventListener("click", () => {
         this.controls.lock();
       });
-
       this.controls.addEventListener("lock", () => {
         switchHeader(false);
         this.controls.enabled = true;
+        // window.addEventListener("resize", this.requestRenderIfNotRequested);
+        window.addEventListener("click", this.stayBlock);
       });
 
       this.controls.addEventListener("unlock", () => {
         switchHeader(true);
         this.controls.enabled = false;
+        // window.removeEventListener("resize", this.requestRenderIfNotRequested);
+        window.removeEventListener("click", this.stayBlock);
       });
     };
     this.getGeneratingBlockDirection = () => {
@@ -325,10 +331,47 @@ export class InitializeGame {
       if (result.body?.position && result.hasHit) {
         let resultVector = new CANNON.Vec3();
         resultVector = result.body.vectorToWorldFrame(result.hitPointWorld);
+        if (
+          this.worldGenerator.voxelWorld.getVoxel(
+            resultVector.x,
+            resultVector.y,
+            resultVector.z
+          ) !== 0
+        ) {
+          return undefined;
+        }
         resultVector.x = Math.floor(resultVector.x) + 0.5;
         resultVector.y = Math.floor(resultVector.y) + 0.5;
         resultVector.z = Math.floor(resultVector.z) + 0.5;
         return resultVector;
+      }
+    };
+    this.stayBlock = () => {
+      if (this.currentPocketItem) {
+        const direction = this.getGeneratingBlockDirection();
+        if (direction) {
+          const box = this.primitives.createCube(
+            direction,
+            this.currentPocketItem?.textureIndex
+          ).body;
+          this.boxes.push(box);
+        }
+
+        if (this.isRayLineShow) {
+          const materialLine = new THREE.LineBasicMaterial({
+            color: 0x0000ff,
+          });
+
+          const points = [];
+          points.push(this.positionVector);
+          points.push(this.lookAtVector);
+
+          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+          const line = new THREE.Line(geometry, materialLine);
+
+          this.scene.add(line);
+        }
       }
     };
     this.initialize = () => {
@@ -336,6 +379,7 @@ export class InitializeGame {
       this.initControls();
       this.initCannon();
       this.render();
+      initialInventoryItems();
     };
   }
 }

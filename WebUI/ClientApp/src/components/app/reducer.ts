@@ -28,7 +28,6 @@ export const homeReducer = (state = initialState, action: HomeAction) => {
       };
     }
     case HomeActionTypes.SWITCH_HEADER: {
-      console.log("header switch");
       return {
         ...state,
         isHeaderActive: action.payload,
