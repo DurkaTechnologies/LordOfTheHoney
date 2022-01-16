@@ -5,6 +5,7 @@ const initialState: IHomeState = {
   isShopCartActive: false,
   isStorageActive: false,
   isHeaderActive: false,
+  isInventoryActive: false,
 };
 
 export const homeReducer = (state = initialState, action: HomeAction) => {
@@ -31,6 +32,12 @@ export const homeReducer = (state = initialState, action: HomeAction) => {
       return {
         ...state,
         isHeaderActive: action.payload,
+      };
+    }
+    case HomeActionTypes.SWITCH_INVENTORY: {
+      return {
+        ...state,
+        isInventoryActive: action.payload,
       };
     }
     default:

@@ -6,7 +6,7 @@ import * as CANNON from 'cannon-es'
  * @author schteppe / https://github.com/schteppe
  */
 class PointerLockControlsCannon extends THREE.EventDispatcher {
-    constructor(camera, cannonBody, onNumberClick) {
+    constructor(camera, cannonBody, onNumberClick, switchInventory) {
         super()
 
         this.enabled = true
@@ -36,6 +36,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
         this.camera = camera;
 
         this.onNumberClick = onNumberClick;
+        this.switchInventory = switchInventory;
 
         const contactNormal = new CANNON.Vec3() // Normal in the contact, pointing *out* of whatever the player touched
         const upAxis = new CANNON.Vec3(0, 1, 0)
@@ -162,6 +163,9 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
                     }
                     this.canJump = false
                     break;
+                case 'KeyI':
+                    this.unlock();
+                    this.switchInventory(true); 
                 default:
                     break;
             }

@@ -1,11 +1,14 @@
 import { InventoryItem } from "./inventoryItem";
 
-export class Inventory {
+export class InventoryService {
   getItem: (id: number) => InventoryItem | undefined;
+  initInventory: () => void;
+
   itemsIndices: Array<number>;
 
   constructor(pocketItems: Array<number>) {
     this.itemsIndices = pocketItems;
+    localStorage.setItem("inventoryItems", JSON.stringify(this.itemsIndices));
 
     this.getItem = (id) => {
       const itemsJson = localStorage.getItem("allInventoryItems");
@@ -22,6 +25,18 @@ export class Inventory {
         return undefined;
       }
       return undefined;
+    };
+    this.initInventory = () => {
+      const itemsJson = localStorage.getItem("inventoryItems");
+      if (!itemsJson) {
+        localStorage.setItem("inventoryItems", JSON.stringify([]));
+        return;
+      }
+      const items = JSON.parse(itemsJson) as Array<InventoryItem>;
+      this.itemsIndices = [];
+      items.forEach((element) => {
+        this.itemsIndices.push(element.id);
+      });
     };
   }
 }

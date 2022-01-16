@@ -1,18 +1,21 @@
 import { InventoryItem } from "./inventoryItem";
 
-export class Pocket {
+export class PocketService {
   getItem: (id: number) => InventoryItem | undefined;
-  pocketItemsIndices: Array<number>;
+  initPocket: () => void;
 
   constructor(pocketItems: Array<number>) {
-    this.pocketItemsIndices = pocketItems;
-
     this.getItem = (id) => {
       const itemsJson = localStorage.getItem("allInventoryItems");
       if (itemsJson) {
         const inventoryItems = JSON.parse(itemsJson) as Array<InventoryItem>;
         let pocketItems: Array<InventoryItem> = [];
-        this.pocketItemsIndices.forEach((x, v) => {
+
+        const pocketItemsIndices = JSON.parse(
+          localStorage.getItem("pocketItems") as string
+        ) as Array<number>;
+
+        pocketItemsIndices.forEach((x, v) => {
           pocketItems.push(inventoryItems.filter((ii) => ii.id === x)[0]);
         });
         const item = pocketItems[id];
@@ -22,6 +25,13 @@ export class Pocket {
         return undefined;
       }
       return undefined;
+    };
+    this.initPocket = () => {
+      const itemsJson = localStorage.getItem("pocketItems");
+      if (!itemsJson) {
+        localStorage.setItem("pocketItems", JSON.stringify([]));
+        return;
+      }
     };
   }
 }

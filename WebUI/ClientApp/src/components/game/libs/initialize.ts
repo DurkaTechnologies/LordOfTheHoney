@@ -17,7 +17,8 @@ import {
   initialInventoryItems,
   InventoryItem,
 } from "./inventory/inventoryItem";
-import { Pocket } from "./inventory/pocket";
+import { PocketService } from "./inventory/pocket";
+import { InventoryService } from "./inventory/inventory";
 
 export class InitializeGame {
   initialize: () => void;
@@ -26,6 +27,7 @@ export class InitializeGame {
   initControls: () => void;
   render: () => void;
   switchHeader: (data: boolean) => void;
+  switchInventory: (data: boolean) => void;
   getGeneratingBlockDirection: () => CANNON.Vec3 | undefined;
   stayBlock: () => void;
 
@@ -59,7 +61,8 @@ export class InitializeGame {
   lookAtVector: THREE.Vector3 = new Vector3();
   positionVector: THREE.Vector3 = new Vector3();
 
-  pocket: Pocket;
+  pocket: PocketService;
+  inventory: InventoryService;
 
   //@ts-ignore
   floor: THREE.Mesh;
@@ -69,8 +72,12 @@ export class InitializeGame {
 
   currentPocketItem: InventoryItem | null;
 
-  constructor(switchHeader: (data: boolean) => void) {
+  constructor(
+    switchHeader: (data: boolean) => void,
+    switchInventory: (data: boolean) => void
+  ) {
     this.switchHeader = switchHeader;
+    this.switchInventory = switchInventory;
 
     this.world = new CANNON.World();
     this.scene = new THREE.Scene();
@@ -154,7 +161,8 @@ export class InitializeGame {
       this.worldGenerator
     );
 
-    this.pocket = new Pocket([1, 2]);
+    this.pocket = new PocketService([1]);
+    this.inventory = new InventoryService([1, 2]);
 
     const currentItem = this.pocket.getItem(0);
     if (currentItem) {
@@ -291,7 +299,8 @@ export class InitializeGame {
       this.controls = new PointerLockControlsCannon(
         this.camera,
         this.sphereBody,
-        setCurrentPocketItem
+        setCurrentPocketItem,
+        this.switchInventory
       );
       this.scene.add(this.controls.getObject());
 
@@ -380,6 +389,8 @@ export class InitializeGame {
       this.initCannon();
       this.render();
       initialInventoryItems();
+      this.pocket.initPocket();
+      this.inventory.initInventory();
     };
   }
 }

@@ -33,3 +33,11 @@ export const switchIsHeader = (data: boolean) => {
     });
   };
 };
+export const switchIsInventory = (data: boolean) => {
+  return async (dispatch: Dispatch<HomeAction>) => {
+    dispatch({
+      type: HomeActionTypes.SWITCH_INVENTORY,
+      payload: data,
+    });
+  };
+};
