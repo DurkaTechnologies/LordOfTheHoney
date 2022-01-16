@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
+import VoxelWorld from "./VoxelWorld/VoxelWorld";
+import { WorldGenerator } from "./VoxelWorld/WorldGenerator";
 
 export type CreateCubePrimitiveResponse = {
   mesh: THREE.Mesh;
@@ -51,15 +53,22 @@ class Primitives {
   });
   world: CANNON.World;
   scene: THREE.Scene;
+  worldGenerator: WorldGenerator;
 
-  constructor(world: CANNON.World, scene: THREE.Scene) {
+  constructor(
+    world: CANNON.World,
+    scene: THREE.Scene,
+    worldGenerator: WorldGenerator
+  ) {
     this.world = world;
     this.scene = scene;
+    this.worldGenerator = worldGenerator;
   }
 
   createCube = (
     position: THREE.Vector3 | CANNON.Vec3,
-    isHelper: boolean = false
+    isHelper: boolean = false,
+    withTexture: boolean = true
   ) => {
     const halfExtents = new CANNON.Vec3(0.5, 0.5, 0.5);
     const boxShape = new CANNON.Box(halfExtents);
@@ -90,7 +99,13 @@ class Primitives {
     // boxMesh.receiveShadow = true;
 
     this.world.addBody(boxBody);
-    this.scene.add(boxMesh);
+    if (withTexture) {
+      this.worldGenerator.setCubeTexture(position);
+      this.worldGenerator.updateVoxelGeometry();
+    } else {
+      this.scene.add(boxMesh);
+    }
+
     // boxes.push(boxBody);
     // boxMeshes.push(boxMesh);
 

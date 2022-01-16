@@ -6,6 +6,8 @@ import VoxelWorld from "./VoxelWorld";
 export class WorldGenerator {
   worldGenerate: () => void;
   getBoxes: () => Array<CANNON.Body>;
+  updateVoxelGeometry: () => void;
+  setCubeTexture: (position: THREE.Vector3 | CANNON.Vec3) => void;
 
   voxelWorld: VoxelWorld;
   voxels: VoxelLandscape;
@@ -65,6 +67,10 @@ export class WorldGenerator {
       // this.scene.add(voxelMesh);
       //   }
 
+      //update voxel geometry
+      this.updateVoxelGeometry();
+    };
+    this.updateVoxelGeometry = () => {
       const { positions, normals, uvs, indices } =
         this.voxelWorld.generateGeometryDataForCell(0, 0, 0);
       const geometry = new THREE.BufferGeometry();
@@ -102,6 +108,9 @@ export class WorldGenerator {
     };
     this.getBoxes = () => {
       return this.voxels.getBoxes();
+    };
+    this.setCubeTexture = (position: THREE.Vector3 | CANNON.Vec3) => {
+      this.voxelWorld.setVoxel(position.x, position.y, position.z, 14);
     };
 
     this.voxelWorld = new VoxelWorld({

@@ -78,8 +78,6 @@ export class InitializeGame {
 
     this.defaultMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd });
 
-    this.primitives = new Primitives(this.world, this.scene);
-
     const canvas = document.querySelector("#webgl");
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas as Element });
 
@@ -107,7 +105,7 @@ export class InitializeGame {
 
       const direction = this.getGeneratingBlockDirection();
       if (direction) {
-        const box = this.primitives.createCube(direction, true);
+        const box = this.primitives.createCube(direction, true, false);
         this.cubeHelperBody = box.body;
         this.cubeHelperMesh = box.mesh;
       }
@@ -139,6 +137,12 @@ export class InitializeGame {
     texture.minFilter = THREE.NearestFilter;
 
     this.worldGenerator = new WorldGenerator(this.world, this.scene, texture);
+
+    this.primitives = new Primitives(
+      this.world,
+      this.scene,
+      this.worldGenerator
+    );
 
     this.initializeThree = () => {
       const sizes = {
@@ -208,24 +212,28 @@ export class InitializeGame {
       };
 
       const stayBlock = () => {
-        const direction = this.getGeneratingBlockDirection();
-        if (direction) {
-          const box = this.primitives.createCube(direction).body;
-          this.boxes.push(box);
-        }
+        if (this.controls.enabled) {
+          const direction = this.getGeneratingBlockDirection();
+          if (direction) {
+            const box = this.primitives.createCube(direction).body;
+            this.boxes.push(box);
+          }
 
-        if (this.isRayLineShow) {
-          const materialLine = new THREE.LineBasicMaterial({ color: 0x0000ff });
+          if (this.isRayLineShow) {
+            const materialLine = new THREE.LineBasicMaterial({
+              color: 0x0000ff,
+            });
 
-          const points = [];
-          points.push(this.positionVector);
-          points.push(this.lookAtVector);
+            const points = [];
+            points.push(this.positionVector);
+            points.push(this.lookAtVector);
 
-          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-          const line = new THREE.Line(geometry, materialLine);
+            const line = new THREE.Line(geometry, materialLine);
 
-          this.scene.add(line);
+            this.scene.add(line);
+          }
         }
       };
 
@@ -318,8 +326,8 @@ export class InitializeGame {
         let resultVector = new CANNON.Vec3();
         resultVector = result.body.vectorToWorldFrame(result.hitPointWorld);
         resultVector.x = Math.floor(resultVector.x) + 0.5;
-        resultVector.z = Math.floor(resultVector.z) + 0.5;
         resultVector.y = Math.floor(resultVector.y) + 0.5;
+        resultVector.z = Math.floor(resultVector.z) + 0.5;
         return resultVector;
       }
     };
