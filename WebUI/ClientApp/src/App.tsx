@@ -22,10 +22,14 @@ import EditProduct from "./components/productAdmin/pages/edit";
 import Shop from "./components/shop";
 import ItemCart from "./components/shop/cart/pages";
 
+//game
+import Game from "./components/game";
+
 export default () => (
   <Router>
     <Routes>
       <Route path="/" element={<DefaultLayout />}>
+        <Route path="/game" element={<Game />} />
         //login
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

@@ -13,7 +13,7 @@ const DefaultLayout = () => {
   return (
     <>
       <Header />
-      <Game />
+      {/* <Game /> */}
       <div
         className="container-fluid"
         // style={{ minHeight: "calc(100vh - 75px)" }}

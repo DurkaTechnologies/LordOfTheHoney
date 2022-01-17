@@ -384,13 +384,13 @@ export class InitializeGame {
       }
     };
     this.initialize = () => {
+      this.pocket.initPocket();
+      this.inventory.initInventory();
       this.initializeThree();
       this.initControls();
       this.initCannon();
       this.render();
       initialInventoryItems();
-      this.pocket.initPocket();
-      this.inventory.initInventory();
     };
   }
 }
