@@ -22,7 +22,7 @@ const history = createBrowserHistory();
 const store = configureStore(history);
 
 //Authorize user if token exist
-if (token !== "") {
+if (token) {
   AuthUser(token as string, store.dispatch);
 }
 
