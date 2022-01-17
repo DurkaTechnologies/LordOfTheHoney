@@ -8,6 +8,7 @@ import $ from 'jquery';
 import InputGroupFormik from "../../common/inputGroupFormik";
 import { BulmaInput, BulmaButton } from "src/components/common/bulma";
 import Button from "../../common/button";
+
 import {
   Formik,
   FormikHelpers,
@@ -16,12 +17,11 @@ import {
   Field,
   FieldProps,
 } from "formik";
+
 import { useActions } from "src/hooks/useActions";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { validationFields } from "./validation";
 import { toast } from "react-toastify";
-
-import "./style.css";
 
 const LoginPage = () => {
   const initialValues: ILoginModel = { email: "", password: "" };

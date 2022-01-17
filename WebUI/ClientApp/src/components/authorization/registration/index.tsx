@@ -22,7 +22,6 @@ import { toast } from "react-toastify";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 
 import "react-toastify/dist/ReactToastify.css";
-import "./style.css";
 import { Link } from "react-router-dom";
 
 const RegisterPage = () => {

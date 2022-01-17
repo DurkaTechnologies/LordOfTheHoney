@@ -43,6 +43,30 @@
     }
 }
 
+.btnConfirm {
+    background-color: #ffbb00 !important;
+    color: #6a6a6a !important;
+
+    &:hover {
+        background-color: #dca100 !important;
+        color: white !important;
+    }
+}
+ 
+.btnRegister, 
+.btnLogin {
+    background-color: rgba(222, 222, 222, 0.5);
+
+    &:hover {
+        background-color: rgba(163, 163, 163, 0.5);
+    }
+}
+
+input:focus {
+    border-color: #ffbb00 !important;
+    box-shadow: 0 0 0 0.125em rgba(255, 187, 0, .25) !important;
+}
+
 .text-gradient {
     animation-duration: 15s;
     animation-delay: 1s;

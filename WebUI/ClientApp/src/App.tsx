@@ -21,7 +21,7 @@ import EditProduct from "./components/productAdmin/pages/edit";
 //shop
 import Shop from "./components/shop";
 import ItemCart from "./components/shop/cart/pages";
-
+import Game from "./components/game";
 export default () => (
   <Router>
     <Routes>

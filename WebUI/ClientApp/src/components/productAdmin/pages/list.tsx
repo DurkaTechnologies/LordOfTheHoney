@@ -1,17 +1,17 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
+
 import * as qs from "qs";
-import { IProduct } from "../types";
-import { toast } from "react-toastify";
+
 import { BulmaModal, BulmaButton } from "../../common/bulma";
 
 import "bulma/css/bulma.css";
-import "./style.css";
-
-
+import { IProduct } from "../types";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const ProductList = () => {
 
   return (
     <>
-      <div className="test">
+      <div className="admin-container">
         <h1 className="title is-1">Product list</h1>
 
         <Link className="button is-success" to="/admin/product/add">
@@ -124,14 +124,14 @@ const ProductList = () => {
             })}
           </tbody>
         </table>
-
-        <BulmaModal
-          content="Are you sure want to delete?"
-          isActive={isModalOpen}
-          onSuccess={handleModalConfirm}
-          onCancel={handleModalCancel}
-        />
       </div>
+
+      <BulmaModal
+        content="Are you sure want to delete?"
+        isActive={isModalOpen}
+        onSuccess={handleModalConfirm}
+        onCancel={handleModalCancel}
+      />
     </>
   );
 };

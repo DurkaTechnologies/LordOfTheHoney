@@ -45,13 +45,13 @@ $pagination-list-padding: 0 !default;
 $modal-title-text-transform: uppercase !default;
 
 // Colors
-$modal-content-background: $gray-a400 !default;
+$modal-content-background: rgba($white, .4) !default;
 $modal-header-background: none !default;
 $modal-footer-background: unset !default;
 $modal-body-background: unset !default;
 
 // Filters
-$modal-content-backdrop-filter: blur(10px) !default; 
+$modal-content-backdrop-filter: blur(20px) !default; 
 
 // Borders
 $modal-border-radius: $border-radius !default;
