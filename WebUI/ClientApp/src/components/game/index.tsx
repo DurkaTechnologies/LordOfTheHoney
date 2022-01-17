@@ -1,15 +1,34 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { initializeThree } from "./libs/initialize";
+import { useActions } from "src/hooks/useActions";
+import { useTypedSelector } from "src/hooks/useTypedSelector";
+import { InitializeGame } from "./libs/initialize";
+import Inventory from "./libs/inventory";
 
 import "./style.css";
 
 const Game = () => {
+  const { switchIsHeader, switchIsInventory } = useActions();
+
   useEffect(() => {
-    initializeThree();
+    const init = new InitializeGame(switchHeader, switchInventory);
+    init.initialize();
   });
 
-  return <canvas id="webgl"></canvas>;
+  const switchHeader = (data: boolean) => {
+    switchIsHeader(data);
+  };
+  const switchInventory = (data: boolean) => {
+    switchIsInventory(data);
+  };
+
+  return (
+    <>
+      <img src="/images/cross.png" id="imgCross" alt="" />
+      <canvas id="webgl"></canvas>;
+      <Inventory />
+    </>
+  );
 };
 
 export default Game;

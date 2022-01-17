@@ -47,7 +47,7 @@ const LoginPage = () => {
       }
       await loginUser(values);
       setLoading(false);
-      navigator("/");
+      navigator("/game");
     } catch (errors) {
       setLoading(false);
       setInvalid("Invalid password or email");

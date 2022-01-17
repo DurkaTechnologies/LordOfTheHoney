@@ -77,19 +77,19 @@ export const getProductTypes = () => {
   return async (dispatch: Dispatch<ProductAction>) => {
     try {
       let data: Array<IProductType> = [];
-      if (localStorage.getItem("itemTypes")) {
-        data = JSON.parse(
-          localStorage.getItem("itemTypes") as string
-        ) as Array<IProductType>;
-      } else {
-        const response = await http.get(`/api/shop/shopItemType`);
+      // if (localStorage.getItem("itemTypes")) {
+      //   data = JSON.parse(
+      //     localStorage.getItem("itemTypes") as string
+      //   ) as Array<IProductType>;
+      // } else {
+      const response = await http.get(`/api/shop/shopItemType`);
 
-        data = response.data;
+      data = response.data;
 
-        if (data.length === 0) return Promise.reject("No one product type");
+      if (data.length === 0) return Promise.reject("No one product type");
 
-        localStorage.setItem("itemTypes", JSON.stringify(data));
-      }
+      localStorage.setItem("itemTypes", JSON.stringify(data));
+      // }
       //Write to redux
       SetProductTypes(data, dispatch);
 

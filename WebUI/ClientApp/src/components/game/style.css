@@ -9,3 +9,13 @@ html,
 body {
   overflow: hidden;
 }
+
+#imgCross {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+}

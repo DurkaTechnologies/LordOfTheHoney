@@ -25,3 +25,19 @@ export const switchIsStorage = (data: boolean) => {
     });
   };
 };
+export const switchIsHeader = (data: boolean) => {
+  return async (dispatch: Dispatch<HomeAction>) => {
+    dispatch({
+      type: HomeActionTypes.SWITCH_HEADER,
+      payload: data,
+    });
+  };
+};
+export const switchIsInventory = (data: boolean) => {
+  return async (dispatch: Dispatch<HomeAction>) => {
+    dispatch({
+      type: HomeActionTypes.SWITCH_INVENTORY,
+      payload: data,
+    });
+  };
+};

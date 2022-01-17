@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
@@ -8,7 +9,17 @@ import { BulmaButton } from "src/components/common/bulma";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 
+import {
+  InventoryItem,
+  InventoryItemType,
+} from "src/components/game/libs/inventory/inventoryItem";
+import { textureNameDictionary } from "src/components/game/libs/dictionary";
+import { IStorageItem } from "../types";
+
 const Storage = () => {
+  const [inventorySendItems, setInventorySendItems] = useState<
+    Array<IStorageItem>
+  >([]);
   const { isStorageActive } = useTypedSelector((redux) => redux.home);
   const { user } = useTypedSelector((redux) => redux.auth);
   const { items } = useTypedSelector((redux) => redux.storage);
@@ -19,8 +30,11 @@ const Storage = () => {
     storageFetchItems,
   } = useActions();
 
-  const handleSendToInventory = (id: number) => {
-    storageRemoveItem(id);
+  const handleSendToInventory = (item: IStorageItem) => {
+    const inventory = inventorySendItems.slice();
+    inventory.push(item);
+    setInventorySendItems(inventory);
+    storageRemoveItem(item.id);
   };
 
   const fetch = async () => {
@@ -31,11 +45,22 @@ const Storage = () => {
     }
   };
 
+  const loadInventory = () => {
+    const itemProducts = JSON.parse(
+      localStorage.getItem("inventoryItems") as string
+    ) as Array<string>;
+    inventorySendItems.forEach((item) => {
+      itemProducts.push(item.barcode as string);
+    });
+    localStorage.setItem("inventoryItems", JSON.stringify(itemProducts));
+  };
+
   return (
     <>
       <Modal
         show={isStorageActive}
         onHide={() => {
+          loadInventory();
           switchIsStorage(false);
         }}
         onShow={fetch}
@@ -66,6 +91,7 @@ const Storage = () => {
                   <span className="material-icons-outlined">close</span>
                 }
                 onClick={() => {
+                  loadInventory();
                   switchIsStorage(false);
                 }}
               />
@@ -100,7 +126,7 @@ const Storage = () => {
                             label="Send to inventory"
                             className="orangeBackColor"
                             type="button"
-                            onClick={() => handleSendToInventory(x.id)}
+                            onClick={() => handleSendToInventory(x)}
                           />
                         </td>
                         {/* <td>

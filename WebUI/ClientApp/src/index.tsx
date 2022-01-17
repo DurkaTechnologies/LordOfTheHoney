@@ -10,7 +10,7 @@ import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
 import { AuthUser } from "./components/authorization/login/service";
-const token = localStorage.getItem("token") as string;
+const token = localStorage.getItem("token");
 
 // Create browser history to use in the Redux store
 const baseUrl = document
@@ -23,7 +23,7 @@ const store = configureStore(history);
 
 //Authorize user if token exist
 if (token) {
-  AuthUser(token, store.dispatch);
+  AuthUser(token as string, store.dispatch);
 }
 
 
