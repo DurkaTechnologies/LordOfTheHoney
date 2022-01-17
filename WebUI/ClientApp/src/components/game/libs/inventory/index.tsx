@@ -63,7 +63,6 @@ const Inventory = () => {
     pocketItems.forEach((x) => {
       tmp.push(x.barcode);
     });
-    console.log("tmp: ", tmp);
     localStorage.setItem("pocketItems", JSON.stringify(tmp));
 
     switchIsInventory(false);
@@ -87,7 +86,7 @@ const Inventory = () => {
   };
 
   console.log("pocketItems: ", pocketItems)
-  console.log("nventoryItems: ", inventoryItems)
+
   return (
     <div>
       <Modal

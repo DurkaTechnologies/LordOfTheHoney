@@ -1,0 +1,9 @@
+.pocket {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  bottom: 20px;
+  width: auto;
+  height: 100px;
+}

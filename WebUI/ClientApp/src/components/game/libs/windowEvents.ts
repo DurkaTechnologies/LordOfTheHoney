@@ -54,7 +54,6 @@ export const escClickEvent = () => {
       // @ts-ignore
       !document.msFullscreenElement
     ) {
-      console.log("esc: ", event);
       event.preventDefault();
     }
   }

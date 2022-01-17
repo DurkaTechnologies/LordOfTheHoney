@@ -4,6 +4,7 @@ import { useActions } from "src/hooks/useActions";
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { InitializeGame } from "./libs/initialize";
 import Inventory from "./libs/inventory";
+import Pocket from "./libs/inventory/pocket";
 
 import "./style.css";
 
@@ -27,6 +28,7 @@ const Game = () => {
       <img src="/images/cross.png" id="imgCross" alt="" />
       <canvas id="webgl"></canvas>;
       <Inventory />
+      <Pocket />
     </>
   );
 };

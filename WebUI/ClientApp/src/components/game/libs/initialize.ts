@@ -17,8 +17,8 @@ import {
   initialInventoryItems,
   InventoryItem,
 } from "./inventory/inventoryItem";
-import { PocketService } from "./inventory/pocket";
-import { InventoryService } from "./inventory/inventory";
+import { PocketService } from "./inventory/pocketService";
+import { InventoryService } from "./inventory/inventoryService";
 
 export class InitializeGame {
   initialize: () => void;

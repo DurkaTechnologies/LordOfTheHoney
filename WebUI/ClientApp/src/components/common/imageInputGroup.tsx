@@ -21,7 +21,7 @@ const ImageInputGroup = ({
       const url = URL.createObjectURL(file);
       setImgSrc(url);
 
-      setFieldValue("formFile", file);
+      // setFieldValue("formFile", file);
 
       // const reader = new FileReader();
       // reader.readAsBinaryString(file);
