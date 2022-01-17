@@ -48,9 +48,9 @@ const Storage = () => {
   const loadInventory = () => {
     const itemProducts = JSON.parse(
       localStorage.getItem("inventoryItems") as string
-    ) as Array<number>;
+    ) as Array<string>;
     inventorySendItems.forEach((item) => {
-      itemProducts.push(item.id);
+      itemProducts.push(item.barcode as string);
     });
     localStorage.setItem("inventoryItems", JSON.stringify(itemProducts));
   };

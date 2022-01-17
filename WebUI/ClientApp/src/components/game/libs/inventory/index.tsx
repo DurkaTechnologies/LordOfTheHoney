@@ -32,32 +32,36 @@ const Inventory = () => {
     ) as Array<InventoryItem>;
 
     if (inventoryItemsJson) {
-      const itemsIndicies = JSON.parse(
+      const itemsBarcodes = JSON.parse(
         inventoryItemsJson as string
-      ) as Array<number>;
-      const tmp: Array<InventoryItem> = [];
-      itemsIndicies.forEach((x) => {
-        tmp.push(allItems.filter((el) => el.id == x)[0]);
-      });
-
-      setInventoryItems(tmp);
+      ) as Array<string>;
+      if(itemsBarcodes){
+        const tmp: Array<InventoryItem> = [];
+        itemsBarcodes.forEach((x) => {
+          tmp.push(allItems.filter((el) => el.barcode == x)[0]);
+        });
+        
+        setInventoryItems(tmp);
+      }
     }
     if (pocketItemsJson) {
-      const itemsIndicies = JSON.parse(
+      const itemBarcodes = JSON.parse(
         pocketItemsJson as string
-      ) as Array<number>;
-      const tmp: Array<InventoryItem> = [];
-      itemsIndicies.forEach((x) => {
-        tmp.push(allItems.filter((el) => el.id == x)[0]);
-      });
-
-      setPocketItems(tmp);
+      ) as Array<string>;
+      if(itemBarcodes){
+        const tmp: Array<InventoryItem> = [];
+        itemBarcodes.forEach((x) => {
+          tmp.push(allItems.filter((el) => el.barcode == x)[0]);
+        });
+        
+        setPocketItems(tmp);
+      }
     }
   };
   const hide = () => {
-    let tmp: Array<number> = [];
+    let tmp: Array<string> = [];
     pocketItems.forEach((x) => {
-      tmp.push(x.id);
+      tmp.push(x.barcode);
     });
     console.log("tmp: ", tmp);
     localStorage.setItem("pocketItems", JSON.stringify(tmp));
@@ -82,6 +86,8 @@ const Inventory = () => {
     setPocketItems(tmp);
   };
 
+  console.log("pocketItems: ", pocketItems)
+  console.log("nventoryItems: ", inventoryItems)
   return (
     <div>
       <Modal
@@ -137,7 +143,8 @@ const Inventory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {pocketItems.map((x, id) => {
+                  {(pocketItems && pocketItems.length > 0) && 
+                  pocketItems.map((x, id) => {
                     return (
                       <tr key={id}>
                         <td>{x.id}</td>
@@ -152,7 +159,9 @@ const Inventory = () => {
                         </td>
                       </tr>
                     );
-                  })}
+                    })
+                  }
+
                 </tbody>
               </table>
             </div>
@@ -167,7 +176,8 @@ const Inventory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {inventoryItems.map((x, id) => {
+                  {(inventoryItems && inventoryItems.length > 0) && 
+                inventoryItems.map((x, id) => {
                     return (
                       <tr key={id}>
                         <td>{x.id}</td>
@@ -181,8 +191,10 @@ const Inventory = () => {
                           />
                         </td>
                       </tr>
-                    );
-                  })}
+                      );
+                    })
+                  }
+
                 </tbody>
               </table>
             </div>

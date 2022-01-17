@@ -11,12 +11,12 @@ export class PocketService {
         const inventoryItems = JSON.parse(itemsJson) as Array<InventoryItem>;
         let pocketItems: Array<InventoryItem> = [];
 
-        const pocketItemsIndices = JSON.parse(
+        const pocketItemsBarcodes = JSON.parse(
           localStorage.getItem("pocketItems") as string
-        ) as Array<number>;
+        ) as Array<string>;
 
-        pocketItemsIndices.forEach((x, v) => {
-          pocketItems.push(inventoryItems.filter((ii) => ii.id === x)[0]);
+        pocketItemsBarcodes.forEach((x, v) => {
+          pocketItems.push(inventoryItems.filter((ii) => ii.barcode === x)[0]);
         });
         const item = pocketItems[id];
         if (item) {

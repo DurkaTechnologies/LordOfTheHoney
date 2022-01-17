@@ -4,6 +4,7 @@ export interface inventoryItemProps {
   name: string;
   isActivity: boolean;
   type: InventoryItemType;
+  barcode: string;
 }
 
 export enum InventoryItemType {
@@ -17,11 +18,13 @@ export class InventoryItem {
   name: string;
   isActivity: boolean;
   type: InventoryItemType;
+  barcode: string;
 
   constructor({
     id,
     textureIndex,
     name,
+    barcode,
     type = InventoryItemType.BLOCK,
     isActivity = false,
   }: inventoryItemProps) {
@@ -30,6 +33,7 @@ export class InventoryItem {
     this.name = name;
     this.isActivity = isActivity;
     this.type = type;
+    this.barcode = barcode;
   }
 }
 
@@ -45,6 +49,7 @@ export const initialInventoryItems = () => {
       name: "ground",
       isActivity: false,
       type: InventoryItemType.BLOCK,
+      barcode: "Block:Ground"
     })
   );
   tmp.push(
@@ -54,6 +59,7 @@ export const initialInventoryItems = () => {
       name: "water",
       isActivity: false,
       type: InventoryItemType.BLOCK,
+      barcode: "Block:Water"
     })
   );
 
