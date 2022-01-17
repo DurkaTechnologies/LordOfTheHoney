@@ -1,0 +1,41 @@
+.modal {
+    .modal-dialog {
+        overflow: hidden;
+
+        &.modal-fullscreen {
+            & > .modal-content {
+                border-radius: 0 !important;
+            }
+        }
+
+        .modal-content {
+            overflow: hidden;
+            max-height: 100vh;
+            margin: $modal-content-margin;
+            border-radius: $modal-border-radius;
+        
+            background-color: $modal-content-background;
+            backdrop-filter: $modal-content-backdrop-filter;
+
+            .modal-header {
+                background-color: $modal-header-background;
+                border: none;
+                padding-bottom: unset;
+
+                .modal-title {
+                    text-transform: $modal-title-text-transform;
+                    margin: $modal-title-margin;
+                }
+            }
+
+            .modal-body {
+                background-color: $modal-body-background;
+                padding: $modal-body-padding;
+            }
+
+            .modal-footer {
+                background-color: $modal-footer-background;
+            }
+        }
+    }
+}

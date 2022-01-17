@@ -1,0 +1,38 @@
+$default-scrollbar-size: 12px;
+$default-scrollbar-background: transparent;
+$default-scrollbar-thumb-background: $dark;
+$default-scrollbar-thumb-hober-background: $primary;
+$default-scrollbar-track-margin: 8px 0px;
+$default-scrollbar-thumb-border-radius: $border-radius;
+
+@mixin scrollbars($size: $default-scrollbar-size, 
+ $foreground: $default-scrollbar-thumb-background,
+ $foreground-hover: $default-scrollbar-thumb-hober-background, 
+ $background: $default-scrollbar-background) {
+
+    // For Google Chrome
+    &::-webkit-scrollbar {
+      width:  $size;
+      height: $size;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background-color: $background;
+      margin: $default-scrollbar-track-margin;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $foreground;
+      border-radius: $default-scrollbar-thumb-border-radius;
+      
+      &:hover {
+        background-color: $foreground-hover;
+      }
+    }
+  
+    // For Internet Explorer
+    & {
+      scrollbar-face-color: $foreground;
+      scrollbar-track-color: $background;
+    }
+  }

@@ -1,80 +1,5 @@
-@font-face {
-  font-family: "Material Icons";
-  font-style: normal;
-  font-weight: 400;
-}
-/* src: url(https://example.com/MaterialIcons-Regular.eot); For IE6-8 
-src: local("Material Icons"), local("MaterialIcons-Regular"),
-  url(https://example.com/MaterialIcons-Regular.woff2) format("woff2"),
-  url(https://example.com/MaterialIcons-Regular.woff) format("woff"),
-  url(https://example.com/MaterialIcons-Regular.ttf) format("truetype");*/
-
 * {
     box-sizing: border-box !important;
-}
-
-/*ubrat*/
-canvas {
-    display: none !important;
-}
-
-html, body {
-    background: url(https://cdn.wallscloud.net/converted/3817951130-dolomitovie-alpi-MBBA-1920x1080-MM-100.jpg) !important;
-    background-size: 100% !important;
-    background-repeat: repeat-y !important;
-}
-
-.material-icons {
-  font-family: "Material Icons";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: "liga";
-}
-
-/*pagination:focus redesign*/
-.pagination-link:focus {
-    border: 1px solid #ffbb00 !important;
-}
-
-.pagination-next:focus {
-    border: 1px solid #ffbb00 !important;
-}
-
-.pagination-previous:focus {
-    border: 1px solid #ffbb00 !important;
-}
-
-/*pagination redesign*/
-.pagination-link {
-    border-radius: 8px !important;
-}
-
-.pagination-next {
-    border-radius: 8px !important;
-    padding: 8px !important;
-}
-
-.pagination-previous {
-    border-radius: 8px !important;
-    padding: 8px !important;
 }
 
 /*button redesign*/
@@ -91,64 +16,16 @@ html, body {
     user-select: none;
 }
 
-/*modal redesign*/
-
-.modal-dialog {
-    overflow: hidden !important;
-}
-
-.modal-header {
-    border: none!important;
-    padding-bottom: unset !important;
-}
-
-.modal-content {
-    max-height: 100vh !important;
-    margin: 0 !important;
-    border-radius: 16px !important;
-    overflow: hidden !important;
-
-    background-color: rgba(222, 222, 222, 0.4) !important;
-    backdrop-filter: blur(10px) !important;
-}
-
 .card {
     border-radius: 16px !important;
 }
 
-td {
+/* td {
     vertical-align: middle !important;
     color: white !important;
     font-weight: 500 !important;
-}
+} */
 
-.modal-body {
-    padding: 16px !important;
-}
-
-.modal-title {
-    text-transform: uppercase !important;
-    margin-top: -8px !important;
-}
-
-.modal-fullscreen modal-content {
-    border-radius: unset !important;
-}
-
-.pagination-list {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.pagination {
-    width: auto !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
-.row > * {
-    padding: 0 !important;
-}
 
 input {
     outline: none !important;
@@ -162,29 +39,4 @@ p {
 
 .table {
     background-color: transparent !important;
-}
-
-/*scroll redesign*/
-
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background-color: transparent;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-right: 8px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: #3a3a3a;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background-color: #e6b000;
 }

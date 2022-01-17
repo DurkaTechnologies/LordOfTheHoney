@@ -1,0 +1,19 @@
+// Bootstrap setup
+@import '~bootstrap/scss/functions';
+
+@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp');
+
+@import 'themes/default';
+
+@import 'user-variables';
+
+@import 'components/variables';
+
+// Bootstrap core
+@import '~bootstrap/scss/bootstrap';
+
+@import 'components/components';
+
+// Custom core
+@import 'buttons';
+@import 'sign-in-up';

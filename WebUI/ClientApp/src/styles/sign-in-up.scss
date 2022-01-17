@@ -1,0 +1,94 @@
+@include keyframes(spin) {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@include keyframes(hue-rotate) {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        filter: hue-rotate(360deg);
+    }
+    100% {
+        filter: hue-rotate(0deg);
+    }
+}
+
+@include keyframes(flow) {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@mixin responsive-box($height){
+    position: relative;
+    &:before{
+      content: '';
+      display: block;
+      padding-top: $height;
+    }
+}
+
+.text-gradient {
+    animation-duration: 15s;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease; 
+    animation-name: flow;
+
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+  
+.sign-media {
+    position: relative;
+    @include responsive-box(100%);
+    width: 80%;
+    margin-top: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    .sign-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        &:nth-child(1) {
+            z-index: 1;
+            animation-duration: 20s;
+            animation-delay: 1s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear; 
+            animation-name: spin, hue-rotate;
+        }
+
+        &:nth-child(2) {
+            z-index: 2;
+            animation: spin 20s linear 1s infinite, hue-rotate 20s linear 1s infinite alternate-reverse;
+        }
+    }
+}
+
+.grayscale {
+    filter: grayscale(100%) !important;
+    animation-name: spin !important;
+}

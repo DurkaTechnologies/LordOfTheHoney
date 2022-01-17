@@ -16,7 +16,7 @@ import ItemCart from "./cart/pages";
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import "./style.css";
+import "./style.scss";
 
 const Shop = () => {
     const { products, types, pagination } = useTypedSelector(

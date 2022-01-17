@@ -1,9 +1,3 @@
-.background {
-  background-image: url("../../../../static/images/honeycomb_back.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 .btnConfirm {
   background-color: #ffbb00;
   color: #6a6a6a;

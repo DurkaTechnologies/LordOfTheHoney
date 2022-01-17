@@ -81,7 +81,8 @@ const RegisterPage = () => {
     >
       <div className="card align-self-center p-3" style={{ width: "25rem" }}>
         <div className="card-body">
-          <h2 className="card-title title is-2">Registration</h2>
+          <h1 className="card-title m-0 pb-2 display-3 fw-bolder text-center text-gradient">Sign Up</h1>
+          
           {serverError && (
             <div className="alert alert-danger">{serverError}</div>
           )}

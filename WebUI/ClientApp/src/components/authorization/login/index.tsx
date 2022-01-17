@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { ILoginModel } from "./types";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-
+import $ from 'jquery';
 import InputGroupFormik from "../../common/inputGroupFormik";
 import { BulmaInput, BulmaButton } from "src/components/common/bulma";
 import Button from "../../common/button";
@@ -61,6 +61,10 @@ const LoginPage = () => {
     refFormik.current?.setFieldTouched("password", false);
   };
 
+  const mediaClick = () => {
+    $(".sign-image").toggleClass("grayscale");
+  };
+
   return (
     <div
       className="d-flex justify-content-center background"
@@ -68,7 +72,13 @@ const LoginPage = () => {
     >
       <div className="card align-self-center p-3" style={{ width: "25rem" }}>
         <div className="card-body">
-          <h2 className="card-title title is-2">Login</h2>
+          <h1 className="card-title m-0 pb-2 display-5 fw-bolder text-center text-gradient">Sign in</h1>
+
+          <div className="sign-media" onDoubleClick={mediaClick}> 
+            <img src="./images/beeCombs.png" className="sign-image"/>
+            <img src="./images/combHoney.png" className="sign-image"/>
+          </div>
+
           {invalid && <div className="alert alert-danger">{invalid}</div>}
           <Formik
             initialValues={initialValues}
