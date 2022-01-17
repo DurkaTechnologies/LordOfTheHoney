@@ -55,6 +55,10 @@
     padding: 4px 18px !important;
     border: none !important;
     color: white !important;
+
+    &:hover {
+        color: gray !important;
+    }
 }
 
 .tabs li.is-active a {
@@ -63,12 +67,15 @@
     position: relative !important;
     color: black !important;
     background-color: rgba(222, 222, 222, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(20px) !important;
+    cursor: default;
 }
 
 .tabs a {
     margin-bottom: 0px;
     color: gray !important;
+
+    
 }
 
 .tabs ul {

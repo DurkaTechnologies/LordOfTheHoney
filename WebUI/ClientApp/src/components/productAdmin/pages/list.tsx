@@ -67,62 +67,64 @@ const ProductList = () => {
 
   return (
     <>
-      <h1 className="title is-1">Product list</h1>
+      <div className="admin-container">
+        <h1 className="title is-1">Product list</h1>
 
-      <Link className="button is-success" to="/admin/product/add">
-        Add product
-      </Link>
+        <Link className="button is-success" to="/admin/product/add">
+          Add product
+        </Link>
 
-      <BulmaButton
-        label="Update with db"
-        className="is-info ms-3"
-        type="submit"
-        onClick={handleUpdate}
-        iconSpan={
-          <span className="material-icons-outlined icon me-1">update</span>
-        }
-        loading={loading}
-      />
+        <BulmaButton
+          label="Update with db"
+          className="is-info ms-3"
+          type="submit"
+          onClick={handleUpdate}
+          iconSpan={
+            <span className="material-icons-outlined icon me-1">update</span>
+          }
+          loading={loading}
+        />
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((x, id) => {
-            return (
-              <tr key={id}>
-                <th>{x.id === 0 ? "-" : x.id}</th>
-                <td>{x.name}</td>
-                <td>
-                  {types.filter((t) => t.id == x.shopItemTypeId)[0]?.name}
-                </td>
-                <td>
-                  <Link
-                    className="button is-info is-light"
-                    to={`/admin/product/edit/`}
-                    onClick={() => handleEditProduct(x)}
-                  >
-                    Edit
-                  </Link>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((x, id) => {
+              return (
+                <tr key={id}>
+                  <th>{x.id === 0 ? "-" : x.id}</th>
+                  <td>{x.name}</td>
+                  <td>
+                    {types.filter((t) => t.id == x.shopItemTypeId)[0]?.name}
+                  </td>
+                  <td>
+                    <Link
+                      className="button is-info is-light"
+                      to={`/admin/product/edit/`}
+                      onClick={() => handleEditProduct(x)}
+                    >
+                      Edit
+                    </Link>
 
-                  <button
-                    className="button is-danger is-light ms-3"
-                    onClick={() => openModal(x.id)}
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                    <button
+                      className="button is-danger is-light ms-3"
+                      onClick={() => openModal(x.id)}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <BulmaModal
         content="Are you sure want to delete?"

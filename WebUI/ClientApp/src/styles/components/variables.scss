@@ -1,0 +1,64 @@
+// Border Radius
+$border-radius: 8px !default;
+
+// *********************************************
+//
+// COLORS
+//
+// *********************************************
+
+// For text
+$link-color: $primary !default;
+$link-hover-color: darken($link-color, 15%) !default;
+
+
+// For backgrounds
+$active-bg-color: $primary !default;
+
+// *********************************************
+//
+// PAGINATION
+//
+// *********************************************
+
+// Colors
+$pagination-link-border-color: $link-color !default;
+$pagination-link-border-hover-color: $link-hover-color !default;
+
+// Borders
+$pagination-link-border-width: 2px !default;
+$pagination-link-border-radius: $border-radius !default;
+
+// Margins
+$pagination-list-margin: 0 !default;
+
+// Paddings
+$pagination-list-padding: 0 !default;
+
+// *********************************************
+//
+// MODAL 
+//
+// *********************************************
+
+//Text
+$modal-title-text-transform: uppercase !default;
+
+// Colors
+$modal-content-background: rgba($white, .4) !default;
+$modal-header-background: none !default;
+$modal-footer-background: unset !default;
+$modal-body-background: unset !default;
+
+// Filters
+$modal-content-backdrop-filter: blur(20px) !default; 
+
+// Borders
+$modal-border-radius: $border-radius !default;
+
+// Margins
+$modal-content-margin: 0 !default;
+$modal-title-margin: -8px 0px 0px 0px;
+
+// Paddings
+$modal-body-padding: 16px !default;

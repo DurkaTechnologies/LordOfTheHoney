@@ -64,63 +64,65 @@ const EditProduct = () => {
               setFieldValue,
             } = props;
             return (
-              <Form onSubmit={handleSubmit}>
-                <BulmaInput
-                  value={values.name}
-                  field="name"
-                  onChange={handleChange}
-                  label="Name"
-                  error={errors.name}
-                  touched={touched.name}
-                />
-                <BulmaTextarea
-                  value={values.description}
-                  field="description"
-                  onChange={handleChange}
-                  label="Description"
-                  error={errors.description}
-                  touched={touched.description}
-                />
+              <div className="admin-container">
+                <Form onSubmit={handleSubmit}>
+                  <BulmaInput
+                    value={values.name}
+                    field="name"
+                    onChange={handleChange}
+                    label="Name"
+                    error={errors.name}
+                    touched={touched.name}
+                  />
+                  <BulmaTextarea
+                    value={values.description}
+                    field="description"
+                    onChange={handleChange}
+                    label="Description"
+                    error={errors.description}
+                    touched={touched.description}
+                  />
 
-                <BulmaSelect
-                  value={values.shopItemTypeId}
-                  field="shopItemTypeId"
-                  onChange={handleChange}
-                  label="Item type"
-                  error={errors.shopItemTypeId}
-                  touched={touched.shopItemTypeId}
-                  values={types}
-                />
+                  <BulmaSelect
+                    value={values.shopItemTypeId}
+                    field="shopItemTypeId"
+                    onChange={handleChange}
+                    label="Item type"
+                    error={errors.shopItemTypeId}
+                    touched={touched.shopItemTypeId}
+                    values={types}
+                  />
 
-                <ImageInputGroup
-                  initialUrl={currentProduct.picturePath as string}
-                  setFieldValue={setFieldValue}
-                />
+                  <ImageInputGroup
+                    initialUrl={currentProduct.picturePath as string}
+                    setFieldValue={setFieldValue}
+                  />
 
-                <div className="field is-grouped">
-                  <div className="control">
-                    {/* <button className="button is-link" type="submit">
+                  <div className="field is-grouped">
+                    <div className="control">
+                      {/* <button className="button is-link" type="submit">
                     Submit
                   </button> */}
-                    <BulmaButton
-                      label="Confirm"
-                      type="submit"
-                      className="is-link"
-                    />
+                      <BulmaButton
+                        label="Confirm"
+                        type="submit"
+                        className="is-link"
+                      />
+                    </div>
+                    <div className="control">
+                      {/* <button className="button is-link is-light">Cancel</button> */}
+                      <BulmaButton
+                        label="Cancel"
+                        type="submit"
+                        className="is-link is-light"
+                        onClick={() => {
+                          navigator("/admin/product/list");
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="control">
-                    {/* <button className="button is-link is-light">Cancel</button> */}
-                    <BulmaButton
-                      label="Cancel"
-                      type="submit"
-                      className="is-link is-light"
-                      onClick={() => {
-                        navigator("/admin/product/list");
-                      }}
-                    />
-                  </div>
-                </div>
-              </Form>
+                </Form>
+              </div>
             );
           }}
         </Formik>
