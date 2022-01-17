@@ -15,19 +15,19 @@ const Header = () => {
     <>
       {isHeaderActive && isAuth && (
         <div className="d-flex justify-content-between ownHeader">
-          <div className="element leftElement d-flex">
-            <span className="material-icons-outlined pt-48 my-auto">
+          <div className="element leftElement d-flex align-items-center">
+            <span className="material-icons-outlined">
               monetization_on
             </span>
-            <span className="headerName">
-              {parseInt(user?.beeCoins.toString())}
+            <span className="headerCoins">
+              {parseInt(user?.beeCoins).toLocaleString()}
             </span>
           </div>
-          <div className="element rightElement d-flex">
+          <div className="element rightElement d-flex align-items-center">
             <p className="headerName">{user?.nickname}</p>
             <div className="btnOption">
               <span
-                className="material-icons-outlined pt-48 mt-1"
+                className="material-icons-outlined"
                 onClick={() => switchIsShop(true)}
               >
                 store
@@ -35,22 +35,20 @@ const Header = () => {
             </div>
             <div className="btnOption">
               <span
-                className="material-icons-outlined pt-48 mt-1"
+                className="material-icons-outlined"
                 onClick={() => switchIsStorage(true)}
               >
                 inventory_2
               </span>
             </div>
             <div className="btnOption">
-              <Link to="/settings" className="color-inherit">
-                <span className="material-icons-outlined pt-48 mt-1">
-                  settings
-                </span>
-              </Link>
+              <span className="material-icons-outlined">
+                settings
+              </span>
             </div>
             <div className="btnOption">
               <span
-                className="material-icons-outlined pt-48 mt-1"
+                className="material-icons-outlined"
                 onClick={logoutUser}
               >
                 logout
@@ -58,55 +56,9 @@ const Header = () => {
             </div>
           </div>
         </div>
-
-    return (
-        <>
-            {isAuth && (
-                <div className="d-flex justify-content-between ownHeader">
-                    <div className="element leftElement d-flex align-items-center">
-                        <span className="material-icons-outlined">
-                            monetization_on
-                        </span>
-                        <span className="headerCoins">
-                            {parseInt(user?.beeCoins).toLocaleString()}
-                        </span>
-                    </div>
-                    <div className="element rightElement d-flex align-items-center">
-                        <p className="headerName">{user?.nickname}</p>
-                        <div className="btnOption">
-                            <span
-                                className="material-icons-outlined"
-                                onClick={() => switchIsShop(true)}
-                            >
-                                store
-                            </span>
-                        </div>
-                        <div className="btnOption">
-                            <span
-                                className="material-icons-outlined"
-                                onClick={() => switchIsStorage(true)}
-                            >
-                                inventory_2
-                            </span>
-                        </div>
-                        <div className="btnOption">
-                            <span className="material-icons-outlined">
-                                settings
-                            </span>
-                        </div>
-                        <div className="btnOption">
-                            <span
-                                className="material-icons-outlined"
-                                onClick={logoutUser}
-                            >
-                                logout
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+      )}
+    </>
+  );
 };
 
 export default Header;
