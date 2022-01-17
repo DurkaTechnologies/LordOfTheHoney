@@ -39,14 +39,14 @@ const BulmaPagination = ({
               disabled={!pagination.hasPreviousPage}
               onClick={handlePrevPage}
             >
-              Previous
+                <span className="material-icons-outlined">navigate_before</span>
             </button>
             <button
               className="pagination-next"
               disabled={!pagination.hasNextPage}
               onClick={handleNextPage}
             >
-              Next page
+                <span className="material-icons-outlined">navigate_next</span>
             </button>
             <ul className="pagination-list">
               {getPaginatedArray().map((x, id) => {

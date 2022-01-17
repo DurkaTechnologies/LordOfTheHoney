@@ -105,7 +105,7 @@ const ItemCart = () => {
       >
         <Modal.Header>
           <div className="d-flex justify-content-between w-100">
-            <Modal.Title>Item Cart</Modal.Title>
+            <Modal.Title>Shop Cart</Modal.Title>
 
             <div>
               <BulmaButton
@@ -121,7 +121,7 @@ const ItemCart = () => {
                 }}
               />
               <BulmaButton
-                className="me-2"
+                className=""
                 label=""
                 type="button"
                 iconSpan={
@@ -135,67 +135,44 @@ const ItemCart = () => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Cost/one</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-            <tbody>
               {cartProducts.length !== 0 && (
                 <>
                   {cartProducts.map((x, id) => {
                     return (
-                      <tr key={id}>
-                        <td>{x.id}</td>
-                        <td>{x.name}</td>
-                        <td>
-                          {
-                            types.filter((t) => t.id == x.shopItemTypeId)[0]
-                              .name
-                          }
-                        </td>
-                        <td>{x.cost}</td>
-                        <td>
-                          <input
-                            type="number"
-                            name="quantity"
-                            className="input"
-                            min="1"
-                            value={x.quantity}
-                            onChange={(e) =>
-                              handleQuantityChange(x.id, +e.target.value)
-                            }
-                          />
-                        </td>
-                        <td>{x.cost * x.quantity}</td>
-                        <td>
-                          <BulmaButton
-                            label="Remove from cart"
-                            className="is-danger"
-                            type="button"
-                            onClick={() => handleDelete(x.id)}
-                          />
-                        </td>
-                      </tr>
+                        <div className="cart-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Icon_Bird_512x512.png" />
+                            <div className="cart-content">
+                                <p className="cart-title white-title">{x.name}</p>
+                                <p className="cart-title">{x.shopItemTypeId}</p>
+                                <input
+                                    type="number"
+                                    name="cart-quantity"
+                                    className="input cart-quantity"
+                                    min="1"
+                                    value={x.quantity}
+                                    onChange={(e) =>
+                                        handleQuantityChange(x.id, +e.target.value)
+                                    }
+                                />
+                            </div>
+                            <BulmaButton
+                                className="btnRemove"
+                                label=""
+                                type="button"
+                                iconSpan={
+                                    <span className="material-icons-outlined">close</span>
+                                }
+                                onClick={() => handleDelete(x.id)}
+                            />
+                            <p className="cart-price-title">{x.cost * x.quantity}</p>
+                        </div>
                     );
                   })}
                 </>
               )}
-            </tbody>
-          </table>
 
-          <div className="row">
-            <div className="offset-5 col-3">
-              <p className="title t-1">TOTAL: {getFinalPrice()}</p>
-            </div>
-            <div className="col-4">
+          <div className="d-flex justify-content-start align-items-center">
+              <p className="title mr-auto">TOTAL: {getFinalPrice()}</p>
               <BulmaButton
                 label="BUY"
                 className="is-success"
@@ -207,12 +184,11 @@ const ItemCart = () => {
               <BulmaButton
                 type="button"
                 label="Clear cart"
-                className="is-danger ml-4"
+                className="is-danger ml-2"
                 onClick={cartClear}
                 loading={loading}
               />
             </div>
-          </div>
         </Modal.Body>
       </Modal>
     </>

@@ -84,7 +84,7 @@ const Storage = () => {
                 }}
               />
               <BulmaButton
-                className="me-2"
+                className=""
                 label=""
                 type="button"
                 iconSpan={
