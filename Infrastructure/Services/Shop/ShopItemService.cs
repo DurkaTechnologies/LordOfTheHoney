@@ -20,6 +20,8 @@ using LordOfTheHoney.Application.Specifications;
 using LordOfTheHoney.Application.Interfaces.Services;
 using LordOfTheHoney.Application.Enums;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace Infrastructure.Services.Shop
 {
@@ -47,10 +49,15 @@ namespace Infrastructure.Services.Shop
             }
 
             var shopItem = mapper.Map<ShopItem>(command);
-            if (command.FormFile != null)
+            if (command.Image != null)
             {
-                string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
-                shopItem.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
+                byte[] converted = Convert.FromBase64String(command.Image.Data);
+                MemoryStream stream = new MemoryStream(converted);
+                IFormFile file = new FormFile(stream, 0, converted.Length, "salo", "png");
+                
+
+                string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(file.FileName)}";
+                shopItem.PicturePath = await uploadService.UploadByFormFileAsync(file,
                     UploadType.ShopItem, fileName);
             }
 

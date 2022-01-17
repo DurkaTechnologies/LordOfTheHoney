@@ -35,8 +35,11 @@ export const initializeThree = () => {
 
   // Renderer
   const renderer = new THREE.WebGLRenderer({
-    canvas: canvas as Element,
+      canvas: canvas as Element,
+      alpha: true,
+      antialias: true
   });
+  renderer.setClearColor(0x000000, 0);
   renderer.setSize(sizes.width, sizes.height);
 
   //Events

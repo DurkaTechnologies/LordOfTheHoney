@@ -27,7 +27,7 @@ namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Create
         [Required]
         public int ShopItemTypeId { get; set; }
 
-        public IFormFile FormFile { get; set; }
+        public UploadRequest Image { get; set; }
     }
 
     internal class CreateShopItemCommandHandler : IRequestHandler<CreateShopItemCommand, IResult<bool>>

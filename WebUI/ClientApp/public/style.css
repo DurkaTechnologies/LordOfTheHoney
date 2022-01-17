@@ -15,7 +15,7 @@ src: local("Material Icons"), local("MaterialIcons-Regular"),
 
 /*ubrat*/
 canvas {
-    display: none !important;
+    /*display: none !important;*/
 }
 
 html, body {

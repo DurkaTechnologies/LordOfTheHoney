@@ -18,7 +18,7 @@ export interface IProduct {
   cost: number;
   description: string | null;
   barcode?: string | undefined | null;
-  formFile?: File | null;
+  formFile?: string | null;
   // uploadRequest?: IProductImage;
 }
 // export interface IProductImage {

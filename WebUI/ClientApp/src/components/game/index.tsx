@@ -4,6 +4,8 @@ import { initializeThree } from "./libs/initialize";
 
 import "./style.css";
 
+
+
 const Game = () => {
   useEffect(() => {
     initializeThree();
