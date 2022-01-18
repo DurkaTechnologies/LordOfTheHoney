@@ -61,7 +61,7 @@ const Pocket = () => {
   return (
     <div className="pocket">
       {pocket && pocket.length > 0 && (
-        <div className="d-flex">
+        <div className="d-flex justify-content-center">
           {/* {pocket.map((x, i) => {
             return (
               <div key={i} className="pocketItemBack">

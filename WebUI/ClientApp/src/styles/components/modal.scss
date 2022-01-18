@@ -1,6 +1,6 @@
 .modal {
     .modal-dialog {
-        overflow: hidden;
+        overflow-y: initial !important;
 
         &.modal-fullscreen {
             & > .modal-content {
@@ -29,6 +29,7 @@
             }
 
             .modal-body {
+                overflow-y: auto;
                 background-color: $modal-body-background;
                 padding: $modal-body-padding;
             }

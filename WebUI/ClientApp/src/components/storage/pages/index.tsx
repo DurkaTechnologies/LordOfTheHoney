@@ -102,7 +102,7 @@ const Storage = () => {
             </div>
           </div>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{height: "80vh"}}>
           <table className="table">
             <thead>
               <tr>
