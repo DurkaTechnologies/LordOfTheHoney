@@ -35,12 +35,16 @@ const Inventory = () => {
       const itemsBarcodes = JSON.parse(
         inventoryItemsJson as string
       ) as Array<string>;
-      if(itemsBarcodes){
+      if (itemsBarcodes) {
+        console.log("inventoryItemsJson: ", itemsBarcodes);
         const tmp: Array<InventoryItem> = [];
         itemsBarcodes.forEach((x) => {
-          tmp.push(allItems.filter((el) => el.barcode == x)[0]);
+          const invItem = allItems.filter((el) => el.barcode == x)[0];
+          if (invItem) {
+            tmp.push(invItem);
+          }
         });
-        
+
         setInventoryItems(tmp);
       }
     }
@@ -48,12 +52,12 @@ const Inventory = () => {
       const itemBarcodes = JSON.parse(
         pocketItemsJson as string
       ) as Array<string>;
-      if(itemBarcodes){
+      if (itemBarcodes) {
         const tmp: Array<InventoryItem> = [];
         itemBarcodes.forEach((x) => {
           tmp.push(allItems.filter((el) => el.barcode == x)[0]);
         });
-        
+
         setPocketItems(tmp);
       }
     }
@@ -86,8 +90,8 @@ const Inventory = () => {
     setPocketItems(tmp);
   };
 
-  console.log("pocketItems: ", pocketItems)
-  console.log("nventoryItems: ", inventoryItems)
+  console.log("pocketItems: ", pocketItems);
+  console.log("nventoryItems: ", inventoryItems);
   return (
     <div>
       <Modal
@@ -143,25 +147,24 @@ const Inventory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {(pocketItems && pocketItems.length > 0) && 
-                  pocketItems.map((x, id) => {
-                    return (
-                      <tr key={id}>
-                        <td>{x.id}</td>
-                        <td>{x.name}</td>
-                        <td>
-                          <BulmaButton
-                            label="Remove from pocket"
-                            className="is-primary"
-                            type="button"
-                            onClick={() => removeFromPocket(x.id)}
-                          />
-                        </td>
-                      </tr>
-                    );
-                    })
-                  }
-
+                  {pocketItems &&
+                    pocketItems.length > 0 &&
+                    pocketItems.map((x, id) => {
+                      return (
+                        <tr key={id}>
+                          <td>{x.id}</td>
+                          <td>{x.name}</td>
+                          <td>
+                            <BulmaButton
+                              label="Remove from pocket"
+                              className="is-primary"
+                              type="button"
+                              onClick={() => removeFromPocket(x.id)}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
@@ -176,25 +179,24 @@ const Inventory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {(inventoryItems && inventoryItems.length > 0) && 
-                inventoryItems.map((x, id) => {
-                    return (
-                      <tr key={id}>
-                        <td>{x.id}</td>
-                        <td>{x.name}</td>
-                        <td>
-                          <BulmaButton
-                            label="Add to pocket"
-                            className="is-primary"
-                            type="button"
-                            onClick={() => addToPocket(x)}
-                          />
-                        </td>
-                      </tr>
+                  {inventoryItems &&
+                    inventoryItems.length > 0 &&
+                    inventoryItems.map((x, id) => {
+                      return (
+                        <tr key={id}>
+                          <td>{x.id}</td>
+                          <td>{x.name}</td>
+                          <td>
+                            <BulmaButton
+                              label="Add to pocket"
+                              className="is-primary"
+                              type="button"
+                              onClick={() => addToPocket(x)}
+                            />
+                          </td>
+                        </tr>
                       );
-                    })
-                  }
-
+                    })}
                 </tbody>
               </table>
             </div>

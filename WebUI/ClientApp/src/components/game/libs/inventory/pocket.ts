@@ -15,6 +15,8 @@ export class PocketService {
           localStorage.getItem("pocketItems") as string
         ) as Array<string>;
 
+        if (!pocketItemsBarcodes) return;
+
         pocketItemsBarcodes.forEach((x, v) => {
           pocketItems.push(inventoryItems.filter((ii) => ii.barcode === x)[0]);
         });

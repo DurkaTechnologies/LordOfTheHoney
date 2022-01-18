@@ -45,6 +45,8 @@ export const logoutUser = () => {
     try {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("inventoryItems");
+      localStorage.removeItem("pocketItems");
 
       dispatch({
         type: AuthActionTypes.LOGOUT_AUTH,

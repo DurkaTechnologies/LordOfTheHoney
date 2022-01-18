@@ -13,10 +13,9 @@ import { Quaternion, Vector2, Vector3 } from "three";
 import { mapFromCannon, mapFromThree } from "./mapperVector";
 import { WorldGenerator } from "./3dLib/VoxelWorld/WorldGenerator";
 
-import {
-  initialInventoryItems,
-  InventoryItem,
-} from "./inventory/inventoryItem";
+import { allInventoryItemsArr } from "./seeder";
+
+import { InventoryItem } from "./inventory/inventoryItem";
 import { PocketService } from "./inventory/pocket";
 import { InventoryService } from "./inventory/inventory";
 
@@ -390,7 +389,10 @@ export class InitializeGame {
       this.initControls();
       this.initCannon();
       this.render();
-      initialInventoryItems();
+      localStorage.setItem(
+        "allInventoryItems",
+        JSON.stringify(allInventoryItemsArr)
+      );
     };
   }
 }
