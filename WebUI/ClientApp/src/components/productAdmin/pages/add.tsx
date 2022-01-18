@@ -57,7 +57,6 @@ const AddProduct = () => {
   const handleSubmit = (values: IProduct, actions: FormikHelpers<IProduct>) => {
     async function add() {
       try {
-        console.log("values: ", values);
         values.barcode = generateBarcode(values);
         await addProduct(values);
         toast.success(`Product ${values.name} was successfully added`);
@@ -85,7 +84,6 @@ const AddProduct = () => {
 
   return (
     <>
-
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}

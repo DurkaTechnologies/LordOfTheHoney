@@ -40,3 +40,8 @@ export class InventoryItem {
     this.quantity = quantity;
   }
 }
+
+export interface ILocalStorageItem {
+  barcode: string;
+  quantity: number;
+}

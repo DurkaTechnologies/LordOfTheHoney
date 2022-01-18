@@ -6,7 +6,7 @@ import { useActions } from "../../../../hooks/useActions";
 
 import { BulmaButton } from "../../../common/bulma";
 
-import { InventoryItem } from "./inventoryItem";
+import { InventoryItem, ILocalStorageItem } from "./inventoryItem";
 
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
@@ -36,12 +36,15 @@ const Inventory = () => {
     if (pocketItemsJson) {
       const itemBarcodes = JSON.parse(
         pocketItemsJson as string
-      ) as Array<string>;
+      ) as Array<ILocalStorageItem>;
       if (itemBarcodes) {
         const tmp: Array<InventoryItem> = [];
         itemBarcodes.forEach((x) => {
-          const pocketItem = allItems.filter((el) => el.barcode == x)[0];
+          const pocketItem = allItems.filter(
+            (el) => el.barcode == x.barcode
+          )[0];
           if (pocketItem) {
+            pocketItem.quantity = x.quantity;
             tmp.push(pocketItem);
           }
         });
@@ -53,15 +56,16 @@ const Inventory = () => {
     if (inventoryItemsJson) {
       const itemsBarcodes = JSON.parse(
         inventoryItemsJson as string
-      ) as Array<string>;
+      ) as Array<ILocalStorageItem>;
       if (itemsBarcodes) {
         const tmp: Array<InventoryItem> = [];
         itemsBarcodes.forEach((x) => {
-          const invItem = allItems.filter((el) => el.barcode == x)[0];
+          const invItem = allItems.filter((el) => el.barcode == x.barcode)[0];
           if (
             invItem &&
-            !pocketLocalItems.filter((item) => item.barcode === x)[0]
+            !pocketLocalItems.filter((item) => item.barcode === x.barcode)[0]
           ) {
+            invItem.quantity = x.quantity;
             tmp.push(invItem);
           }
         });
@@ -71,9 +75,9 @@ const Inventory = () => {
   };
 
   const hide = () => {
-    let tmp: Array<string> = [];
+    let tmp: Array<ILocalStorageItem> = [];
     pocketItems.forEach((x) => {
-      tmp.push(x.barcode);
+      tmp.push({ barcode: x.barcode, quantity: x.quantity ? x.quantity : -1 });
     });
     setPocketItems(pocketItems);
     localStorage.setItem("pocketItems", JSON.stringify(tmp));
@@ -100,7 +104,13 @@ const Inventory = () => {
     let tmp = pocketItems.slice();
     tmp.push(item);
     setPocketItemsState(tmp);
+
+    let tmpInventory = inventoryItems.slice();
+    setInventoryItems(tmpInventory.filter((x) => x.id !== item.id));
   };
+
+  console.log("inventoryItems: ", inventoryItems);
+  console.log("pocketItems : ", pocketItems);
 
   return (
     <div>
@@ -187,6 +197,7 @@ const Inventory = () => {
                   <tr>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Quantity</th>
                     <th>Options</th>
                   </tr>
                 </thead>
@@ -198,6 +209,7 @@ const Inventory = () => {
                         <tr key={id}>
                           <td>{x.id}</td>
                           <td>{x.name}</td>
+                          <td>{x.quantity ? x.quantity : "-"}</td>
                           <td>
                             <BulmaButton
                               label="Add to pocket"

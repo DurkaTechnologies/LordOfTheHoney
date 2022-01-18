@@ -52,8 +52,6 @@ export class WorldGenerator {
 
       this.voxels.update();
 
-      console.log(`${this.voxels.boxes.length} voxel physics bodies`);
-
       // Voxel meshes
       //   for (let i = 0; i < voxels.boxes.length; i++) {
       //     const box = voxels.boxes[i];

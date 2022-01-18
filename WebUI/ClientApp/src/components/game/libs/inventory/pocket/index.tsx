@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { InventoryItem } from "../inventoryItem";
+import { InventoryItem, ILocalStorageItem } from "../inventoryItem";
 
 import { useTypedSelector } from "src/hooks/useTypedSelector";
 import { useActions } from "src/hooks/useActions";
@@ -16,7 +16,7 @@ const Pocket = () => {
     if (!pocket || pocket.length === 0) {
       const pocketBarcodes = JSON.parse(
         localStorage.getItem("pocketItems") as string
-      ) as Array<string>;
+      ) as Array<ILocalStorageItem>;
       const allItems = JSON.parse(
         localStorage.getItem("allInventoryItems") as string
       ) as Array<InventoryItem>;
@@ -24,7 +24,7 @@ const Pocket = () => {
       let tmp = Array<InventoryItem>();
 
       pocketBarcodes.forEach((x) => {
-        tmp.push(allItems.filter((i) => i.barcode === x)[0]);
+        tmp.push(allItems.filter((i) => i.barcode === x.barcode)[0]);
       });
 
       setPocketItems(tmp);
@@ -57,8 +57,6 @@ const Pocket = () => {
     }
     return tmp;
   };
-
-  console.log("Pocket: ", pocket);
 
   return (
     <div className="pocket">
