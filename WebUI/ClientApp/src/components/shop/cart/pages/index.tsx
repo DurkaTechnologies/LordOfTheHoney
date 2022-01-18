@@ -135,60 +135,60 @@ const ItemCart = () => {
           </div>
         </Modal.Header>
         <Modal.Body>
-              {cartProducts.length !== 0 && (
-                <>
-                  {cartProducts.map((x, id) => {
-                    return (
-                        <div className="cart-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Icon_Bird_512x512.png" />
-                            <div className="cart-content">
-                                <p className="cart-title white-title">{x.name}</p>
-                                <p className="cart-title">{x.shopItemTypeId}</p>
-                                <input
-                                    type="number"
-                                    name="cart-quantity"
-                                    className="input cart-quantity"
-                                    min="1"
-                                    value={x.quantity}
-                                    onChange={(e) =>
-                                        handleQuantityChange(x.id, +e.target.value)
-                                    }
-                                />
-                            </div>
-                            <BulmaButton
-                                className="btnRemove"
-                                label=""
-                                type="button"
-                                iconSpan={
-                                    <span className="material-icons-outlined">close</span>
-                                }
-                                onClick={() => handleDelete(x.id)}
-                            />
-                            <p className="cart-price-title">{x.cost * x.quantity}</p>
-                        </div>
-                    );
-                  })}
-                </>
-              )}
+          {cartProducts.length !== 0 && (
+            <>
+              {cartProducts.map((x, id) => {
+                return (
+                  <div key={id} className="cart-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Icon_Bird_512x512.png" />
+                    <div className="cart-content">
+                      <p className="cart-title white-title">{x.name}</p>
+                      <p className="cart-title">{x.shopItemTypeId}</p>
+                      <input
+                        type="number"
+                        name="cart-quantity"
+                        className="input cart-quantity"
+                        min="1"
+                        value={x.quantity}
+                        onChange={(e) =>
+                          handleQuantityChange(x.id, +e.target.value)
+                        }
+                      />
+                    </div>
+                    <BulmaButton
+                      className="btnRemove"
+                      label=""
+                      type="button"
+                      iconSpan={
+                        <span className="material-icons-outlined">close</span>
+                      }
+                      onClick={() => handleDelete(x.id)}
+                    />
+                    <p className="cart-price-title">{x.cost * x.quantity}</p>
+                  </div>
+                );
+              })}
+            </>
+          )}
 
           <div className="d-flex justify-content-start align-items-center">
-              <p className="title mr-auto">TOTAL: {getFinalPrice()}</p>
-              <BulmaButton
-                label="BUY"
-                className="is-success"
-                type="button"
-                onClick={handleCartBuy}
-                disabled={getButtonDisabled()}
-                loading={loading}
-              />
-              <BulmaButton
-                type="button"
-                label="Clear cart"
-                className="is-danger ml-2"
-                onClick={cartClear}
-                loading={loading}
-              />
-            </div>
+            <p className="title mr-auto">TOTAL: {getFinalPrice()}</p>
+            <BulmaButton
+              label="BUY"
+              className="is-success"
+              type="button"
+              onClick={handleCartBuy}
+              disabled={getButtonDisabled()}
+              loading={loading}
+            />
+            <BulmaButton
+              type="button"
+              label="Clear cart"
+              className="is-danger ml-2"
+              onClick={cartClear}
+              loading={loading}
+            />
+          </div>
         </Modal.Body>
       </Modal>
     </>

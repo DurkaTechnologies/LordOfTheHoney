@@ -13,12 +13,12 @@ import { toast } from "react-toastify";
 
 const Inventory = () => {
   const { isInventoryActive } = useTypedSelector((redux) => redux.home);
-  const { switchIsInventory, switchIsShop } = useActions();
+  const { switchIsInventory, switchIsShop, setPocketItems } = useActions();
 
   const [inventoryItems, setInventoryItems] = useState<Array<InventoryItem>>(
     []
   );
-  const [pocketItems, setPocketItems] = useState<Array<InventoryItem>>([]);
+  const [pocketItems, setPocketItemsState] = useState<Array<InventoryItem>>([]);
 
   React.useEffect(() => {
     fetch();
@@ -31,23 +31,8 @@ const Inventory = () => {
       localStorage.getItem("allInventoryItems") as string
     ) as Array<InventoryItem>;
 
-    if (inventoryItemsJson) {
-      const itemsBarcodes = JSON.parse(
-        inventoryItemsJson as string
-      ) as Array<string>;
-      if (itemsBarcodes) {
-        console.log("inventoryItemsJson: ", itemsBarcodes);
-        const tmp: Array<InventoryItem> = [];
-        itemsBarcodes.forEach((x) => {
-          const invItem = allItems.filter((el) => el.barcode == x)[0];
-          if (invItem) {
-            tmp.push(invItem);
-          }
-        });
+    let pocketLocalItems: Array<InventoryItem> = [];
 
-        setInventoryItems(tmp);
-      }
-    }
     if (pocketItemsJson) {
       const itemBarcodes = JSON.parse(
         pocketItemsJson as string
@@ -55,26 +40,53 @@ const Inventory = () => {
       if (itemBarcodes) {
         const tmp: Array<InventoryItem> = [];
         itemBarcodes.forEach((x) => {
-          tmp.push(allItems.filter((el) => el.barcode == x)[0]);
+          const pocketItem = allItems.filter((el) => el.barcode == x)[0];
+          if (pocketItem) {
+            tmp.push(pocketItem);
+          }
         });
+        setPocketItemsState(tmp);
+        pocketLocalItems = tmp;
+      }
+    }
 
-        setPocketItems(tmp);
+    if (inventoryItemsJson) {
+      const itemsBarcodes = JSON.parse(
+        inventoryItemsJson as string
+      ) as Array<string>;
+      if (itemsBarcodes) {
+        const tmp: Array<InventoryItem> = [];
+        itemsBarcodes.forEach((x) => {
+          const invItem = allItems.filter((el) => el.barcode == x)[0];
+          if (
+            invItem &&
+            !pocketLocalItems.filter((item) => item.barcode === x)[0]
+          ) {
+            tmp.push(invItem);
+          }
+        });
+        setInventoryItems(tmp);
       }
     }
   };
+
   const hide = () => {
     let tmp: Array<string> = [];
     pocketItems.forEach((x) => {
       tmp.push(x.barcode);
     });
-    console.log("tmp: ", tmp);
+    setPocketItems(pocketItems);
     localStorage.setItem("pocketItems", JSON.stringify(tmp));
 
     switchIsInventory(false);
   };
-  const removeFromPocket = (id: number) => {
+  const removeFromPocket = (item: InventoryItem) => {
     let tmp = pocketItems.slice();
-    setPocketItems(tmp.filter((x) => x.id !== id));
+    setPocketItemsState(tmp.filter((x) => x.id !== item.id));
+
+    let tmpInventory = inventoryItems.slice();
+    tmpInventory.push(item);
+    setInventoryItems(tmpInventory);
   };
   const addToPocket = (item: InventoryItem) => {
     if (pocketItems.length > 10) {
@@ -87,11 +99,9 @@ const Inventory = () => {
     }
     let tmp = pocketItems.slice();
     tmp.push(item);
-    setPocketItems(tmp);
+    setPocketItemsState(tmp);
   };
 
-  console.log("pocketItems: ", pocketItems);
-  console.log("nventoryItems: ", inventoryItems);
   return (
     <div>
       <Modal
@@ -143,6 +153,7 @@ const Inventory = () => {
                   <tr>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Qunatity</th>
                     <th>Options</th>
                   </tr>
                 </thead>
@@ -154,12 +165,13 @@ const Inventory = () => {
                         <tr key={id}>
                           <td>{x.id}</td>
                           <td>{x.name}</td>
+                          <td>{x.quantity ? x.quantity : "-"}</td>
                           <td>
                             <BulmaButton
                               label="Remove from pocket"
                               className="is-primary"
                               type="button"
-                              onClick={() => removeFromPocket(x.id)}
+                              onClick={() => removeFromPocket(x)}
                             />
                           </td>
                         </tr>
