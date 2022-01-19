@@ -140,7 +140,7 @@ const ItemCart = () => {
               {cartProducts.map((x, id) => {
                 return (
                   <div key={id} className="cart-item">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Icon_Bird_512x512.png" />
+                    <img src={ x.picturePath as string } />
                     <div className="cart-content">
                       <p className="cart-title white-title">{x.name}</p>
                       <p className="cart-title">{x.shopItemTypeId}</p>
