@@ -47,11 +47,12 @@ namespace Infrastructure.Services.Shop
             }
 
             var shopItem = mapper.Map<ShopItem>(command);
-            if (command.FormFile != null)
+            if (command.UploadRequest != null)
             {
-                string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
-                shopItem.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
-                    UploadType.ShopItem, fileName);
+                if (String.IsNullOrEmpty(command.UploadRequest.FileName))
+                    command.UploadRequest.FileName = $"ShopItem-{command.Name}.{command.UploadRequest.Extension}";
+                command.UploadRequest.UploadType = UploadType.ShopItem;
+                shopItem.PicturePath = await uploadService.UploadAsync(command.UploadRequest);
             }
 
             await unitOfWork.Repository<ShopItem>().AddAsync(shopItem);
@@ -71,11 +72,12 @@ namespace Infrastructure.Services.Shop
             var shopItem = await unitOfWork.Repository<ShopItem>().GetByIdAsync(command.Id);
             if (shopItem != null)
             {
-                if (command.FormFile != null)
+                if (command.UploadRequest != null)
                 {
-                    string fileName = $"ShopItem-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
-                    shopItem.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
-                        UploadType.ShopItem, fileName);
+                    if (String.IsNullOrEmpty(command.UploadRequest.FileName))
+                        command.UploadRequest.FileName = $"ShopItem-{command.Name}.{command.UploadRequest.Extension}";
+                    command.UploadRequest.UploadType = UploadType.ShopItem;
+                    shopItem.PicturePath = await uploadService.UploadAsync(command.UploadRequest);
                 }
 
                 shopItem.Name = command.Name ?? shopItem.Name;

@@ -21,7 +21,14 @@ const ImageInputGroup = ({
       const url = URL.createObjectURL(file);
       setImgSrc(url);
 
-      setFieldValue("formFile", file);
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+          console.log(reader.result);
+          const fileString = reader.result;
+          setFieldValue("uploadRequest.data", fileString);
+          setFieldValue("uploadRequest.extension", file.name.split(".").pop());
+      };
 
       // const reader = new FileReader();
       // reader.readAsBinaryString(file);
