@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LordOfTheHoney.Infrastructure
@@ -33,16 +32,16 @@ namespace LordOfTheHoney.Infrastructure
             _logger = logger;
         }
 
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            AddAdministrator();
-            AddBasicUser();
-            _db.SaveChanges();
+            await AddAdministratorAsync();
+            await AddBasicUserAsync();
+            await _db.SaveChangesAsync();
         }
 
-        private void AddAdministrator()
+        private async Task AddAdministratorAsync()
         {
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 //Check if Role Exists
                 var adminRole = new ApplicationRole(RoleConstants.AdministratorRole, "Administrator role with full permissions");
@@ -50,7 +49,6 @@ namespace LordOfTheHoney.Infrastructure
                 if (adminRoleInDb == null)
                 {
                     await _roleManager.CreateAsync(adminRole);
-                    adminRoleInDb = await _roleManager.FindByNameAsync(RoleConstants.AdministratorRole);
                     _logger.LogInformation("Seeded Administrator Role.");
                 }
                 //Check if User Exists
@@ -60,6 +58,7 @@ namespace LordOfTheHoney.Infrastructure
                     UserName = "durkabee",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
+                    BeeCoins = 79228162514264,
                     CreatedOn = DateTime.Now,
                     IsActive = true
                 };
@@ -82,14 +81,14 @@ namespace LordOfTheHoney.Infrastructure
                 }
                 foreach (var permission in Permissions.GetRegisteredPermissions())
                 {
-                    await _roleManager.AddPermissionClaim(adminRoleInDb, permission);
+                    await _roleManager.AddPermissionClaimAsync(adminRoleInDb, permission);
                 }
-            }).GetAwaiter().GetResult();
+            });
         }
 
-        private void AddBasicUser()
+        private async Task AddBasicUserAsync()
         {
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 //Check if Role Exists
                 var basicRole = new ApplicationRole(RoleConstants.BasicRole, "Basic role with default permissions");
@@ -107,16 +106,27 @@ namespace LordOfTheHoney.Infrastructure
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     CreatedOn = DateTime.Now,
+                    BeeCoins = 200,
                     IsActive = true
                 };
                 var basicUserInDb = await _userManager.FindByEmailAsync(basicUser.Email);
                 if (basicUserInDb == null)
                 {
                     await _userManager.CreateAsync(basicUser, UserConstants.DefaultPassword);
-                    await _userManager.AddToRoleAsync(basicUser, RoleConstants.BasicRole);
+                    var result = await _userManager.AddToRoleAsync(basicUser, RoleConstants.BasicRole);
                     _logger.LogInformation("Seeded User with Basic Role.");
+
+                    if (result.Succeeded)
+                    {
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.Messages);
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.Swagger);
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.ShopItems);
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.ShopItemTypes);
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.Home);
+                        await _roleManager.AddPermissionClaimAsync(basicRole, PermissionModules.Options);
+                    }
                 }
-            }).GetAwaiter().GetResult();
+            });
         }
     }
 }

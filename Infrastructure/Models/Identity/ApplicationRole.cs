@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LordOfTheHoney.Infrastructure.Models.Identity
 {
-    public class ApplicationRole : IdentityRole, IAuditableEntity<string>
+    public class ApplicationRole : IdentityRole, IAuditableEntity
     {
         public string Description { get; set; }
         public string CreatedBy { get; set; }

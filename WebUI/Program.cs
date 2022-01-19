@@ -1,9 +1,11 @@
+using LordOfTheHoney.Application.Configurations;
 using LordOfTheHoney.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ namespace WebUI
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                AppConfiguration appConfiguration = services.GetService<IOptions<AppConfiguration>>()?.Value;
 
                 try
                 {

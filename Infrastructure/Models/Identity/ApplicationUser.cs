@@ -5,11 +5,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using LordOfTheHoney.Application.Interfaces.Chat;
 using LordOfTheHoney.Application.Models.Chat;
+using LordOfTheHoney.Domain.Entities.Shop;
 
 namespace LordOfTheHoney.Infrastructure.Models.Identity
 {
-    public class ApplicationUser : IdentityUser<string>, IChatUser, IAuditableEntity<string>
+    public class ApplicationUser : IdentityUser<string>, IChatUser, IAuditableEntity
     {
+        public ApplicationUser()
+        {
+            ChatHistoryFromUsers = new HashSet<ChatHistory<ApplicationUser>>();
+            ChatHistoryToUsers = new HashSet<ChatHistory<ApplicationUser>>();
+            StorageItems = new HashSet<StorageItem>();
+        }
+
         public string CreatedBy { get; set; }
 
         [Column(TypeName = "text")]
@@ -24,16 +32,20 @@ namespace LordOfTheHoney.Infrastructure.Models.Identity
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
         public bool IsActive { get; set; }
+
         public string RefreshToken { get; set; }
+
         public DateTime RefreshTokenExpiryTime { get; set; }
+
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryFromUsers { get; set; }
+
         public virtual ICollection<ChatHistory<ApplicationUser>> ChatHistoryToUsers { get; set; }
 
-        public ApplicationUser()
-        {
-            ChatHistoryFromUsers = new HashSet<ChatHistory<ApplicationUser>>();
-            ChatHistoryToUsers = new HashSet<ChatHistory<ApplicationUser>>();
-        }
+        public virtual ICollection<StorageItem> StorageItems { get; set; }
+
+        public decimal BeeCoins { get; set; }
+
     }
 }

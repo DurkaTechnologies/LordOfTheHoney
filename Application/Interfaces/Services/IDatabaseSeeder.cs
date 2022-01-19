@@ -1,7 +1,9 @@
-﻿namespace LordOfTheHoney.Application.Interfaces.Services
+﻿using System.Threading.Tasks;
+
+namespace LordOfTheHoney.Application.Interfaces.Services
 {
     public interface IDatabaseSeeder
     {
-        void Initialize();
+        Task InitializeAsync();
     }
 }

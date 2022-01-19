@@ -6,24 +6,35 @@ namespace LordOfTheHoney.Shared.Constants.Permission
 {
     public static class Permissions
     {
-        public static class Products
+        public static class Swagger
         {
-            public const string View = "Permissions.Products.View";
-            public const string Create = "Permissions.Products.Create";
-            public const string Edit = "Permissions.Products.Edit";
-            public const string Delete = "Permissions.Products.Delete";
-            public const string Export = "Permissions.Products.Export";
-            public const string Search = "Permissions.Products.Search";
+            public const string View = "Permissions.Swagger.View";
         }
 
-        public static class Brands
+        public static class Messages
         {
-            public const string View = "Permissions.Brands.View";
-            public const string Create = "Permissions.Brands.Create";
-            public const string Edit = "Permissions.Brands.Edit";
-            public const string Delete = "Permissions.Brands.Delete";
-            public const string Export = "Permissions.Brands.Export";
-            public const string Search = "Permissions.Brands.Search";
+            public const string View = "Permissions.Messages.View";
+            public const string Create = "Permissions.Messages.Create";
+            public const string Edit = "Permissions.Messages.Edit";
+            public const string Delete = "Permissions.Messages.Delete";
+        }
+
+        public static class ShopItems
+        {
+            public const string View = "Permissions.ShopItems.View";
+            public const string Create = "Permissions.ShopItems.Create";
+            public const string Edit = "Permissions.ShopItems.Edit";
+            public const string Delete = "Permissions.ShopItems.Delete";
+            public const string Search = "Permissions.ShopItems.Search";
+        }
+
+        public static class ShopItemTypes
+        {
+            public const string View = "Permissions.ShopItemTypes.View";
+            public const string Create = "Permissions.ShopItemTypes.Create";
+            public const string Edit = "Permissions.ShopItemTypes.Edit";
+            public const string Delete = "Permissions.ShopItemTypes.Delete";
+            public const string Search = "Permissions.ShopItemTypes.Search";
         }
 
         public static class Documents

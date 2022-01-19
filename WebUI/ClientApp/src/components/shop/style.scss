@@ -1,0 +1,183 @@
+.whiteColor {
+  color: #ffffff;
+}
+
+.orangeBackColor {
+  background-color: #ffbb00;
+}
+
+.orangeBackColor:hover {
+  background-color: #dca100;
+}
+
+.coinPrice {
+  position: relative;
+  top: 4px;
+  margin-right: 4px;
+}
+
+.btnBuy {
+    margin-right: 8px !important;
+    font-weight: 500 !important;
+}
+
+.btnRemove {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.btnRemove:hover {
+    border: 1px solid rgba(222, 222, 222, 1) !important;
+}
+
+.mw-auto {
+    width: auto !important;
+}
+
+.mw-128 {
+    width: 128px !important;
+}
+
+.mw-32 {
+    width: 32px !important;
+}
+
+.tabs {
+    margin-bottom: 0px !important;
+}
+
+.tabs ul {
+    margin-bottom: 0px !important;
+}
+
+.tabs li a {
+    border-radius: 8px 8px 0px 0px !important;
+    padding: 4px 18px !important;
+    border: none !important;
+    color: white !important;
+
+    &:hover {
+        color: gray !important;
+    }
+}
+
+.tabs li.is-active a {
+    border: none !important;
+    border-bottom: hidden;
+    position: relative !important;
+    color: black !important;
+    background-color: rgba(222, 222, 222, 0.1) !important;
+    backdrop-filter: blur(20px) !important;
+    cursor: default;
+}
+
+.tabs a {
+    margin-bottom: 0px;
+    color: gray !important;
+
+    
+}
+
+.tabs ul {
+    border-bottom: none !important;
+}
+
+.card {
+    border-radius: 8px !important;
+}
+
+.card-content {
+    padding: 16px !important;
+}
+
+.card-content img {
+    margin-bottom: 8px !important;
+}
+
+.product-name {
+    margin-bottom: 8px !important;
+    font-size: 20px !important; 
+    font-weight: 600 !important;
+}
+
+.product-category {
+    margin-bottom: 0px !important;
+}
+
+.price-title {
+    margin: 0px !important;
+    font-size: 22px !important;
+}
+
+.title {
+    font-size: 24px !important;
+}
+
+.shop-content {
+    background-color: rgba(222, 222, 222, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 0px !important;
+    padding: 32px !important;
+    border-radius: 8px !important;
+    height: auto !important;
+}
+
+.shop-input {
+    color: white !important;
+}
+
+.cart-item {
+    display: flex !important;
+    overflow: hidden !important;
+    background-color: rgba(222, 222, 222, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 8px !important;
+    height: 100px !important;
+    width: 100% !important;
+    position: relative !important;
+    margin-bottom: 16px !important;
+}
+
+.cart-item .cart-content {
+    padding: 8px !important;
+    display: flex !important;
+    width: 100%;
+    position: relative !important;
+    flex-direction: column !important;
+}
+
+.cart-item img {
+    height: 100% !important;
+    background-color: white !important;
+}
+
+.cart-item .btnRemove {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+}
+
+.cart-quantity {
+    width: 128px !important;
+    height: 32px !important;
+    margin-top: auto !important;
+    
+}
+
+.cart-title {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.cart-item .white-title {
+    color: white !important;
+    font-size: 18px !important;
+}
+
+.cart-price-title {
+    position: absolute !important;
+    right: 8px !important;
+    bottom: 2px !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}

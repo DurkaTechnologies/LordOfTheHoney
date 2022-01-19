@@ -111,7 +111,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                 }
                 else
                 {
-                    model.RoleClaims = new List<RoleClaimResponse>();
+                    model.RoleClaims = new List<RoleClaimsResponse>();
                     return await Result<PermissionResponse>.FailAsync(roleClaimsResult.Messages);
                 }
             }
@@ -119,9 +119,9 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
             return await Result<PermissionResponse>.SuccessAsync(model);
         }
 
-        private List<RoleClaimResponse> GetAllPermissions()
+        private List<RoleClaimsResponse> GetAllPermissions()
         {
-            var allPermissions = new List<RoleClaimResponse>();
+            var allPermissions = new List<RoleClaimsResponse>();
 
             #region GetPermissions
 
@@ -205,7 +205,7 @@ namespace LordOfTheHoney.Infrastructure.Services.Identity
                 }
                 foreach (var claim in selectedClaims)
                 {
-                    var addResult = await _roleManager.AddPermissionClaim(role, claim.Value);
+                    var addResult = await _roleManager.AddPermissionClaimAsync(role, claim.Value);
                     if (!addResult.Succeeded)
                     {
                         errors.AddRange(addResult.Errors.Select(e => e.Description.ToString()));

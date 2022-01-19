@@ -4,11 +4,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using WebUI;
+using Swashbuckle.AspNetCore.Swagger;
+using LordOfTheHoney.Shared.Constants.Permission;
+using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
+using System.Linq;
 
 namespace LordOfTheHoney.WebUI.Extensions
 {
     internal static class ApplicationBuilderExtensions
     {
+        internal static IMvcBuilder AddValidators(this IMvcBuilder builder)
+        {
+            builder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AppConfiguration>());
+            return builder;
+        }
+
         internal static IApplicationBuilder UseForwarding(this IApplicationBuilder app, IConfiguration configuration)
         {
             AppConfiguration config = GetApplicationSettings(configuration);
@@ -27,8 +38,12 @@ namespace LordOfTheHoney.WebUI.Extensions
             return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
 
-        internal static void ConfigureSwagger(this IApplicationBuilder app)
+        internal static void ConfigureSwagger(this IApplicationBuilder app, bool useSwaggerMiddleware = false)
         {
+            if (useSwaggerMiddleware)
+            {
+                app.UseMiddleware<SwaggerMiddleware>(Permissions.Swagger.View);
+            }
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
@@ -41,11 +56,10 @@ namespace LordOfTheHoney.WebUI.Extensions
         internal static IApplicationBuilder UseEndpoints(this IApplicationBuilder app)
             => app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
 
-        internal static IApplicationBuilder Initialize(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
+        internal static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
         {
             using var serviceScope = app.ApplicationServices.CreateScope();
 
@@ -53,7 +67,7 @@ namespace LordOfTheHoney.WebUI.Extensions
 
             foreach (var initializer in initializers)
             {
-                initializer.Initialize();
+                await initializer.InitializeAsync();
             }
 
             return app;

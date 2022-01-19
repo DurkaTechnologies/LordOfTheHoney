@@ -47,40 +47,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("ChatHistory");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Tax")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,8 +57,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -101,9 +68,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageDataURL")
-                        .HasColumnType("text");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -114,118 +78,20 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.ExtendedAttributes.DocumentExtendedAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("PicturePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Decimal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EntityId")
+                    b.Property<int>("ShopItemTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ExternalId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Group")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Json")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("tinyint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EntityId");
+                    b.HasIndex("ShopItemTypeId");
 
-                    b.ToTable("DocumentExtendedAttributes");
+                    b.ToTable("ShopItems");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Misc.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DocumentTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentTypeId");
-
-                    b.ToTable("Documents");
-                });
-
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Misc.DocumentType", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,9 +116,37 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentTypes");
+                    b.ToTable("ShopItemTypes");
+                });
+
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShopItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ShopItemId");
+
+                    b.ToTable("StorageItems");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Audit.Audit", b =>
@@ -383,6 +277,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("BeeCoins")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -566,37 +463,30 @@ namespace Infrastructure.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItem", b =>
                 {
-                    b.HasOne("LordOfTheHoney.Domain.Entities.Catalog.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", "ShopItemType")
+                        .WithMany("ShopItems")
+                        .HasForeignKey("ShopItemTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Brand");
+                    b.Navigation("ShopItemType");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.ExtendedAttributes.DocumentExtendedAttribute", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.StorageItem", b =>
                 {
-                    b.HasOne("LordOfTheHoney.Domain.Entities.Misc.Document", "Entity")
-                        .WithMany("ExtendedAttributes")
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationUser", null)
+                        .WithMany("StorageItems")
+                        .HasForeignKey("ApplicationUserId");
 
-                    b.Navigation("Entity");
-                });
-
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Misc.Document", b =>
-                {
-                    b.HasOne("LordOfTheHoney.Domain.Entities.Misc.DocumentType", "DocumentType")
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.ShopItem", "ShopItem")
                         .WithMany()
-                        .HasForeignKey("DocumentTypeId")
+                        .HasForeignKey("ShopItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DocumentType");
+                    b.Navigation("ShopItem");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationRoleClaim", b =>
@@ -652,9 +542,9 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Misc.Document", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.ShopItemType", b =>
                 {
-                    b.Navigation("ExtendedAttributes");
+                    b.Navigation("ShopItems");
                 });
 
             modelBuilder.Entity("LordOfTheHoney.Infrastructure.Models.Identity.ApplicationRole", b =>
@@ -667,6 +557,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("ChatHistoryFromUsers");
 
                     b.Navigation("ChatHistoryToUsers");
+
+                    b.Navigation("StorageItems");
                 });
 #pragma warning restore 612, 618
         }

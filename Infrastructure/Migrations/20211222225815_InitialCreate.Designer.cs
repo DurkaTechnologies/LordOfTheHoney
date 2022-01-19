@@ -49,7 +49,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("ChatHistory");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Brand", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +82,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -568,9 +568,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Catalog.Product", b =>
+            modelBuilder.Entity("LordOfTheHoney.Domain.Entities.Shop.Product", b =>
                 {
-                    b.HasOne("LordOfTheHoney.Domain.Entities.Catalog.Brand", "Brand")
+                    b.HasOne("LordOfTheHoney.Domain.Entities.Shop.Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
