@@ -113,9 +113,9 @@ class Primitives {
 
     return response;
   };
-  clearCube(boxBody: CANNON.Body, mesh: THREE.Mesh) {
+  clearCube(boxBody: CANNON.Body, mesh?: THREE.Mesh) {
     this.world.removeBody(boxBody);
-    this.scene.remove(mesh);
+    if (mesh) this.scene.remove(mesh);
   }
 
   static CreateBoxGeometry(geometrySettings: GeometrySettings) {
