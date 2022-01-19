@@ -29,7 +29,10 @@ export class InitializeGame {
   setCurrentPocketIndex: (data: number) => void;
   switchInventory: (data: boolean) => void;
   getGeneratingBlockDirection: () => CANNON.Vec3 | undefined;
+
+  clickHandle: (event: any) => void;
   stayBlock: () => void;
+  removeBlock: () => void;
 
   world: CANNON.World;
   scene: THREE.Scene;
@@ -53,6 +56,7 @@ export class InitializeGame {
   boxMeshes: Array<THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>> =
     [];
   boxes: Array<CANNON.Body> = [];
+  myBoxes: Array<CANNON.Body> = [];
 
   isRayLineShow = false;
 
@@ -314,14 +318,14 @@ export class InitializeGame {
         switchHeader(false);
         this.controls.enabled = true;
         // window.addEventListener("resize", this.requestRenderIfNotRequested);
-        window.addEventListener("click", this.stayBlock);
+        window.addEventListener("click", this.clickHandle);
       });
 
       this.controls.addEventListener("unlock", () => {
         switchHeader(true);
         this.controls.enabled = false;
         // window.removeEventListener("resize", this.requestRenderIfNotRequested);
-        window.removeEventListener("click", this.stayBlock);
+        window.removeEventListener("click", this.clickHandle);
       });
     };
     this.getGeneratingBlockDirection = () => {
@@ -358,6 +362,13 @@ export class InitializeGame {
         return resultVector;
       }
     };
+    this.clickHandle = (event: any) => {
+      if (event.button === 2) {
+        this.stayBlock();
+      } else if (event.button === 0) {
+        this.removeBlock();
+      }
+    };
     this.stayBlock = () => {
       if (this.currentPocketItem) {
         const direction = this.getGeneratingBlockDirection();
@@ -367,6 +378,7 @@ export class InitializeGame {
             this.currentPocketItem?.textureIndex
           ).body;
           this.boxes.push(box);
+          this.myBoxes.push(box);
         }
 
         if (this.isRayLineShow) {
@@ -385,6 +397,51 @@ export class InitializeGame {
           this.scene.add(line);
         }
       }
+    };
+    this.removeBlock = () => {
+      this.camera.getWorldPosition(this.positionVector);
+      this.camera.getWorldDirection(this.lookAtVector);
+
+      this.lookAtVector.multiplyScalar(5);
+      this.lookAtVector.addVectors(this.lookAtVector, this.positionVector);
+
+      const ray = new CANNON.Ray(
+        mapFromThree(this.positionVector),
+        mapFromThree(this.lookAtVector)
+      );
+      ray.mode = CANNON.RAY_MODES.CLOSEST;
+      const result = new CANNON.RaycastResult();
+      ray.intersectBodies(this.myBoxes, result);
+
+      if (result.body) {
+        this.primitives.clearCube(result.body);
+        let resultVector = new CANNON.Vec3();
+        resultVector = result.body.vectorToWorldFrame(result.hitPointWorld);
+        // resultVector.x = Math.floor(resultVector.x) + 0.5;
+        // resultVector.y = Math.floor(resultVector.y) + 0.5;
+        // resultVector.z = Math.floor(resultVector.z) + 0.5;
+        console.log("resultVector: ", resultVector);
+        this.boxes = this.boxes.filter((x) => x !== result.body);
+        this.worldGenerator.voxels.setFilled(
+          resultVector.x,
+          resultVector.y,
+          resultVector.z,
+          false
+        );
+        this.worldGenerator.voxels.setBoxified(
+          resultVector.x,
+          resultVector.y,
+          resultVector.z,
+          false
+        );
+        this.worldGenerator.updateVoxelGeometry();
+        this.worldGenerator.voxels.update();
+      }
+
+      // const box = this.primitives.createCube(
+      //   direction,
+      //   this.currentPocketItem?.textureIndex
+      // ).body;
     };
     this.initialize = () => {
       this.pocket.initPocket();
