@@ -10,6 +10,7 @@ import {
   IProductType,
   IProductError,
   ProductPaginationState,
+  IProductImage,
 } from "./types";
 import { Dispatch } from "react";
 import http from "../../http_common";
@@ -108,25 +109,8 @@ export const getProductTypes = () => {
 export const addProduct = (data: IProduct) => {
   return async (dispatch: Dispatch<ProductAction>) => {
     try {
-      const form = new FormData();
-      form.append("id", data.id.toString());
-      form.append("name", data.name as string);
-      form.append("description", data.description as string);
-      form.append("barcode", data.barcode as string);
-      form.append("cost", data.cost.toString());
-      form.append("picturePath", "");
-      form.append("shopItemTypeId", data.shopItemTypeId.toString());
-      form.append("formFile", data.formFile as Blob);
-
       const response = await http.post<IProductResponse>(
-        `/api/shop/shopItem/CreateShopItem/`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+        `/api/shop/shopItem/CreateShopItem/`, data);
       AddProduct(data, dispatch);
       return Promise.resolve();
     } catch (error) {

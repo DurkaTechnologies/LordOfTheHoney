@@ -35,7 +35,7 @@ const AddProduct = () => {
     shopItemTypeId: 0,
     picturePath: null,
     cost: 0,
-    formFile: null,
+    uploadRequest: undefined,
   };
   const initialUrl = "https://static.thenounproject.com/png/3752804-200.png";
 

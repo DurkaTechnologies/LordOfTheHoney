@@ -30,7 +30,7 @@ namespace LordOfTheHoney.Application.Features.ShopItems.Commands.Patch
         [Required]
         public int ShopItemTypeId { get; set; }
 
-        public IFormFile FormFile { get; set; }
+        public UploadRequest UploadRequest { get; set; }
     }
 
     public class PatchShopItemCommandValidator : AbstractValidator<PatchShopItemCommand>
