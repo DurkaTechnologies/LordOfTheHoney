@@ -16,13 +16,13 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
             if (request.Data == null)
                 return string.Empty;
                 
-            var streamData = new MemoryStream(request.Data);
+            var fileBytes = Convert.FromBase64String(request.Data.Substring(request.Data.LastIndexOf(',') + 1));
+            var streamData = new MemoryStream(fileBytes);
 
             if (streamData.Length > 0)
             {
                 var folder = request.UploadType.ToDescriptionString();
-                var folderName = Path.Combine("Files", folder);
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory() + "\\ClientApp\\public", folder);
                 bool exists = Directory.Exists(pathToSave);
 
                 if (!exists)
@@ -30,7 +30,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
 
                 var fileName = request.FileName.Trim('"');
                 var fullPath = Path.Combine(pathToSave, fileName);
-                var dbPath = Path.Combine(folderName, fileName);
+                var dbPath = Path.Combine(folder, fileName);
 
                 if (File.Exists(dbPath))
                 {
@@ -95,35 +95,35 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
             return string.Format(pattern, max);
         }
 
-        public async Task<string> UploadByFormFileAsync(IFormFile formFile, UploadType uploadType, string fileName = null)
-        {
-            if (formFile == null)
-                return "";
+        //public async Task<string> UploadByFormFileAsync(IFormFile formFile, UploadType uploadType, string fileName = null)
+        //{
+        //    if (formFile == null)
+        //        return "";
 
-            byte[] fileBytes = new byte[formFile.Length];
+        //    byte[] fileBytes = new byte[formFile.Length];
 
-            using (var memoryStream = new MemoryStream())
-            {
-                formFile.CopyTo(memoryStream);
-                fileBytes = memoryStream.ToArray();
-            }
+        //    using (var memoryStream = new MemoryStream())
+        //    {
+        //        formFile.CopyTo(memoryStream);
+        //        fileBytes = memoryStream.ToArray();
+        //    }
 
-            UploadRequest request = new UploadRequest
-            {
-                Extension = Path.GetExtension(formFile.FileName),
-                FileName = string.IsNullOrWhiteSpace(fileName) ? formFile.FileName : fileName,
-                UploadType = uploadType,
-                Data = fileBytes
-            };
+        //    UploadRequest request = new UploadRequest
+        //    {
+        //        Extension = Path.GetExtension(formFile.FileName),
+        //        FileName = string.IsNullOrWhiteSpace(fileName) ? formFile.FileName : fileName,
+        //        UploadType = uploadType,
+        //        Data = fileBytes
+        //    };
 
-            try
-            {
-                return await UploadAsync(request);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //    try
+        //    {
+        //        return await UploadAsync(request);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
     }
 }

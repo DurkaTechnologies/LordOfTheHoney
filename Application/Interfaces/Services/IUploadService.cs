@@ -9,6 +9,6 @@ namespace LordOfTheHoney.Application.Interfaces.Services
     {
         Task<string> UploadAsync(UploadRequest request);
 
-        Task<string> UploadByFormFileAsync(IFormFile formFile, UploadType uploadType, string fileName = null);
+        //Task<string> UploadByFormFileAsync(IFormFile formFile, UploadType uploadType, string fileName = null);
     }
 }

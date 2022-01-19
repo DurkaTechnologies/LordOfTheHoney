@@ -48,11 +48,12 @@ namespace Infrastructure.Services.Shop
 
             var shopItemType = mapper.Map<ShopItemType>(command);
 
-            if (command.FormFile != null)
+            if (command.UploadRequest != null)
             {
-                string fileName = $"ShopItemType-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
-                shopItemType.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
-                    UploadType.ShopItemType, fileName);
+                if (String.IsNullOrEmpty(command.UploadRequest.FileName))
+                    command.UploadRequest.FileName = $"ShopItemType-{command.Name}.{command.UploadRequest.Extension}";
+                command.UploadRequest.UploadType = UploadType.ShopItem;
+                shopItemType.PicturePath = await uploadService.UploadAsync(command.UploadRequest);
             }
 
             await unitOfWork.Repository<ShopItemType>().AddAsync(shopItemType);
@@ -72,11 +73,12 @@ namespace Infrastructure.Services.Shop
             var shopItemType = await unitOfWork.Repository<ShopItemType>().GetByIdAsync(command.Id);
             if (shopItemType != null)
             {
-                if (command.FormFile != null)
+                if (command.UploadRequest != null)
                 {
-                    string fileName = $"ShopItemType-{command.Name}.{Path.GetExtension(command.FormFile.FileName)}";
-                    shopItemType.PicturePath = await uploadService.UploadByFormFileAsync(command.FormFile,
-                        UploadType.ShopItemType, fileName);
+                    if (String.IsNullOrEmpty(command.UploadRequest.FileName))
+                        command.UploadRequest.FileName = $"ShopItemType-{command.Name}.{command.UploadRequest.Extension}";
+                    command.UploadRequest.UploadType = UploadType.ShopItem;
+                    shopItemType.PicturePath = await uploadService.UploadAsync(command.UploadRequest);
                 }
 
                 shopItemType.Name = command.Name ?? shopItemType.Name;

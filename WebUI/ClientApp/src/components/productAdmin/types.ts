@@ -18,15 +18,16 @@ export interface IProduct {
   cost: number;
   description: string | null;
   barcode?: string | undefined | null;
-  formFile?: File | null;
-  // uploadRequest?: IProductImage;
+  uploadRequest?: IProductImage | undefined;
 }
-// export interface IProductImage {
-//   fileName: string;
-//   extension: string;
-//   uploadType: number;
-//   data: Uint8Array | null;
-// }
+
+ export interface IProductImage {
+   fileName: string;
+   extension: string;
+   uploadType: number;
+   data: string | undefined | null;
+}
+
 export interface IProductType {
   id: number;
   name: string;
