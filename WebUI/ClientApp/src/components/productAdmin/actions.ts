@@ -109,8 +109,6 @@ export const getProductTypes = () => {
 export const addProduct = (data: IProduct) => {
   return async (dispatch: Dispatch<ProductAction>) => {
     try {
-      console.log("WORKS");
-      
       const response = await http.post<IProductResponse>(
         `/api/shop/shopItem/CreateShopItem/`, data);
       AddProduct(data, dispatch);

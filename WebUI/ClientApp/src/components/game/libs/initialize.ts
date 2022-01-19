@@ -16,8 +16,8 @@ import { WorldGenerator } from "./3dLib/VoxelWorld/WorldGenerator";
 import { allInventoryItemsArr } from "./seeder";
 
 import { InventoryItem } from "./inventory/inventoryItem";
-import { PocketService } from "./inventory/pocket";
-import { InventoryService } from "./inventory/inventory";
+import { PocketService } from "./inventory/pocketService";
+import { InventoryService } from "./inventory/inventoryService";
 
 export class InitializeGame {
   initialize: () => void;
@@ -26,6 +26,7 @@ export class InitializeGame {
   initControls: () => void;
   render: () => void;
   switchHeader: (data: boolean) => void;
+  setCurrentPocketIndex: (data: number) => void;
   switchInventory: (data: boolean) => void;
   getGeneratingBlockDirection: () => CANNON.Vec3 | undefined;
   stayBlock: () => void;
@@ -73,10 +74,12 @@ export class InitializeGame {
 
   constructor(
     switchHeader: (data: boolean) => void,
-    switchInventory: (data: boolean) => void
+    switchInventory: (data: boolean) => void,
+    setCurrentPocketIndex: (data: number) => void
   ) {
     this.switchHeader = switchHeader;
     this.switchInventory = switchInventory;
+    this.setCurrentPocketIndex = setCurrentPocketIndex;
 
     this.world = new CANNON.World();
     this.scene = new THREE.Scene();
@@ -286,6 +289,7 @@ export class InitializeGame {
     };
     this.initControls = () => {
       const setCurrentPocketItem = (id: number) => {
+        this.setCurrentPocketIndex(id - 1);
         const pocketItem = this.pocket.getItem(id - 1);
         if (pocketItem) {
           this.currentPocketItem = pocketItem;

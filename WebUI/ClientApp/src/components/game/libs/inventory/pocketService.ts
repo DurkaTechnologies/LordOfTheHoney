@@ -1,4 +1,4 @@
-import { InventoryItem } from "./inventoryItem";
+import { InventoryItem, ILocalStorageItem } from "./inventoryItem";
 
 export class PocketService {
   getItem: (id: number) => InventoryItem | undefined;
@@ -13,12 +13,14 @@ export class PocketService {
 
         const pocketItemsBarcodes = JSON.parse(
           localStorage.getItem("pocketItems") as string
-        ) as Array<string>;
+        ) as Array<ILocalStorageItem>;
 
         if (!pocketItemsBarcodes) return;
 
         pocketItemsBarcodes.forEach((x, v) => {
-          pocketItems.push(inventoryItems.filter((ii) => ii.barcode === x)[0]);
+          pocketItems.push(
+            inventoryItems.filter((ii) => ii.barcode === x.barcode)[0]
+          );
         });
         const item = pocketItems[id];
         if (item) {

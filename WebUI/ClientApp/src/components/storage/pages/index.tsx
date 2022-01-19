@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import {
   InventoryItem,
   InventoryItemType,
+  ILocalStorageItem,
 } from "src/components/game/libs/inventory/inventoryItem";
 import { textureNameDictionary } from "src/components/game/libs/dictionary";
 import { IStorageItem } from "../types";
@@ -48,9 +49,12 @@ const Storage = () => {
   const loadInventory = () => {
     const itemProducts = JSON.parse(
       localStorage.getItem("inventoryItems") as string
-    ) as Array<string>;
+    ) as Array<ILocalStorageItem>;
     inventorySendItems.forEach((item) => {
-      itemProducts.push(item.barcode as string);
+      itemProducts.push({
+        barcode: item.barcode as string,
+        quantity: item.quantity,
+      });
     });
     localStorage.setItem("inventoryItems", JSON.stringify(itemProducts));
   };
@@ -98,7 +102,7 @@ const Storage = () => {
             </div>
           </div>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{height: "80vh"}}>
           <table className="table">
             <thead>
               <tr>

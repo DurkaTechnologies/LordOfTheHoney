@@ -6,19 +6,19 @@ import { useActions } from "../../../../hooks/useActions";
 
 import { BulmaButton } from "../../../common/bulma";
 
-import { InventoryItem } from "./inventoryItem";
+import { InventoryItem, ILocalStorageItem } from "./inventoryItem";
 
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 
 const Inventory = () => {
   const { isInventoryActive } = useTypedSelector((redux) => redux.home);
-  const { switchIsInventory, switchIsShop } = useActions();
+  const { switchIsInventory, switchIsShop, setPocketItems } = useActions();
 
   const [inventoryItems, setInventoryItems] = useState<Array<InventoryItem>>(
     []
   );
-  const [pocketItems, setPocketItems] = useState<Array<InventoryItem>>([]);
+  const [pocketItems, setPocketItemsState] = useState<Array<InventoryItem>>([]);
 
   React.useEffect(() => {
     fetch();
@@ -31,50 +31,66 @@ const Inventory = () => {
       localStorage.getItem("allInventoryItems") as string
     ) as Array<InventoryItem>;
 
-    if (inventoryItemsJson) {
-      const itemsBarcodes = JSON.parse(
-        inventoryItemsJson as string
-      ) as Array<string>;
-      if (itemsBarcodes) {
-        console.log("inventoryItemsJson: ", itemsBarcodes);
-        const tmp: Array<InventoryItem> = [];
-        itemsBarcodes.forEach((x) => {
-          const invItem = allItems.filter((el) => el.barcode == x)[0];
-          if (invItem) {
-            tmp.push(invItem);
-          }
-        });
+    let pocketLocalItems: Array<InventoryItem> = [];
 
-        setInventoryItems(tmp);
-      }
-    }
     if (pocketItemsJson) {
       const itemBarcodes = JSON.parse(
         pocketItemsJson as string
-      ) as Array<string>;
+      ) as Array<ILocalStorageItem>;
       if (itemBarcodes) {
         const tmp: Array<InventoryItem> = [];
         itemBarcodes.forEach((x) => {
-          tmp.push(allItems.filter((el) => el.barcode == x)[0]);
+          const pocketItem = allItems.filter(
+            (el) => el.barcode == x.barcode
+          )[0];
+          if (pocketItem) {
+            pocketItem.quantity = x.quantity;
+            tmp.push(pocketItem);
+          }
         });
+        setPocketItemsState(tmp);
+        pocketLocalItems = tmp;
+      }
+    }
 
-        setPocketItems(tmp);
+    if (inventoryItemsJson) {
+      const itemsBarcodes = JSON.parse(
+        inventoryItemsJson as string
+      ) as Array<ILocalStorageItem>;
+      if (itemsBarcodes) {
+        const tmp: Array<InventoryItem> = [];
+        itemsBarcodes.forEach((x) => {
+          const invItem = allItems.filter((el) => el.barcode == x.barcode)[0];
+          if (
+            invItem &&
+            !pocketLocalItems.filter((item) => item.barcode === x.barcode)[0]
+          ) {
+            invItem.quantity = x.quantity;
+            tmp.push(invItem);
+          }
+        });
+        setInventoryItems(tmp);
       }
     }
   };
+
   const hide = () => {
-    let tmp: Array<string> = [];
+    let tmp: Array<ILocalStorageItem> = [];
     pocketItems.forEach((x) => {
-      tmp.push(x.barcode);
+      tmp.push({ barcode: x.barcode, quantity: x.quantity ? x.quantity : -1 });
     });
-    console.log("tmp: ", tmp);
+    setPocketItems(pocketItems);
     localStorage.setItem("pocketItems", JSON.stringify(tmp));
 
     switchIsInventory(false);
   };
-  const removeFromPocket = (id: number) => {
+  const removeFromPocket = (item: InventoryItem) => {
     let tmp = pocketItems.slice();
-    setPocketItems(tmp.filter((x) => x.id !== id));
+    setPocketItemsState(tmp.filter((x) => x.id !== item.id));
+
+    let tmpInventory = inventoryItems.slice();
+    tmpInventory.push(item);
+    setInventoryItems(tmpInventory);
   };
   const addToPocket = (item: InventoryItem) => {
     if (pocketItems.length > 10) {
@@ -87,11 +103,15 @@ const Inventory = () => {
     }
     let tmp = pocketItems.slice();
     tmp.push(item);
-    setPocketItems(tmp);
+    setPocketItemsState(tmp);
+
+    let tmpInventory = inventoryItems.slice();
+    setInventoryItems(tmpInventory.filter((x) => x.id !== item.id));
   };
 
-  console.log("pocketItems: ", pocketItems);
-  console.log("nventoryItems: ", inventoryItems);
+  console.log("inventoryItems: ", inventoryItems);
+  console.log("pocketItems : ", pocketItems);
+
   return (
     <div>
       <Modal
@@ -143,6 +163,7 @@ const Inventory = () => {
                   <tr>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Qunatity</th>
                     <th>Options</th>
                   </tr>
                 </thead>
@@ -154,12 +175,13 @@ const Inventory = () => {
                         <tr key={id}>
                           <td>{x.id}</td>
                           <td>{x.name}</td>
+                          <td>{x.quantity ? x.quantity : "-"}</td>
                           <td>
                             <BulmaButton
                               label="Remove from pocket"
                               className="is-primary"
                               type="button"
-                              onClick={() => removeFromPocket(x.id)}
+                              onClick={() => removeFromPocket(x)}
                             />
                           </td>
                         </tr>
@@ -175,6 +197,7 @@ const Inventory = () => {
                   <tr>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Quantity</th>
                     <th>Options</th>
                   </tr>
                 </thead>
@@ -186,6 +209,7 @@ const Inventory = () => {
                         <tr key={id}>
                           <td>{x.id}</td>
                           <td>{x.name}</td>
+                          <td>{x.quantity ? x.quantity : "-"}</td>
                           <td>
                             <BulmaButton
                               label="Add to pocket"

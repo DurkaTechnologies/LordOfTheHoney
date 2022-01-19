@@ -9,6 +9,7 @@ import { loginReducer } from "../components/authorization/login/reducer";
 import { itemShopReducer } from "../components/productAdmin/reducer";
 import { cartReducer } from "../components/shop/cart/reducer";
 import { storageReducer } from "src/components/storage/reducer";
+import { gameReducer } from "src/components/game/app/reducer";
 
 const rootReducer = combineReducers({
   ...reducers,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   itemShop: itemShopReducer,
   cart: cartReducer,
   storage: storageReducer,
+  game: gameReducer,
 });
 
 export default function configureStore(

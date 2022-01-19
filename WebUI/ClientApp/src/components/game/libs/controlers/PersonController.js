@@ -158,7 +158,6 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
             
                 case 'Space':
                     if (this.canJump) {
-                        console.log("SPACE")
                         this.cannonBody.velocity.y = this.jumpVelocity
                     }
                     this.canJump = false
